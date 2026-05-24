@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-ink-100 text-ink-900 font-sans;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/80 backdrop-blur-xl border border-white/60 shadow-glass rounded-xl2;
+  }
+  .glass-dark {
+    @apply bg-ink-900/70 backdrop-blur-xl border border-white/10 shadow-glass rounded-xl2 text-ink-0;
+  }
+  .container-app {
+    @apply mx-auto w-full max-w-md px-5;
+  }
+  .container-wide {
+    @apply mx-auto w-full max-w-6xl px-5;
+  }
+  .pill {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium;
+  }
+}
+
+/* Safe area for iOS notches / home indicator on the bottom nav */
+.safe-bottom {
+  padding-bottom: max(env(safe-area-inset-bottom), 0.75rem);
+}
+.safe-top {
+  padding-top: max(env(safe-area-inset-top), 0.75rem);
+}
