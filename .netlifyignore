@@ -1,0 +1,8 @@
+node_modules
+.next
+.data
+.git
+public/uploads
+tsconfig.tsbuildinfo
+legacy
+*.log
