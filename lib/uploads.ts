@@ -2,7 +2,12 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 
-const UPLOAD_ROOT = path.join(process.cwd(), "public", "uploads");
+// Same caveat as lib/db.ts: /tmp on Vercel so writes don't crash. Files there
+// won't be web-served (not under /public), so uploaded images will 404 in the
+// preview — by design, this is a stand-in for Supabase Storage.
+const UPLOAD_ROOT = process.env.VERCEL
+  ? "/tmp/roadlime/uploads"
+  : path.join(process.cwd(), "public", "uploads");
 const ALLOWED_MIME = new Set([
   "image/jpeg",
   "image/png",

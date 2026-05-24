@@ -11,7 +11,12 @@ import { uniqueSlug } from "./slugify";
  * interface, not to the storage backend.
  */
 
-const DATA_DIR = path.join(process.cwd(), ".data");
+// On Vercel the cwd is read-only at runtime, so writes (and even mkdir) fail.
+// /tmp is writable but ephemeral per Lambda instance — fine for the preview
+// only; the real fix is swapping this module to Supabase.
+const DATA_DIR = process.env.VERCEL
+  ? "/tmp/roadlime/data"
+  : path.join(process.cwd(), ".data");
 const VENDORS_FILE = path.join(DATA_DIR, "vendors.json");
 const PRODUCTS_FILE = path.join(DATA_DIR, "products.json");
 
@@ -24,7 +29,12 @@ let cache: DbShape | null = null;
 let writeLock: Promise<void> = Promise.resolve();
 
 async function ensureDir() {
-  await fs.mkdir(DATA_DIR, { recursive: true });
+  try {
+    await fs.mkdir(DATA_DIR, { recursive: true });
+  } catch {
+    // Read-only filesystem (e.g. unconfigured serverless) — reads still work
+    // via the catch on readFile below.
+  }
 }
 
 async function load(): Promise<DbShape> {
