@@ -1,3 +1,10 @@
+# This Repo
+
+- **[Club Flyer Builder](club-flyer-builder.html)** — browser-based flyer template builder (below)
+- **[OPAIJA: Kalinda Clash](opaija-kalinda-clash/)** — playable HTML5 rhythm-fighting-game prototype set in the OPAIJA animated series universe. Open `opaija-kalinda-clash/index.html` to play.
+
+---
+
 # 🎉 Club Flyer Builder
 
 A browser-based club/event flyer template builder built with HTML5 Canvas. No dependencies — runs entirely in the browser.
