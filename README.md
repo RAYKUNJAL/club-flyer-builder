@@ -1,3 +1,13 @@
+# This repo
+
+- **🧊 MoldForge** (`moldstudio/`) — browser-based 3D mold generator (Meshcast competitor).
+  Landing page + 3D studio + AI support bot + PayPal checkout. See `moldstudio/support-bot/README.md`
+  for VPS deployment and `docs/MESHCAST_COMPETITOR_ANALYSIS.md` for the strategy behind it.
+  Quick start: `node moldstudio/support-bot/server.js` → http://localhost:8787
+- **🎉 Club Flyer Builder** (below) — flyer template builder for Wefetepass.
+
+---
+
 # 🎉 Club Flyer Builder
 
 A browser-based club/event flyer template builder built with HTML5 Canvas. No dependencies — runs entirely in the browser.

@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧊</text></svg>">
+<title>MoldForge Studio — Turn any shape into a mold</title>
+<meta name="description" content="Make a 3D-printable mold in your browser. No 3D skills needed. Pick a shape, we build the mold, you print and pour.">
+<link href="vendor/fonts/nunito.css" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f1220; --panel:#171b2e; --panel2:#1d2238; --line:#2a3050;
+  --text:#eef0fb; --muted:#9aa3c7; --accent:#ff7a59; --accent2:#ffb35c;
+  --good:#3ddc97; --warn:#ffcf5c; --bad:#ff6b81; --blue:#6ea8ff;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Nunito',system-ui,sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
+button{font-family:inherit;cursor:pointer;border:none;color:inherit;background:none}
+input,select{font-family:inherit}
+
+/* ---------- layout ---------- */
+#app{display:grid;grid-template-rows:56px 1fr;height:100vh}
+#topbar{display:flex;align-items:center;gap:14px;padding:0 16px;background:var(--panel);border-bottom:1px solid var(--line);z-index:30}
+.logo{font-weight:900;font-size:19px;letter-spacing:.3px;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.logo .cube{display:inline-block;transform:rotate(-8deg)}
+.logo b{color:var(--accent)}
+#projName{background:transparent;border:1px solid transparent;color:var(--muted);font-size:14px;font-weight:700;padding:6px 8px;border-radius:8px;min-width:80px;max-width:220px}
+#projName:hover,#projName:focus{border-color:var(--line);color:var(--text);outline:none}
+.top-spacer{flex:1}
+.mode-toggle{display:flex;background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:3px;font-size:12.5px;font-weight:800}
+.mode-toggle button{padding:5px 14px;border-radius:999px;color:var(--muted)}
+.mode-toggle button.on{background:var(--blue);color:#0b1020}
+.btn{border-radius:10px;font-weight:800;font-size:14px;padding:9px 16px;transition:.15s;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#26140c;box-shadow:0 4px 18px rgba(255,122,89,.35)}
+.btn.primary:hover{transform:translateY(-1px)}
+.btn.ghost{background:var(--panel2);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--blue)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.badge-free{font-size:11px;font-weight:800;color:var(--good);border:1px solid rgba(61,220,151,.4);padding:3px 9px;border-radius:999px;white-space:nowrap}
+
+#main{display:grid;grid-template-columns:330px 1fr 270px;min-height:0}
+#steps{background:var(--panel);border-right:1px solid var(--line);overflow-y:auto;padding:14px}
+#infopanel{background:var(--panel);border-left:1px solid var(--line);overflow-y:auto;padding:14px}
+#viewportWrap{position:relative;min-width:0}
+#viewport{position:absolute;inset:0}
+
+/* ---------- steps panel ---------- */
+.step{border:1px solid var(--line);border-radius:var(--radius);margin-bottom:12px;background:var(--panel2);overflow:hidden}
+.step-head{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;user-select:none}
+.step-num{width:26px;height:26px;border-radius:50%;background:var(--line);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0}
+.step.done .step-num{background:var(--good);color:#07301f}
+.step.open .step-num{background:var(--accent);color:#2b130a}
+.step-title{font-weight:800;font-size:14.5px;flex:1}
+.step-sub{font-size:11.5px;color:var(--muted);font-weight:600}
+.step-body{padding:0 14px 14px;display:none}
+.step.open .step-body{display:block}
+.chev{color:var(--muted);transition:.2s}
+.step.open .chev{transform:rotate(90deg)}
+
+.shape-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.shape-card{background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:10px 4px;text-align:center;transition:.12s}
+.shape-card:hover{border-color:var(--blue)}
+.shape-card.on{border-color:var(--accent);background:rgba(255,122,89,.08)}
+.shape-card .ico{font-size:22px;display:block;margin-bottom:4px}
+.shape-card .lbl{font-size:11.5px;font-weight:800;color:var(--muted)}
+.shape-card.on .lbl{color:var(--text)}
+
+.mold-cards{display:flex;flex-direction:column;gap:8px}
+.mold-card{display:flex;gap:12px;align-items:center;background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:11px 12px;text-align:left;transition:.12s}
+.mold-card:hover{border-color:var(--blue)}
+.mold-card.on{border-color:var(--accent);background:rgba(255,122,89,.08)}
+.mold-card .ico{font-size:24px}
+.mold-card .t{font-weight:800;font-size:13.5px}
+.mold-card .d{font-size:11.5px;color:var(--muted);font-weight:600;line-height:1.35}
+
+.ctl{margin-top:12px}
+.ctl label{display:flex;justify-content:space-between;font-size:12.5px;font-weight:800;margin-bottom:6px}
+.ctl label .val{color:var(--accent2)}
+.ctl .hint{font-size:11px;color:var(--muted);font-weight:600;margin-top:3px;line-height:1.35}
+input[type=range]{width:100%;accent-color:var(--accent);height:22px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.switch{display:flex;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 12px;margin-top:10px}
+.switch .t{font-size:12.5px;font-weight:800}
+.switch .d{font-size:10.5px;color:var(--muted);font-weight:600}
+.toggle{position:relative;width:40px;height:22px;background:var(--line);border-radius:999px;transition:.15s;flex-shrink:0}
+.toggle.on{background:var(--good)}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;background:#fff;border-radius:50%;transition:.15s}
+.toggle.on::after{left:21px}
+.adv-only{display:none}
+body.adv .adv-only{display:block}
+.adv-note{font-size:11px;color:var(--muted);font-weight:700;text-align:center;padding:8px;background:var(--panel);border-radius:10px;margin-top:12px}
+body.adv .adv-note{display:none}
+.rot-row{display:flex;gap:8px;margin-top:8px}
+.rot-row .btn{flex:1;font-size:12px;padding:7px 4px}
+
+#generateBtn{width:100%;margin-top:4px;padding:13px;font-size:15.5px}
+#downloadStep .dl-list{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.dl-btn{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-weight:800;font-size:13px;transition:.12s}
+.dl-btn:hover{border-color:var(--good)}
+.dl-btn .ico{font-size:18px}
+.print-tips{font-size:11.5px;color:var(--muted);font-weight:600;line-height:1.5;background:var(--panel);border-radius:10px;padding:10px 12px;margin-top:10px}
+.print-tips b{color:var(--text)}
+
+/* ---------- viewport overlays ---------- */
+.vp-toolbar{position:absolute;top:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px;background:rgba(23,27,46,.85);border:1px solid var(--line);backdrop-filter:blur(8px);border-radius:12px;padding:6px;z-index:5}
+.vp-toolbar button{padding:7px 12px;border-radius:8px;font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap}
+.vp-toolbar button:hover{color:var(--text)}
+.vp-toolbar button.on{background:var(--blue);color:#0b1020}
+#explodedWrap{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:none;align-items:center;gap:12px;background:rgba(23,27,46,.85);border:1px solid var(--line);backdrop-filter:blur(8px);border-radius:12px;padding:10px 16px;z-index:5;width:min(420px,80%)}
+#explodedWrap.show{display:flex}
+#explodedWrap .lbl{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap}
+#explodedWrap input{flex:1}
+#vpHint{position:absolute;bottom:16px;right:16px;font-size:11px;color:var(--muted);font-weight:700;background:rgba(23,27,46,.7);padding:6px 10px;border-radius:8px;z-index:4}
+#demoldBanner{position:absolute;top:64px;left:50%;transform:translateX(-50%);display:none;background:rgba(23,27,46,.92);border:1px solid var(--line);border-radius:12px;padding:10px 16px;font-size:13px;font-weight:800;z-index:5;max-width:90%;text-align:center}
+#demoldBanner.show{display:block}
+
+/* ---------- info panel ---------- */
+.info-card{background:var(--panel2);border:1px solid var(--line);border-radius:var(--radius);padding:13px 14px;margin-bottom:12px}
+.info-card h4{font-size:12px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:9px}
+.stat{display:flex;justify-content:space-between;font-size:13px;font-weight:700;padding:4px 0}
+.stat .k{color:var(--muted)}
+.stat .v{font-weight:800}
+.pill{display:inline-block;font-size:11px;font-weight:800;padding:3px 10px;border-radius:999px;margin-top:6px}
+.pill.good{background:rgba(61,220,151,.15);color:var(--good)}
+.pill.warn{background:rgba(255,207,92,.15);color:var(--warn)}
+.upsell{font-size:11.5px;line-height:1.5;color:var(--muted);font-weight:600}
+.upsell b{color:var(--text)}
+.upsell a{color:var(--blue);font-weight:800;text-decoration:none}
+
+/* ---------- wizard ---------- */
+#wizard{position:fixed;inset:0;background:rgba(10,12,24,.88);backdrop-filter:blur(10px);z-index:100;display:flex;align-items:center;justify-content:center;padding:18px}
+#wizard.hide{display:none}
+.wiz-box{background:var(--panel);border:1px solid var(--line);border-radius:22px;max-width:640px;width:100%;padding:34px;max-height:92vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.wiz-progress{display:flex;gap:6px;margin-bottom:26px}
+.wiz-progress i{height:5px;flex:1;border-radius:99px;background:var(--line)}
+.wiz-progress i.on{background:var(--accent)}
+.wiz-box h1{font-size:26px;font-weight:900;margin-bottom:6px}
+.wiz-box .sub{color:var(--muted);font-weight:700;font-size:14.5px;margin-bottom:22px;line-height:1.5}
+.wiz-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.wiz-grid.two{grid-template-columns:repeat(2,1fr)}
+.wiz-card{background:var(--panel2);border:2px solid var(--line);border-radius:16px;padding:18px 10px;text-align:center;transition:.12s}
+.wiz-card:hover{border-color:var(--blue);transform:translateY(-2px)}
+.wiz-card.on{border-color:var(--accent);background:rgba(255,122,89,.08)}
+.wiz-card .ico{font-size:34px;display:block;margin-bottom:8px}
+.wiz-card .t{font-weight:800;font-size:13.5px}
+.wiz-card .d{font-size:11px;color:var(--muted);font-weight:600;margin-top:3px}
+.wiz-foot{display:flex;justify-content:space-between;align-items:center;margin-top:26px}
+.wiz-skip{color:var(--muted);font-size:13px;font-weight:700}
+.wiz-skip:hover{color:var(--text)}
+.wiz-summary{background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:8px}
+.wiz-summary .row{display:flex;justify-content:space-between;padding:7px 0;font-size:14px;font-weight:700;border-bottom:1px dashed var(--line)}
+.wiz-summary .row:last-child{border:none}
+.wiz-summary .k{color:var(--muted)}
+#wizText{width:100%;background:var(--panel2);border:2px solid var(--line);color:var(--text);font-size:20px;font-weight:800;padding:14px 16px;border-radius:14px;text-align:center;margin-top:6px}
+#wizText:focus{outline:none;border-color:var(--accent)}
+
+/* ---------- loading ---------- */
+#loader{position:fixed;inset:0;background:rgba(10,12,24,.82);backdrop-filter:blur(6px);z-index:90;display:none;align-items:center;justify-content:center;flex-direction:column;gap:18px}
+#loader.show{display:flex}
+.spinner{width:52px;height:52px;border-radius:50%;border:5px solid var(--line);border-top-color:var(--accent);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loaderMsg{font-weight:800;font-size:16px}
+#loaderSub{font-size:12.5px;color:var(--muted);font-weight:700}
+
+/* ---------- toast ---------- */
+#toasts{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:120;display:flex;flex-direction:column;gap:8px;align-items:center}
+.toast{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:11px 18px;font-weight:800;font-size:13.5px;box-shadow:0 10px 30px rgba(0,0,0,.4);animation:pop .2s}
+.toast.good{border-color:rgba(61,220,151,.5)}
+.toast.bad{border-color:rgba(255,107,129,.5)}
+@keyframes pop{from{transform:translateY(10px);opacity:0}}
+
+/* ---------- mobile ---------- */
+#mobileTabs{display:none}
+@media (max-width:900px){
+  #main{grid-template-columns:1fr}
+  #steps,#infopanel{position:fixed;top:56px;bottom:54px;width:min(360px,92vw);z-index:40;transition:transform .22s;box-shadow:0 0 40px rgba(0,0,0,.5)}
+  #steps{left:0;transform:translateX(-105%)}
+  #infopanel{right:0;transform:translateX(105%)}
+  body.show-steps #steps{transform:none}
+  body.show-info #infopanel{transform:none}
+  #mobileTabs{display:flex;position:fixed;bottom:0;left:0;right:0;height:54px;background:var(--panel);border-top:1px solid var(--line);z-index:45}
+  #mobileTabs button{flex:1;font-size:12px;font-weight:800;color:var(--muted);display:flex;flex-direction:column;gap:2px;align-items:center;justify-content:center}
+  #mobileTabs button.on{color:var(--accent)}
+  #topbar .badge-free{display:none}
+  #projName{display:none}
+  .vp-toolbar{max-width:94%;overflow-x:auto}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="topbar">
+    <div class="logo"><span class="cube">🧊</span> Mold<b>Forge</b></div>
+    <input id="projName" value="My first mold" spellcheck="false">
+    <span class="badge-free">✓ Free — no watermark, files stay on your device</span>
+    <div class="top-spacer"></div>
+    <div class="mode-toggle">
+      <button id="modeSimple" class="on">Simple</button>
+      <button id="modeAdv">Advanced</button>
+    </div>
+    <button class="btn ghost" id="helpBtn">❓ Help</button>
+    <button class="btn ghost" id="saveBtn" title="Save project file">💾</button>
+    <button class="btn ghost" id="loadBtn" title="Open project file">📂</button>
+  </div>
+
+  <div id="main">
+    <!-- LEFT: steps -->
+    <div id="steps">
+      <!-- STEP 1 -->
+      <div class="step open" id="step1">
+        <div class="step-head" data-step="1">
+          <div class="step-num">1</div>
+          <div style="flex:1">
+            <div class="step-title">Pick your shape</div>
+            <div class="step-sub" id="step1sub">The thing your mold will create</div>
+          </div>
+          <span class="chev">▶</span>
+        </div>
+        <div class="step-body">
+          <div class="shape-grid" id="shapeGrid">
+            <button class="shape-card on" data-shape="heart"><span class="ico">❤️</span><span class="lbl">Heart</span></button>
+            <button class="shape-card" data-shape="star"><span class="ico">⭐</span><span class="lbl">Star</span></button>
+            <button class="shape-card" data-shape="gem"><span class="ico">💎</span><span class="lbl">Gem</span></button>
+            <button class="shape-card" data-shape="hex"><span class="ico">⬡</span><span class="lbl">Hexagon</span></button>
+            <button class="shape-card" data-shape="dome"><span class="ico">🔮</span><span class="lbl">Dome</span></button>
+            <button class="shape-card" data-shape="flower"><span class="ico">🌸</span><span class="lbl">Flower</span></button>
+            <button class="shape-card" data-shape="text"><span class="ico">✍️</span><span class="lbl">My text</span></button>
+            <button class="shape-card" data-shape="upload" id="uploadCard"><span class="ico">📁</span><span class="lbl">Upload 3D file</span></button>
+          </div>
+          <input type="file" id="fileInput" accept=".stl" hidden>
+          <div class="ctl" id="textCtl" style="display:none">
+            <label>Your text</label>
+            <input id="shapeText" value="LOVE" maxlength="12" style="width:100%;background:var(--panel);border:2px solid var(--line);color:var(--text);font-weight:800;font-size:16px;padding:10px 12px;border-radius:10px">
+            <div class="hint">Great for name molds — soap bars, chocolate letters, plaques.</div>
+          </div>
+          <div class="ctl">
+            <label>How big? <span class="val" id="sizeVal">70 mm</span></label>
+            <input type="range" id="sizeSlider" min="25" max="150" value="70">
+            <div class="hint">The longest side of your shape. 70&nbsp;mm ≈ the size of a bar of soap.</div>
+          </div>
+          <div class="adv-only">
+            <div class="ctl"><label>Rotate shape</label>
+              <div class="rot-row">
+                <button class="btn ghost" data-rot="x">↻ Tilt</button>
+                <button class="btn ghost" data-rot="y">↻ Spin</button>
+                <button class="btn ghost" data-rot="z">↻ Roll</button>
+              </div>
+              <div class="hint">Turn the shape so its widest part faces sideways — molds open easier that way.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step" id="step2">
+        <div class="step-head" data-step="2">
+          <div class="step-num">2</div>
+          <div style="flex:1">
+            <div class="step-title">Choose mold style</div>
+            <div class="step-sub" id="step2sub">We picked the best one for you</div>
+          </div>
+          <span class="chev">▶</span>
+        </div>
+        <div class="step-body">
+          <div class="mold-cards">
+            <button class="mold-card on" data-mold="twopart">
+              <span class="ico">🧩</span>
+              <span><span class="t">Two-part mold</span><br><span class="d">Opens like a clamshell. Best for candles, resin &amp; full 3D shapes.</span></span>
+            </button>
+            <button class="mold-card" data-mold="tray">
+              <span class="ico">🍮</span>
+              <span><span class="t">Open tray</span><br><span class="d">Pour from the top. Best for soap bars, plaster &amp; flat-backed shapes.</span></span>
+            </button>
+            <button class="mold-card" data-mold="multitray">
+              <span class="ico">🍫</span>
+              <span><span class="t">Multi-tray</span><br><span class="d">Several copies in one tray. Best for chocolates, ice &amp; wax melts.</span></span>
+            </button>
+          </div>
+          <div class="ctl" id="gridCtl" style="display:none">
+            <div class="row2">
+              <div><label>Across <span class="val" id="colsVal">3</span></label><input type="range" id="colsSlider" min="1" max="4" value="3"></div>
+              <div><label>Down <span class="val" id="rowsVal">2</span></label><input type="range" id="rowsSlider" min="1" max="4" value="2"></div>
+            </div>
+            <div class="hint">How many copies fit in your tray.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step" id="step3">
+        <div class="step-head" data-step="3">
+          <div class="step-num">3</div>
+          <div style="flex:1">
+            <div class="step-title">Mold settings</div>
+            <div class="step-sub">Good defaults are already set</div>
+          </div>
+          <span class="chev">▶</span>
+        </div>
+        <div class="step-body">
+          <div class="switch" id="spoutSwitch">
+            <span><span class="t">Pour spout</span><br><span class="d">A funnel hole on top to pour through</span></span>
+            <span class="toggle on" id="spoutToggle"></span>
+          </div>
+          <div class="switch" id="keysSwitch">
+            <span><span class="t">Snap-fit alignment bumps</span><br><span class="d">The two halves click together perfectly</span></span>
+            <span class="toggle on" id="keysToggle"></span>
+          </div>
+          <div class="adv-only">
+            <div class="ctl">
+              <label>Wall thickness <span class="val" id="wallVal">5 mm</span></label>
+              <input type="range" id="wallSlider" min="3" max="12" value="5">
+              <div class="hint">Chunkier walls = tougher mold, more filament.</div>
+            </div>
+            <div class="ctl">
+              <label>Wiggle room <span class="val" id="clearVal">0.2 mm</span></label>
+              <input type="range" id="clearSlider" min="0" max="8" value="2">
+              <div class="hint">A tiny gap so your cast pops out without a fight.</div>
+            </div>
+            <div class="ctl" id="partCtl">
+              <label>Where the mold opens <span class="val" id="partVal">middle</span></label>
+              <input type="range" id="partSlider" min="20" max="80" value="50">
+              <div class="hint">Slide the split line up or down the shape.</div>
+            </div>
+            <div class="switch" id="ventSwitch">
+              <span><span class="t">Air vent</span><br><span class="d">Thin hole that lets trapped air escape</span></span>
+              <span class="toggle" id="ventToggle"></span>
+            </div>
+          </div>
+          <div class="adv-note">Need finer control? Flip on <b>Advanced</b> at the top.</div>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="step" id="step4">
+        <div class="step-head" data-step="4">
+          <div class="step-num">4</div>
+          <div style="flex:1">
+            <div class="step-title">Build &amp; download</div>
+            <div class="step-sub">Print-ready STL files</div>
+          </div>
+          <span class="chev">▶</span>
+        </div>
+        <div class="step-body" id="downloadStep">
+          <button class="btn primary" id="generateBtn">✨ Build my mold</button>
+          <div class="dl-list" id="dlList"></div>
+          <div class="print-tips" id="printTips" style="display:none">
+            <b>Print tips:</b> PLA or PETG · 0.2&nbsp;mm layers · 15% infill · no supports needed. Wash with soapy water before food use, or pour silicone for a food-safe flexible mold.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENTER: 3D viewport -->
+    <div id="viewportWrap">
+      <div id="viewport"></div>
+      <div class="vp-toolbar">
+        <button id="vpSpin" class="on">🔄 Spin</button>
+        <button id="vpShape">👁 Shape</button>
+        <button id="vpXray">🩻 See inside</button>
+        <button id="vpDemold">🧲 Will it pop out?</button>
+        <button id="vpReset">🎯 Re-center</button>
+      </div>
+      <div id="demoldBanner"></div>
+      <div id="explodedWrap">
+        <span class="lbl">Open mold</span>
+        <input type="range" id="explodedSlider" min="0" max="100" value="0">
+        <span class="lbl">Closed ←→ Open</span>
+      </div>
+      <div id="vpHint">Drag to look around · scroll to zoom</div>
+    </div>
+
+    <!-- RIGHT: info -->
+    <div id="infopanel">
+      <div class="info-card">
+        <h4>Your mold</h4>
+        <div class="stat"><span class="k">Status</span><span class="v" id="statStatus">Not built yet</span></div>
+        <div class="stat"><span class="k">Mold size</span><span class="v" id="statSize">—</span></div>
+        <div class="stat"><span class="k">Parts to print</span><span class="v" id="statParts">—</span></div>
+      </div>
+      <div class="info-card">
+        <h4>What you'll need</h4>
+        <div class="stat"><span class="k" id="matName">Wax</span><span class="v" id="statMat">—</span></div>
+        <div class="stat"><span class="k">≈ cost per cast</span><span class="v" id="statMatCost">—</span></div>
+        <div class="stat"><span class="k">Filament</span><span class="v" id="statFil">—</span></div>
+        <div class="stat"><span class="k">≈ print time</span><span class="v" id="statPrint">—</span></div>
+        <span class="pill good" id="demoldPill" style="display:none">✓ Pops out easily</span>
+      </div>
+      <div class="info-card">
+        <h4>Why makers switch to us</h4>
+        <div class="upsell">
+          <b>Free plan:</b> 10 downloads a day, <b>no watermark ever</b>, and your files never leave your device.<br><br>
+          Selling your casts? <b>Pro ($15/mo)</b> gives you a commercial license that <b>you keep forever</b> for everything you make while subscribed — even if you cancel. <a href="index.html#pricing">See plans →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="mobileTabs">
+  <button id="tabSteps" class="on">🛠<br>Build</button>
+  <button id="tabView">🧊<br>3D view</button>
+  <button id="tabInfo">📋<br>Details</button>
+</div>
+
+<!-- WIZARD -->
+<div id="wizard">
+  <div class="wiz-box">
+    <div class="wiz-progress"><i class="on"></i><i></i><i></i></div>
+    <div id="wizStep1">
+      <h1>What do you want to make? 👋</h1>
+      <p class="sub">Answer two quick questions and we'll set everything up for you. No 3D experience needed — promise.</p>
+      <div class="wiz-grid">
+        <button class="wiz-card" data-goal="candle"><span class="ico">🕯️</span><span class="t">Candles</span><span class="d">wax</span></button>
+        <button class="wiz-card" data-goal="soap"><span class="ico">🧼</span><span class="t">Soap</span><span class="d">melt &amp; pour</span></button>
+        <button class="wiz-card" data-goal="resin"><span class="ico">💍</span><span class="t">Resin &amp; jewelry</span><span class="d">epoxy</span></button>
+        <button class="wiz-card" data-goal="choc"><span class="ico">🍫</span><span class="t">Chocolate &amp; ice</span><span class="d">treats</span></button>
+        <button class="wiz-card" data-goal="plaster"><span class="ico">🏺</span><span class="t">Plaster &amp; concrete</span><span class="d">decor</span></button>
+        <button class="wiz-card" data-goal="explore"><span class="ico">✨</span><span class="t">Just exploring</span><span class="d">show me around</span></button>
+      </div>
+    </div>
+    <div id="wizStep2" style="display:none">
+      <h1>Pick a shape to start</h1>
+      <p class="sub">You can change it, resize it, or upload your own 3D file any time.</p>
+      <div class="wiz-grid" id="wizShapes">
+        <button class="wiz-card" data-shape="heart"><span class="ico">❤️</span><span class="t">Heart</span></button>
+        <button class="wiz-card" data-shape="star"><span class="ico">⭐</span><span class="t">Star</span></button>
+        <button class="wiz-card" data-shape="gem"><span class="ico">💎</span><span class="t">Gem</span></button>
+        <button class="wiz-card" data-shape="flower"><span class="ico">🌸</span><span class="t">Flower</span></button>
+        <button class="wiz-card" data-shape="text"><span class="ico">✍️</span><span class="t">My own text</span></button>
+        <button class="wiz-card" data-shape="upload"><span class="ico">📁</span><span class="t">Upload 3D file</span></button>
+      </div>
+      <input id="wizText" style="display:none" placeholder="Type your word…" maxlength="12" value="LOVE">
+    </div>
+    <div id="wizStep3" style="display:none">
+      <h1>You're all set! 🎉</h1>
+      <p class="sub">We picked the best mold style and settings for your project. Hit the button and watch your mold appear.</p>
+      <div class="wiz-summary" id="wizSummary"></div>
+    </div>
+    <div class="wiz-foot">
+      <button class="wiz-skip" id="wizSkip">Skip, take me to the studio →</button>
+      <button class="btn primary" id="wizNext" disabled>Next →</button>
+    </div>
+  </div>
+</div>
+
+<div id="loader"><div class="spinner"></div><div id="loaderMsg">Building your mold…</div><div id="loaderSub">This happens right on your device — nothing is uploaded.</div></div>
+<div id="toasts"></div>
+<input type="file" id="projInput" accept=".json" hidden>
+
+<script type="importmap">
+{"imports":{
+  "three":"./vendor/three.module.js",
+  "three/addons/":"./vendor/jsm/",
+  "three-mesh-bvh":"./vendor/three-mesh-bvh.module.js",
+  "three-bvh-csg":"./vendor/three-bvh-csg.module.js"
+}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { Brush, Evaluator, SUBTRACTION, ADDITION, INTERSECTION } from 'three-bvh-csg';
+
+/* ================= state ================= */
+const state = {
+  goal:'explore', shape:'heart', text:'LOVE', size:70,
+  mold:'twopart', cols:3, rows:2,
+  spout:true, keys:true, vent:false,
+  wall:5, clearance:0.2, part:50,
+  rotX:0, rotY:0, rotZ:0,
+  uploadedGeo:null, uploadedName:null, uploadedB64:null,
+  built:false, parts:[],
+};
+const GOALS = {
+  candle:  {label:'Candles 🕯️', mold:'twopart', mat:'Wax',       dens:0.9,  cost:9,  spout:true },
+  soap:    {label:'Soap 🧼',    mold:'tray',    mat:'Soap base', dens:1.0,  cost:8,  spout:false},
+  resin:   {label:'Resin 💍',   mold:'twopart', mat:'Resin',     dens:1.1,  cost:30, spout:true },
+  choc:    {label:'Chocolate & ice 🍫', mold:'multitray', mat:'Chocolate', dens:1.3, cost:12, spout:false},
+  plaster: {label:'Plaster 🏺', mold:'tray',    mat:'Plaster',   dens:1.8,  cost:4,  spout:false},
+  explore: {label:'Exploring ✨',mold:'twopart', mat:'Wax',       dens:0.9,  cost:9,  spout:true },
+};
+const SHAPE_LABELS = {heart:'Heart ❤️',star:'Star ⭐',gem:'Gem 💎',hex:'Hexagon ⬡',dome:'Dome 🔮',flower:'Flower 🌸',text:'My text ✍️',upload:'My 3D file 📁'};
+
+/* ================= three.js scene ================= */
+const vp = document.getElementById('viewport');
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+vp.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0f1220);
+scene.fog = new THREE.Fog(0x0f1220, 600, 1400);
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), .04).texture;
+
+const camera = new THREE.PerspectiveCamera(42, 1, 1, 4000);
+camera.position.set(160, 130, 200);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 1.2;
+controls.maxPolarAngle = Math.PI * 0.52;
+controls.target.set(0, 30, 0);
+
+const key = new THREE.DirectionalLight(0xffffff, 2.2);
+key.position.set(120, 220, 140);
+key.castShadow = true;
+key.shadow.mapSize.set(2048, 2048);
+const s = 220; Object.assign(key.shadow.camera, {left:-s, right:s, top:s, bottom:-s, far:800});
+scene.add(key, new THREE.AmbientLight(0x8899ff, .25));
+
+// ground: soft radial shadow-catcher + grid
+const ground = new THREE.Mesh(new THREE.CircleGeometry(700, 64), new THREE.ShadowMaterial({opacity:.35}));
+ground.rotation.x = -Math.PI/2; ground.receiveShadow = true; scene.add(ground);
+const grid = new THREE.GridHelper(700, 46, 0x2a3050, 0x1d2238);
+grid.material.transparent = true; grid.material.opacity = .5; scene.add(grid);
+
+const matModel = new THREE.MeshPhysicalMaterial({color:0xff7a59, roughness:.35, metalness:.05, clearcoat:.4});
+const matMoldA = new THREE.MeshPhysicalMaterial({color:0x6ea8ff, roughness:.45, metalness:.05});
+const matMoldB = new THREE.MeshPhysicalMaterial({color:0x9b7bff, roughness:.45, metalness:.05});
+const matCheckOK = new THREE.MeshStandardMaterial({vertexColors:true, roughness:.5});
+
+const modelGroup = new THREE.Group();   // the user's shape
+const moldGroup = new THREE.Group();    // generated mold parts
+const checkGroup = new THREE.Group();   // demold heatmap overlay
+scene.add(modelGroup, moldGroup, checkGroup);
+
+function resize(){
+  const w = vp.clientWidth, h = vp.clientHeight;
+  renderer.setSize(w, h); camera.aspect = w/h; camera.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(vp); resize();
+renderer.setAnimationLoop(()=>{ controls.update(); renderer.render(scene, camera); });
+
+/* ================= shape builders ================= */
+function extrudeShape(shape, depth){
+  const g = new THREE.ExtrudeGeometry(shape, {depth, bevelEnabled:true, bevelThickness:2, bevelSize:2, bevelSegments:3, curveSegments:36});
+  g.rotateX(-Math.PI/2); // lay flat, extrude up
+  return g;
+}
+function heartGeo(){
+  const sh = new THREE.Shape(); const k = 1;
+  sh.moveTo(0,-14*k);
+  sh.bezierCurveTo(-16*k,-4*k,-18*k,8*k,-9*k,14*k);
+  sh.bezierCurveTo(-4*k,17.5*k,0,15*k,0,10*k);
+  sh.bezierCurveTo(0,15*k,4*k,17.5*k,9*k,14*k);
+  sh.bezierCurveTo(18*k,8*k,16*k,-4*k,0,-14*k);
+  return extrudeShape(sh, 12);
+}
+function starGeo(){
+  const sh = new THREE.Shape();
+  for(let i=0;i<10;i++){
+    const r = i%2 ? 8 : 18, a = i*Math.PI/5 - Math.PI/2;
+    i ? sh.lineTo(r*Math.cos(a), r*Math.sin(a)) : sh.moveTo(r*Math.cos(a), r*Math.sin(a));
+  }
+  sh.closePath(); return extrudeShape(sh, 10);
+}
+function flowerGeo(){
+  const sh = new THREE.Shape();
+  const petals = 6, R = 16;
+  sh.moveTo(R, 0);
+  for(let i=1;i<=petals*2;i++){
+    const a = i*Math.PI/petals, r = i%2 ? R*0.55 : R;
+    const pa = (i-.5)*Math.PI/petals, pr = i%2 ? R*1.05 : R*0.75;
+    sh.quadraticCurveTo(pr*Math.cos(pa), pr*Math.sin(pa), r*Math.cos(a), r*Math.sin(a));
+  }
+  sh.closePath(); return extrudeShape(sh, 9);
+}
+function gemGeo(){
+  const g = new THREE.CylinderGeometry(9, 17, 14, 8, 1);
+  const top = new THREE.ConeGeometry(9, 5, 8);
+  top.translate(0, 9.5, 0);
+  const merged = mergeGeos([g, top]);
+  merged.computeVertexNormals();
+  return merged;
+}
+function hexGeo(){ return new THREE.CylinderGeometry(16, 16, 14, 6); }
+function domeGeo(){
+  const g = new THREE.SphereGeometry(16, 48, 24, 0, Math.PI*2, 0, Math.PI/2);
+  // close the flat bottom
+  const cap = new THREE.CircleGeometry(16, 48); cap.rotateX(Math.PI/2);
+  return mergeGeos([g, cap]);
+}
+function mergeGeos(geos){
+  const nonIndexed = geos.map(g=>g.toNonIndexed());
+  let total = 0; nonIndexed.forEach(g=>total += g.attributes.position.count);
+  const pos = new Float32Array(total*3); let off = 0;
+  nonIndexed.forEach(g=>{ pos.set(g.attributes.position.array, off); off += g.attributes.position.array.length; });
+  const out = new THREE.BufferGeometry();
+  out.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  out.computeVertexNormals(); return out;
+}
+
+let fontCache = null;
+async function getFont(){
+  if(fontCache) return fontCache;
+  fontCache = await new FontLoader().loadAsync('./vendor/fonts/helvetiker_bold.typeface.json');
+  return fontCache;
+}
+async function textGeo(txt){
+  const font = await getFont();
+  const g = new TextGeometry(txt || 'LOVE', {font, size:20, height:8, curveSegments:8, bevelEnabled:true, bevelThickness:1.2, bevelSize:1, bevelSegments:2});
+  g.rotateX(-Math.PI/2);
+  return g;
+}
+
+async function buildShapeGeometry(){
+  let g;
+  switch(state.shape){
+    case 'heart': g = heartGeo(); break;
+    case 'star': g = starGeo(); break;
+    case 'gem': g = gemGeo(); break;
+    case 'hex': g = hexGeo(); break;
+    case 'dome': g = domeGeo(); break;
+    case 'flower': g = flowerGeo(); break;
+    case 'text': g = await textGeo(state.text); break;
+    case 'upload': g = state.uploadedGeo ? state.uploadedGeo.clone() : heartGeo(); break;
+    default: g = heartGeo();
+  }
+  g = g.index ? g.toNonIndexed() : g;
+  g.deleteAttribute('uv'); g.deleteAttribute('color');
+  // apply user rotation
+  if(state.rotX) g.rotateX(state.rotX);
+  if(state.rotY) g.rotateY(state.rotY);
+  if(state.rotZ) g.rotateZ(state.rotZ);
+  // scale longest side to state.size, center on origin, sit on y=0
+  g.computeBoundingBox();
+  const bb = g.boundingBox, dims = new THREE.Vector3().subVectors(bb.max, bb.min);
+  const sc = state.size / Math.max(dims.x, dims.y, dims.z);
+  g.scale(sc, sc, sc);
+  g.computeBoundingBox();
+  const b2 = g.boundingBox, c = new THREE.Vector3().addVectors(b2.min, b2.max).multiplyScalar(.5);
+  g.translate(-c.x, -b2.min.y, -c.z);
+  g.computeVertexNormals();
+  g.computeBoundingBox();
+  return g;
+}
+
+/* ================= show shape ================= */
+let currentShapeGeo = null;
+async function refreshShape(){
+  currentShapeGeo = await buildShapeGeometry();
+  modelGroup.clear();
+  const m = new THREE.Mesh(currentShapeGeo, matModel);
+  m.castShadow = true;
+  modelGroup.add(m);
+  clearMold('Shape changed — build again when ready');
+  updateInfo();
+}
+function clearMold(msg){
+  if(state.built && msg) toast(msg);
+  moldGroup.clear(); checkGroup.clear();
+  state.built = false; state.parts = [];
+  document.getElementById('dlList').innerHTML = '';
+  document.getElementById('printTips').style.display = 'none';
+  document.getElementById('explodedWrap').classList.remove('show');
+  document.getElementById('demoldBanner').classList.remove('show');
+  document.getElementById('statStatus').textContent = 'Not built yet';
+  document.getElementById('demoldPill').style.display = 'none';
+  stepDone(4, false);
+  modelGroup.visible = true;
+}
+
+/* ================= CSG mold generation ================= */
+const evaluator = new Evaluator();
+evaluator.attributes = ['position', 'normal'];
+const tick = () => new Promise(r => requestAnimationFrame(()=>requestAnimationFrame(r)));
+
+function brushOf(geo, matrix){
+  const b = new Brush(geo);
+  if(matrix) b.applyMatrix4(matrix);
+  b.updateMatrixWorld();
+  return b;
+}
+function boxBrush(cx, cy, cz, sx, sy, sz){
+  const g = new THREE.BoxGeometry(sx, sy, sz);
+  g.translate(cx, cy, cz);
+  return brushOf(g);
+}
+function csg(a, b, op){ return evaluator.evaluate(a, b, op); }
+
+async function generateMold(){
+  if(!currentShapeGeo) return;
+  const tri = currentShapeGeo.attributes.position.count / 3;
+  showLoader(tri > 80000 ? 'Big file — give us a minute…' : 'Building your mold…');
+  try{
+    await tick();
+    const wall = state.wall, clear = state.clearance;
+    // cast shape brush (slightly inflated for wiggle room)
+    const shapeG = currentShapeGeo.clone();
+    shapeG.computeBoundingBox();
+    const bb = shapeG.boundingBox;
+    const dims = new THREE.Vector3().subVectors(bb.max, bb.min);
+    const cx = (bb.min.x+bb.max.x)/2, cz = (bb.min.z+bb.max.z)/2, cy = (bb.min.y+bb.max.y)/2;
+    if(clear > 0){
+      const k = 1 + clear/ (Math.max(dims.x,dims.y,dims.z)/2);
+      shapeG.translate(-cx,-cy,-cz); shapeG.scale(k,k,k); shapeG.translate(cx,cy,cz);
+    }
+
+    const parts = [];
+    if(state.mold === 'twopart'){
+      setLoader('Carving the cavity…'); await tick();
+      const blockMinY = bb.min.y - wall, blockMaxY = bb.max.y + wall;
+      const bs = new THREE.Vector3(dims.x + wall*2, blockMaxY - blockMinY, dims.z + wall*2);
+      const bcy = (blockMinY + blockMaxY)/2;
+      let mold = csg(boxBrush(cx, bcy, cz, bs.x, bs.y, bs.z), brushOf(shapeG), SUBTRACTION);
+
+      if(state.spout){
+        setLoader('Adding the pour spout…'); await tick();
+        const sg = new THREE.CylinderGeometry(Math.max(5, dims.x*0.10), 3.5, (blockMaxY - bb.max.y) + 6, 24);
+        sg.translate(cx, bb.max.y - 2 + ((blockMaxY - bb.max.y) + 6)/2, cz);
+        mold = csg(mold, brushOf(sg), SUBTRACTION);
+      }
+      if(state.vent){
+        const vg = new THREE.CylinderGeometry(1.2, 1.2, (blockMaxY - bb.max.y) + dims.y*0.35, 12);
+        vg.translate(cx + dims.x*0.28, bb.max.y - dims.y*0.15 + ((blockMaxY - bb.max.y) + dims.y*0.35)/2, cz);
+        mold = csg(mold, brushOf(vg), SUBTRACTION);
+      }
+
+      setLoader('Splitting into two halves…'); await tick();
+      const partY = bb.min.y + dims.y * (state.part/100);
+      const big = 4000;
+      const lower = csg(mold, boxBrush(cx, partY - big/2, cz, big, big, big), INTERSECTION);
+      let upper = csg(mold, boxBrush(cx, partY + big/2, cz, big, big, big), INTERSECTION);
+
+      let lowerFinal = lower;
+      if(state.keys){
+        setLoader('Adding snap-fit bumps…'); await tick();
+        const pr = Math.min(3.2, wall*0.42);
+        const px = bs.x/2 - wall*0.5, pz = bs.z/2 - wall*0.5;
+        for(const [ox,oz] of [[1,1],[1,-1],[-1,1],[-1,-1]]){
+          const peg = new THREE.SphereGeometry(pr, 20, 14); peg.translate(cx + ox*px, partY, cz + oz*pz);
+          const hole = new THREE.SphereGeometry(pr + 0.25, 20, 14); hole.translate(cx + ox*px, partY, cz + oz*pz);
+          lowerFinal = csg(lowerFinal, brushOf(peg), ADDITION);
+          upper = csg(upper, brushOf(hole), SUBTRACTION);
+        }
+      }
+      parts.push({name:'bottom-half', label:'Bottom half', geo:lowerFinal.geometry, mat:matMoldA, explode:new THREE.Vector3(0,-1,0), flip:false});
+      parts.push({name:'top-half', label:'Top half', geo:upper.geometry, mat:matMoldB, explode:new THREE.Vector3(0,1,0), flip:true});
+    }
+    else { // tray & multitray — open-top, one piece
+      setLoader('Carving your tray…'); await tick();
+      let cavity = brushOf(shapeG);
+      let nx = 1, nz = 1;
+      if(state.mold === 'multitray'){ nx = state.cols; nz = state.rows; }
+      const gap = Math.max(wall*0.8, 4);
+      const cellX = dims.x + gap, cellZ = dims.z + gap;
+      if(nx*nz > 1){
+        setLoader(`Laying out ${nx*nz} cavities…`); await tick();
+        let all = null;
+        for(let i=0;i<nx;i++) for(let j=0;j<nz;j++){
+          const g = shapeG.clone();
+          g.translate((i-(nx-1)/2)*cellX, 0, (j-(nz-1)/2)*cellZ);
+          const b = brushOf(g);
+          all = all ? csg(all, b, ADDITION) : b;
+        }
+        cavity = all;
+      }
+      const bsx = cellX*nx - gap + wall*2, bsz = cellZ*nz - gap + wall*2;
+      const blockMinY = bb.min.y - wall, blockMaxY = bb.max.y; // open top: block ends at shape top
+      const tray = csg(boxBrush(cx, (blockMinY+blockMaxY)/2, cz, bsx, blockMaxY-blockMinY, bsz), cavity, SUBTRACTION);
+      parts.push({name:'tray-mold', label:'Tray mold', geo:tray.geometry, mat:matMoldA, explode:new THREE.Vector3(0,0,0), flip:false});
+    }
+
+    setLoader('Polishing…'); await tick();
+    showParts(parts);
+    state.built = true; state.parts = parts;
+    buildDownloads();
+    updateInfo(true);
+    stepDone(4, true);
+    openStep(4);
+    document.getElementById('explodedWrap').classList.toggle('show', parts.length > 1);
+    toast('✅ Your mold is ready!', 'good');
+  }catch(err){
+    console.error(err);
+    toast('😕 That shape was tricky. Try the "Wiggle room" slider or a simpler shape.', 'bad');
+  }finally{
+    hideLoader();
+  }
+}
+
+function showParts(parts){
+  moldGroup.clear();
+  modelGroup.visible = false;
+  document.getElementById('vpShape').classList.remove('on');
+  for(const p of parts){
+    p.geo.computeVertexNormals();
+    const m = new THREE.Mesh(p.geo, p.mat.clone());
+    m.castShadow = true; m.userData.part = p;
+    moldGroup.add(m);
+  }
+  setExploded(document.getElementById('explodedSlider').value = 0);
+}
+function setExploded(v){
+  const d = v * 0.55;
+  moldGroup.children.forEach(m=>{
+    const e = m.userData.part.explode;
+    m.position.set(e.x*d, e.y*d, e.z*d);
+  });
+}
+
+/* ================= demold check ================= */
+function demoldCheck(){
+  if(!currentShapeGeo) return;
+  checkGroup.clear();
+  const g = currentShapeGeo.clone();
+  g.computeBoundingBox();
+  const bb = g.boundingBox, h = bb.max.y - bb.min.y;
+  const partY = state.mold === 'twopart' ? bb.min.y + h*(state.part/100) : bb.min.y + h*0.02;
+  const pos = g.attributes.position, nrm = g.attributes.normal;
+  const colors = new Float32Array(pos.count*3);
+  const ok = [61/255, 220/255, 151/255], bad = [255/255, 90/255, 110/255];
+  let badArea = 0, totArea = 0;
+  const vA=new THREE.Vector3(), vB=new THREE.Vector3(), vC=new THREE.Vector3(), tmp=new THREE.Vector3(), tmp2=new THREE.Vector3();
+  for(let i=0;i<pos.count;i+=3){
+    vA.fromBufferAttribute(pos,i); vB.fromBufferAttribute(pos,i+1); vC.fromBufferAttribute(pos,i+2);
+    const cy = (vA.y+vB.y+vC.y)/3;
+    const ny = (nrm.getY(i)+nrm.getY(i+1)+nrm.getY(i+2))/3;
+    const area = tmp.subVectors(vB,vA).cross(tmp2.subVectors(vC,vA)).length()/2;
+    totArea += area;
+    let isBad;
+    if(state.mold === 'twopart') isBad = (cy > partY && ny < -0.08) || (cy < partY && ny > 0.08);
+    else isBad = (cy > partY && ny < -0.08);
+    if(isBad) badArea += area;
+    const c = isBad ? bad : ok;
+    for(let k=0;k<3;k++){ colors[(i+k)*3]=c[0]; colors[(i+k)*3+1]=c[1]; colors[(i+k)*3+2]=c[2]; }
+  }
+  g.setAttribute('color', new THREE.BufferAttribute(colors,3));
+  const mesh = new THREE.Mesh(g, matCheckOK);
+  checkGroup.add(mesh);
+  modelGroup.visible = false; moldGroup.visible = false;
+
+  const pct = totArea ? badArea/totArea*100 : 0;
+  const banner = document.getElementById('demoldBanner');
+  const pill = document.getElementById('demoldPill');
+  if(pct < 1){
+    banner.innerHTML = '✅ <span style="color:var(--good)">Pops out easily!</span> No trapped areas found.';
+    pill.className = 'pill good'; pill.textContent = '✓ Pops out easily';
+  }else if(pct < 8){
+    banner.innerHTML = `⚠️ <span style="color:var(--warn)">Mostly fine.</span> Small red spots (${pct.toFixed(0)}%) may grip a little — flexible silicone or a bit more wiggle room will fix it.`;
+    pill.className = 'pill warn'; pill.textContent = '△ Minor grip spots';
+  }else{
+    banner.innerHTML = `🚫 <span style="color:var(--bad)">Red areas will get stuck.</span> Try rotating the shape, moving where the mold opens, or use an open tray instead.`;
+    pill.className = 'pill warn'; pill.textContent = '⚠ Tricky to demold';
+  }
+  banner.classList.add('show');
+  pill.style.display = 'inline-block';
+}
+function exitDemold(){
+  checkGroup.clear();
+  document.getElementById('demoldBanner').classList.remove('show');
+  moldGroup.visible = true;
+  modelGroup.visible = !state.built || document.getElementById('vpShape').classList.contains('on');
+}
+
+/* ================= volume / stats ================= */
+function meshVolume(geo){
+  const p = geo.attributes.position; let v = 0;
+  for(let i=0;i<p.count;i+=3){
+    const ax=p.getX(i),   ay=p.getY(i),   az=p.getZ(i);
+    const bx=p.getX(i+1), by=p.getY(i+1), bz=p.getZ(i+1);
+    const cx2=p.getX(i+2),cy2=p.getY(i+2),cz2=p.getZ(i+2);
+    v += (ax*(by*cz2 - bz*cy2) + bx*(cy2*az - cz2*ay) + cx2*(ay*bz - az*by)) / 6;
+  }
+  return Math.abs(v); // mm^3
+}
+function updateInfo(built){
+  const goal = GOALS[state.goal];
+  document.getElementById('matName').textContent = goal.mat;
+  if(!currentShapeGeo) return;
+  const vol = meshVolume(currentShapeGeo);
+  const count = state.mold==='multitray' ? state.cols*state.rows : 1;
+  const grams = vol/1000 * goal.dens * count;
+  document.getElementById('statMat').textContent = grams >= 1000 ? (grams/1000).toFixed(2)+' kg' : grams.toFixed(0)+' g';
+  document.getElementById('statMatCost').textContent = '$' + (grams/1000*goal.cost).toFixed(2);
+  if(built && state.parts.length){
+    let moldVol = 0; const bb = new THREE.Box3();
+    state.parts.forEach(p=>{ moldVol += meshVolume(p.geo); p.geo.computeBoundingBox(); bb.union(p.geo.boundingBox); });
+    const d = new THREE.Vector3(); bb.getSize(d);
+    document.getElementById('statSize').textContent = `${d.x.toFixed(0)} × ${d.z.toFixed(0)} × ${d.y.toFixed(0)} mm`;
+    document.getElementById('statParts').textContent = state.parts.length + (state.parts.length>1?' pieces':' piece');
+    const fil = moldVol/1000 * 1.24 * 0.38; // PLA, ~15% infill + walls
+    document.getElementById('statFil').textContent = fil.toFixed(0)+' g';
+    document.getElementById('statPrint').textContent = (fil/18).toFixed(1)+' h';
+    document.getElementById('statStatus').textContent = '✅ Ready to print';
+  }
+}
+
+/* ================= STL export ================= */
+function exportSTL(geo, flip){
+  let g = geo.clone();
+  const m = new THREE.Matrix4().makeRotationX(flip ? -Math.PI/2 : Math.PI/2); // Y-up scene → Z-up STL, parting face up
+  g.applyMatrix4(m);
+  g.computeBoundingBox();
+  const bb = g.boundingBox, c = new THREE.Vector3().addVectors(bb.min,bb.max).multiplyScalar(.5);
+  g.translate(-c.x, -c.y, -bb.min.z);
+  const pos = g.attributes.position, triCount = pos.count/3;
+  const buf = new ArrayBuffer(84 + triCount*50);
+  const dv = new DataView(buf);
+  new Uint8Array(buf, 0, 80).set(new TextEncoder().encode('MoldForge Studio - moldforge.app'));
+  dv.setUint32(80, triCount, true);
+  let o = 84;
+  const a=new THREE.Vector3(), b=new THREE.Vector3(), c2=new THREE.Vector3(), n=new THREE.Vector3(), t1=new THREE.Vector3(), t2=new THREE.Vector3();
+  for(let i=0;i<pos.count;i+=3){
+    a.fromBufferAttribute(pos,i); b.fromBufferAttribute(pos,i+1); c2.fromBufferAttribute(pos,i+2);
+    n.copy(t1.subVectors(b,a)).cross(t2.subVectors(c2,a)).normalize();
+    dv.setFloat32(o,n.x,true); dv.setFloat32(o+4,n.y,true); dv.setFloat32(o+8,n.z,true); o+=12;
+    for(const v of [a,b,c2]){ dv.setFloat32(o,v.x,true); dv.setFloat32(o+4,v.y,true); dv.setFloat32(o+8,v.z,true); o+=12; }
+    o += 2;
+  }
+  return new Blob([buf], {type:'model/stl'});
+}
+function buildDownloads(){
+  const list = document.getElementById('dlList');
+  list.innerHTML = '';
+  const proj = (document.getElementById('projName').value || 'mold').trim().toLowerCase().replace(/[^a-z0-9]+/g,'-');
+  state.parts.forEach(p=>{
+    const btn = document.createElement('button');
+    btn.className = 'dl-btn';
+    btn.innerHTML = `<span class="ico">⬇️</span> Download ${p.label} (.stl)`;
+    btn.onclick = ()=>{
+      const blob = exportSTL(p.geo, p.flip);
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `${proj}-${p.name}.stl`;
+      a.click(); URL.revokeObjectURL(a.href);
+      toast('⬇️ Saved! Open it in your slicer and print.', 'good');
+    };
+    list.appendChild(btn);
+  });
+  document.getElementById('printTips').style.display = 'block';
+}
+
+/* ================= UI wiring ================= */
+const $ = id => document.getElementById(id);
+function toast(msg, cls=''){
+  const t = document.createElement('div');
+  t.className = 'toast '+cls; t.textContent = msg;
+  $('toasts').appendChild(t);
+  setTimeout(()=>{ t.style.opacity = 0; t.style.transition = '.4s'; setTimeout(()=>t.remove(), 400); }, 3400);
+}
+function showLoader(msg){ $('loaderMsg').textContent = msg; $('loader').classList.add('show'); }
+function setLoader(msg){ $('loaderMsg').textContent = msg; }
+function hideLoader(){ $('loader').classList.remove('show'); }
+
+function openStep(n){
+  document.querySelectorAll('.step').forEach((el,i)=>el.classList.toggle('open', i===n-1));
+}
+function stepDone(n, done=true){ $('step'+n).classList.toggle('done', done); }
+document.querySelectorAll('.step-head').forEach(h=>h.addEventListener('click', ()=>openStep(+h.dataset.step)));
+
+// mode toggle
+$('modeSimple').onclick = ()=>{ document.body.classList.remove('adv'); $('modeSimple').classList.add('on'); $('modeAdv').classList.remove('on'); };
+$('modeAdv').onclick = ()=>{ document.body.classList.add('adv'); $('modeAdv').classList.add('on'); $('modeSimple').classList.remove('on'); };
+
+// shape picking
+function selectShape(sh){
+  state.shape = sh;
+  document.querySelectorAll('#shapeGrid .shape-card').forEach(c=>c.classList.toggle('on', c.dataset.shape===sh));
+  $('textCtl').style.display = sh==='text' ? 'block' : 'none';
+  $('step1sub').textContent = SHAPE_LABELS[sh] || '';
+  stepDone(1);
+  refreshShape();
+}
+document.querySelectorAll('#shapeGrid .shape-card').forEach(c=>{
+  c.addEventListener('click', ()=>{
+    if(c.dataset.shape === 'upload'){ $('fileInput').click(); return; }
+    selectShape(c.dataset.shape);
+  });
+});
+$('fileInput').addEventListener('change', async e=>{
+  const f = e.target.files[0]; if(!f) return;
+  try{
+    const buf = await f.arrayBuffer();
+    let g = new STLLoader().parse(buf);
+    g = g.index ? g.toNonIndexed() : g;
+    g.deleteAttribute('uv'); g.deleteAttribute('color');
+    state.uploadedGeo = g; state.uploadedName = f.name;
+    state.uploadedB64 = btoa(new Uint8Array(buf).reduce((s,b)=>s+String.fromCharCode(b),''));
+    const tri = g.attributes.position.count/3;
+    if(tri > 150000) toast('⚠️ Big file ('+ (tri/1000|0) +'k triangles) — building may take a while.');
+    $('uploadCard').querySelector('.lbl').textContent = f.name.length>14 ? f.name.slice(0,12)+'…' : f.name;
+    selectShape('upload');
+    toast('📁 '+f.name+' loaded!', 'good');
+  }catch(err){ console.error(err); toast('😕 Could not read that file. Is it a valid STL?', 'bad'); }
+  e.target.value = '';
+});
+$('shapeText').addEventListener('change', ()=>{ state.text = $('shapeText').value || 'LOVE'; refreshShape(); });
+
+// size + advanced sliders
+function bindSlider(id, valId, fmt, apply){
+  $(id).addEventListener('input', e=>{ $(valId).textContent = fmt(+e.target.value); });
+  $(id).addEventListener('change', e=>{ apply(+e.target.value); });
+}
+bindSlider('sizeSlider','sizeVal', v=>v+' mm', v=>{ state.size=v; refreshShape(); });
+bindSlider('wallSlider','wallVal', v=>v+' mm', v=>{ state.wall=v; clearMold(); });
+bindSlider('clearSlider','clearVal', v=>(v/10).toFixed(1)+' mm', v=>{ state.clearance=v/10; clearMold(); });
+bindSlider('partSlider','partVal', v=>v===50?'middle':(v<50?'lower':'higher'), v=>{ state.part=v; clearMold(); });
+bindSlider('colsSlider','colsVal', v=>v, v=>{ state.cols=v; clearMold(); });
+bindSlider('rowsSlider','rowsVal', v=>v, v=>{ state.rows=v; clearMold(); });
+document.querySelectorAll('[data-rot]').forEach(b=>b.addEventListener('click', ()=>{
+  const ax = b.dataset.rot;
+  state['rot'+ax.toUpperCase()] = (state['rot'+ax.toUpperCase()] + Math.PI/2) % (Math.PI*2);
+  refreshShape();
+}));
+
+// mold style
+function selectMold(m){
+  state.mold = m;
+  document.querySelectorAll('.mold-card').forEach(c=>c.classList.toggle('on', c.dataset.mold===m));
+  $('gridCtl').style.display = m==='multitray' ? 'block' : 'none';
+  $('spoutSwitch').style.display = m==='twopart' ? 'flex' : 'none';
+  $('keysSwitch').style.display = m==='twopart' ? 'flex' : 'none';
+  $('ventSwitch').style.display = m==='twopart' ? 'flex' : 'none';
+  $('partCtl').style.display = m==='twopart' ? 'block' : 'none';
+  $('step2sub').textContent = {twopart:'Two-part mold 🧩', tray:'Open tray 🍮', multitray:'Multi-tray 🍫'}[m];
+  stepDone(2);
+  clearMold();
+}
+document.querySelectorAll('.mold-card').forEach(c=>c.addEventListener('click', ()=>selectMold(c.dataset.mold)));
+
+// toggles
+function bindToggle(id, key){
+  $(id).addEventListener('click', ()=>{
+    state[key] = !state[key];
+    $(id).classList.toggle('on', state[key]);
+    clearMold();
+  });
+}
+bindToggle('spoutToggle','spout'); bindToggle('keysToggle','keys'); bindToggle('ventToggle','vent');
+
+$('generateBtn').addEventListener('click', ()=>{ stepDone(3); generateMold(); });
+
+// viewport toolbar
+$('vpSpin').addEventListener('click', ()=>{ controls.autoRotate = !controls.autoRotate; $('vpSpin').classList.toggle('on', controls.autoRotate); });
+$('vpShape').addEventListener('click', ()=>{
+  exitDemold(); $('vpDemold').classList.remove('on');
+  const on = $('vpShape').classList.toggle('on');
+  modelGroup.visible = on || !state.built;
+  moldGroup.visible = !on;
+});
+$('vpXray').addEventListener('click', ()=>{
+  const on = $('vpXray').classList.toggle('on');
+  moldGroup.children.forEach(m=>{ m.material.transparent = on; m.material.opacity = on? .55 : 1; m.material.needsUpdate = true; });
+});
+$('vpDemold').addEventListener('click', ()=>{
+  const on = $('vpDemold').classList.toggle('on');
+  if(on){ $('vpShape').classList.remove('on'); demoldCheck(); } else exitDemold();
+});
+$('vpReset').addEventListener('click', ()=>{ camera.position.set(160,130,200); controls.target.set(0,30,0); });
+$('explodedSlider').addEventListener('input', e=>setExploded(+e.target.value));
+
+// save / load project
+$('saveBtn').addEventListener('click', ()=>{
+  const data = {...state, uploadedGeo:undefined, parts:undefined, built:undefined, projName: $('projName').value, app:'moldforge', v:1};
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(data)], {type:'application/json'}));
+  a.download = (data.projName||'mold').replace(/[^a-z0-9]+/gi,'-')+'.moldforge.json';
+  a.click(); URL.revokeObjectURL(a.href);
+  toast('💾 Project saved!', 'good');
+});
+$('loadBtn').addEventListener('click', ()=>$('projInput').click());
+$('projInput').addEventListener('change', async e=>{
+  const f = e.target.files[0]; if(!f) return;
+  try{
+    const d = JSON.parse(await f.text());
+    if(d.app !== 'moldforge') throw new Error('not a project');
+    Object.assign(state, {goal:d.goal, shape:d.shape, text:d.text, size:d.size, mold:d.mold, cols:d.cols, rows:d.rows,
+      spout:d.spout, keys:d.keys, vent:d.vent, wall:d.wall, clearance:d.clearance, part:d.part, rotX:d.rotX||0, rotY:d.rotY||0, rotZ:d.rotZ||0});
+    if(d.uploadedB64){
+      const bin = Uint8Array.from(atob(d.uploadedB64), ch=>ch.charCodeAt(0));
+      let g = new STLLoader().parse(bin.buffer);
+      g = g.index ? g.toNonIndexed() : g; g.deleteAttribute('uv'); g.deleteAttribute('color');
+      state.uploadedGeo = g; state.uploadedB64 = d.uploadedB64;
+    }
+    $('projName').value = d.projName || 'My mold';
+    syncUI(); await refreshShape();
+    toast('📂 Project loaded!', 'good');
+  }catch(err){ console.error(err); toast('😕 Could not open that project file.', 'bad'); }
+  e.target.value = '';
+});
+
+function syncUI(){
+  document.querySelectorAll('#shapeGrid .shape-card').forEach(c=>c.classList.toggle('on', c.dataset.shape===state.shape));
+  $('textCtl').style.display = state.shape==='text' ? 'block' : 'none';
+  $('shapeText').value = state.text;
+  $('sizeSlider').value = state.size; $('sizeVal').textContent = state.size+' mm';
+  $('wallSlider').value = state.wall; $('wallVal').textContent = state.wall+' mm';
+  $('clearSlider').value = state.clearance*10; $('clearVal').textContent = state.clearance.toFixed(1)+' mm';
+  $('partSlider').value = state.part;
+  $('colsSlider').value = state.cols; $('colsVal').textContent = state.cols;
+  $('rowsSlider').value = state.rows; $('rowsVal').textContent = state.rows;
+  $('spoutToggle').classList.toggle('on', state.spout);
+  $('keysToggle').classList.toggle('on', state.keys);
+  $('ventToggle').classList.toggle('on', state.vent);
+  selectMold(state.mold);
+}
+
+// help = re-run wizard
+$('helpBtn').addEventListener('click', ()=>{ wizStep = 1; wizShow(); $('wizard').classList.remove('hide'); });
+
+// mobile tabs
+function mobileShow(which){
+  document.body.classList.toggle('show-steps', which==='steps');
+  document.body.classList.toggle('show-info', which==='info');
+  $('tabSteps').classList.toggle('on', which==='steps');
+  $('tabView').classList.toggle('on', which==='view');
+  $('tabInfo').classList.toggle('on', which==='info');
+}
+$('tabSteps').onclick = ()=>mobileShow('steps');
+$('tabView').onclick = ()=>mobileShow('view');
+$('tabInfo').onclick = ()=>mobileShow('info');
+if(matchMedia('(max-width:900px)').matches) mobileShow('view');
+
+/* ================= wizard ================= */
+let wizStep = 1, wizGoal = null, wizShape = null;
+function wizShow(){
+  $('wizStep1').style.display = wizStep===1?'block':'none';
+  $('wizStep2').style.display = wizStep===2?'block':'none';
+  $('wizStep3').style.display = wizStep===3?'block':'none';
+  document.querySelectorAll('.wiz-progress i').forEach((el,i)=>el.classList.toggle('on', i<wizStep));
+  $('wizNext').disabled = (wizStep===1 && !wizGoal) || (wizStep===2 && !wizShape);
+  $('wizNext').textContent = wizStep===3 ? '✨ Build my mold!' : 'Next →';
+  if(wizStep===3){
+    const g = GOALS[wizGoal||'explore'];
+    $('wizSummary').innerHTML = `
+      <div class="row"><span class="k">You're making</span><span>${g.label}</span></div>
+      <div class="row"><span class="k">Starting shape</span><span>${SHAPE_LABELS[wizShape||'heart']}</span></div>
+      <div class="row"><span class="k">Best mold style</span><span>${{twopart:'Two-part mold 🧩',tray:'Open tray 🍮',multitray:'Multi-tray 🍫'}[g.mold]}</span></div>
+      <div class="row"><span class="k">Settings</span><span>Done for you ✓</span></div>`;
+  }
+}
+document.querySelectorAll('#wizStep1 .wiz-card').forEach(c=>c.addEventListener('click', ()=>{
+  wizGoal = c.dataset.goal;
+  document.querySelectorAll('#wizStep1 .wiz-card').forEach(x=>x.classList.toggle('on', x===c));
+  $('wizNext').disabled = false;
+}));
+document.querySelectorAll('#wizShapes .wiz-card').forEach(c=>c.addEventListener('click', ()=>{
+  wizShape = c.dataset.shape;
+  document.querySelectorAll('#wizShapes .wiz-card').forEach(x=>x.classList.toggle('on', x===c));
+  $('wizText').style.display = wizShape==='text' ? 'block' : 'none';
+  $('wizNext').disabled = false;
+}));
+$('wizNext').addEventListener('click', async ()=>{
+  if(wizStep < 3){ wizStep++; wizShow(); return; }
+  // apply choices
+  const g = GOALS[wizGoal||'explore'];
+  state.goal = wizGoal || 'explore';
+  state.mold = g.mold; state.spout = g.spout;
+  state.text = $('wizText').value || 'LOVE';
+  const names = {candle:'My candle mold', soap:'My soap mold', resin:'My resin mold', choc:'My chocolate mold', plaster:'My plaster mold', explore:'My first mold'};
+  $('projName').value = names[state.goal];
+  $('wizard').classList.add('hide');
+  if(wizShape === 'upload'){ state.shape='heart'; syncUI(); await refreshShape(); $('fileInput').click(); }
+  else { state.shape = wizShape || 'heart'; syncUI(); await refreshShape(); await generateMold(); }
+});
+$('wizSkip').addEventListener('click', ()=>$('wizard').classList.add('hide'));
+
+/* ================= boot ================= */
+wizShow();
+await refreshShape();
+</script>
+<script src="support-bot/widget.js" defer></script>
+</body>
+</html>
