@@ -46,7 +46,13 @@ Modes: **VS CPU** (beat-aware AI) and **VS Player** (local 2P on one keyboard).
 
 ## Assets
 
-`assets/` contains the OPAIJA logo and official character-sheet art (poses + portraits)
-for Jabari and Marius; the in-battle fighters are procedurally drawn and animated on
-canvas to match each sheet's palette and gear (compact drum, sticks and headphones for
-Jabari; long coat, plum lining and the Black Bois silence staff for Marius).
+All fighter visuals are the **official character-sheet art**. `assets/` contains:
+
+- `logo.jpg` — the OPAIJA logo (title screen)
+- `*-face.png` — front head portraits (battle HUD)
+- `*-pose.png` — full action-pose panels with quotes (character select cards)
+- `*-side / *-front / *-relax / *-action.png` — figures cut out of each sheet's
+  turnaround, relaxed and action panels with transparent backgrounds. These are the
+  in-battle sprites, animated paper-doll style on canvas: side view for idle/walk/jump,
+  action pose (with lunge, tilt and swing-arc FX) for attacks and supers, front view
+  for hit/block reactions, relaxed pose for round victory.

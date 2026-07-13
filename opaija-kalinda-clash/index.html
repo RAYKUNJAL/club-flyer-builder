@@ -45,6 +45,14 @@ const MANIFEST = {
   mariusPose: 'assets/marius-pose.png',
   jabariFace: 'assets/jabari-face.png',
   mariusFace: 'assets/marius-face.png',
+  jabariSide: 'assets/jabari-side.png',
+  jabariFront: 'assets/jabari-front.png',
+  jabariRelax: 'assets/jabari-relax.png',
+  jabariAction: 'assets/jabari-action.png',
+  mariusSide: 'assets/marius-side.png',
+  mariusFront: 'assets/marius-front.png',
+  mariusRelax: 'assets/marius-relax.png',
+  mariusAction: 'assets/marius-action.png',
 };
 let assetsLeft = Object.keys(MANIFEST).length;
 for (const [k, src] of Object.entries(MANIFEST)) {
@@ -172,8 +180,10 @@ const CHARS = {
     id:'jabari', name:'JABARI “JABS” HENRY', short:'JABARI', island:'TRINIDAD',
     title:'Drummer / Beat Strategist', quote:'“Hold beat! Hold beat!”',
     accent:'#f47b20', accent2:'#ffb25e', dark:'#181410',
-    hp: 950, speed: 4.7, jumpV: -16, height: 148,
+    hp: 950, speed: 4.7, jumpV: -16, height: 205,
     pose:'jabariPose', face:'jabariFace',
+    sprites: { side:{k:'jabariSide',faces:-1}, front:{k:'jabariFront',faces:1},
+               relax:{k:'jabariRelax',faces:1}, action:{k:'jabariAction',faces:-1} },
     moves: {
       light:  { name:'Stick Jab',    dmg:36,  startup:5,  active:4, recovery:9,  range:96,  rh:60, kb:4.5, hitstun:15, anim:'jab' },
       heavy:  { name:'Drum Swing',   dmg:74,  startup:11, active:5, recovery:17, range:120, rh:78, kb:9,  hitstun:24, launch:-7, anim:'swing' },
@@ -185,8 +195,10 @@ const CHARS = {
     id:'marius', name:'MARIUS VALE', short:'MARIUS', island:'CARIBBEAN',
     title:'False One Drum / Silence Strategist', quote:'“One drum. One command. One Caribbean.”',
     accent:'#7d5aa6', accent2:'#b18ee0', dark:'#0e0a12',
-    hp: 1080, speed: 3.7, jumpV: -14.2, height: 164,
+    hp: 1080, speed: 3.7, jumpV: -14.2, height: 230,
     pose:'mariusPose', face:'mariusFace',
+    sprites: { side:{k:'mariusSide',faces:-1}, front:{k:'mariusFront',faces:1},
+               relax:{k:'mariusRelax',faces:1}, action:{k:'mariusAction',faces:1} },
     moves: {
       light:  { name:'Staff Cut',    dmg:42,  startup:7,  active:4, recovery:11, range:133, rh:57, kb:5,  hitstun:16, anim:'poke' },
       heavy:  { name:'Bois Slam',    dmg:84,  startup:14, active:5, recovery:20, range:140, rh:91, kb:10, hitstun:28, launch:-9, anim:'slam' },
@@ -224,7 +236,7 @@ class Fighter {
     this.aiTimer = 0; this.aiPlan = 'approach';
   }
   get w(){ return 72; }
-  get h(){ return this.c.height * 1.3; }
+  get h(){ return this.c.height; }
   get silenced(){ return game.time < this.silencedUntil; }
   rect(){ return { x:this.x - this.w/2, y:this.y - this.h, w:this.w, h:this.h }; }
   busy(){ return this.state === 'attack' || this.state === 'hit' || this.state === 'ko'; }
@@ -658,266 +670,102 @@ function moveProg(f){
   return { p, ph, sp: Math.min(1, f.t / m.startup) };
 }
 
-/* ------------- JABARI (compact drummer, orange/black) ------------- */
-function drawJabari(f){
-  const P = f.alt ? { skin:'#8a5433', hair:'#171310', bead:'#3fa9d8', top:'#12100e', trim:'#3fa9d8', sash:'#2f86b8', pant:'#15130f', shoe:'#3fa9d8' }
-                  : { skin:'#8a5433', hair:'#171310', bead:'#f47b20', top:'#12100e', trim:'#f47b20', sash:'#d8681a', pant:'#15130f', shoe:'#f47b20' };
-  const t = game.time;
-  const beat = AC && !f.silenced ? Math.max(0, 1 - beatPhase() * 4) : 0;
-  const bob = f.state === 'idle' ? Math.sin(t * 0.09) * 2 + beat * 3 : 0;
-  const { p, ph } = moveProg(f);
-  const anim = f.move ? f.move.anim : '';
-
-  ctx.save();
-  ctx.translate(f.x, f.y);
-  ctx.scale(f.facing * 1.3, 1.3);
-
-  let lean = 0, crouch = 0;
-  if (f.state === 'walk') crouch = Math.abs(Math.sin(t * 0.25)) * 4;
-  if (f.state === 'hit') lean = -0.35;
-  if (f.state === 'block') lean = -0.15;
-  if (anim === 'swing') lean = ph === 'startup' ? -0.25 : 0.3;
-  if (anim === 'jab') lean = 0.14;
-  if (f.state === 'ko') {
-    // flat on back
-    ctx.rotate(-Math.PI / 2 * Math.min(1, f.t / 14));
+/* ------------- sprite-based fighters (official sheet art) ------------- */
+const tintCache = new Map();
+function tinted(img, color){
+  const key = img.src + color;
+  let c = tintCache.get(key);
+  if (!c) {
+    c = document.createElement('canvas');
+    c.width = img.width; c.height = img.height;
+    const g = c.getContext('2d');
+    g.drawImage(img, 0, 0);
+    g.globalCompositeOperation = 'source-in';
+    g.fillStyle = color; g.fillRect(0, 0, c.width, c.height);
+    tintCache.set(key, c);
   }
-  if (f.state === 'victory') { lean = 0; }
-
-  const hipY = -58 - bob + crouch;
-  const chestY = hipY - 42;
-  const headY = chestY - 24;
-
-  ctx.rotate(lean * 0.5);
-
-  // legs
-  const ls = f.state === 'walk' ? Math.sin(t * 0.25) * 14 : 0;
-  const jump = !f.grounded ? 14 : 0;
-  limb(0, hipY, -12 - ls * 0.6, -26 + jump * 0.5, 13, P.pant);
-  limb(-12 - ls * 0.6, -26 + jump * 0.5, -16 - ls, -3 - jump, 11, P.pant);
-  limb(0, hipY, 12 + ls * 0.6, -26 + jump * 0.4, 13, P.pant);
-  limb(12 + ls * 0.6, -26 + jump * 0.4, 18 + ls, -3 - jump * 0.7, 11, P.pant);
-  // sneakers
-  circle(-18 - ls, -5 - jump, 7, P.shoe);
-  circle(20 + ls, -5 - jump * 0.7, 7, P.shoe);
-
-  // sash at waist
-  ctx.fillStyle = P.sash;
-  ctx.beginPath();
-  ctx.moveTo(-14, hipY + 2); ctx.lineTo(10, hipY + 2);
-  ctx.lineTo(4 + Math.sin(t * 0.1) * 3, hipY + 30); ctx.lineTo(-18, hipY + 26);
-  ctx.fill();
-
-  // torso (vest)
-  limb(0, hipY, 0, chestY, 27, P.top);
-  limb(-8, chestY + 6, -8, hipY - 4, 6, P.trim);   // vest trim
-  limb(8, chestY + 6, 8, hipY - 4, 6, P.trim);
-
-  // drum at hip (signature gear)
-  const drumHit = anim === 'drumhit' && ph !== 'recovery';
-  ctx.save();
-  ctx.translate(-16, hipY - 8);
-  ctx.rotate(-0.3);
-  ctx.fillStyle = '#211a13';
-  ctx.fillRect(-13, -10, 26, 22);
-  ctx.strokeStyle = P.trim; ctx.lineWidth = 2;
-  ctx.strokeRect(-13, -10, 26, 22);
-  ctx.fillStyle = drumHit ? '#ffd9ad' : '#caa26f';
-  ctx.beginPath(); ctx.ellipse(0, -10, 13, 5, 0, 0, 7); ctx.fill();
-  ctx.restore();
-
-  // arms + sticks
-  const stick = (x1, y1, x2, y2) => { limb(x1, y1, x2, y2, 4, '#caa26f'); };
-  if (f.state === 'ko') {
-    limb(0, chestY, -20, chestY + 8, 9, P.top); limb(0, chestY, 22, chestY + 4, 9, P.top);
-  } else if (f.state === 'block') {
-    limb(0, chestY, 18, chestY - 6, 9, P.top); limb(18, chestY - 6, 14, headY + 6, 8, P.skin);
-    limb(0, chestY, 16, chestY + 8, 9, P.top); limb(16, chestY + 8, 20, chestY - 10, 8, P.skin);
-    stick(14, headY + 6, 26, headY - 8);
-  } else if (anim === 'jab' && f.state === 'attack') {
-    const ext = ph === 'startup' ? ease(p * 3) : ph === 'active' ? 1 : 1 - ease((p - 0.4) * 1.6);
-    limb(0, chestY, 14 + 26 * ext, chestY + 2, 9, P.top);
-    limb(14 + 26 * ext, chestY + 2, 22 + 34 * ext, chestY, 8, P.skin);
-    stick(22 + 34 * ext, chestY, 40 + 44 * ext, chestY - 4);
-    limb(0, chestY, -14, chestY + 10, 9, P.top);
-    stick(-14, chestY + 10, -4, chestY - 2);
-  } else if (anim === 'swing' && f.state === 'attack') {
-    const sw = ph === 'startup' ? -1.9 * ease(p * 2.4) : -1.9 + 3.4 * ease(Math.min(1, (f.t - f.move.startup) / (f.move.active + 4)));
-    ctx.save(); ctx.translate(0, chestY); ctx.rotate(sw * 0.9);
-    limb(0, 0, 30, -6, 9, P.top);
-    limb(30, -6, 46, -10, 8, P.skin);
-    stick(46, -10, 72, -16);
-    ctx.restore();
-    limb(0, chestY, -16, chestY + 8, 9, P.top);
-  } else if (anim === 'drumhit' && f.state === 'attack') {
-    const raise = ph === 'startup' ? ease(p * 2.5) : 1;
-    limb(0, chestY, -6, chestY + 14 - raise * 30, 9, P.top);
-    stick(-6, chestY + 14 - raise * 30, -16, chestY + 4 - raise * 18);
-    limb(0, chestY, 16, chestY + 6, 9, P.top);
-    stick(16, chestY + 6, 30, chestY - 6);
-  } else if (anim === 'superJ' && f.state === 'attack') {
-    const fl = Math.sin(f.t * 1.4) * 20;
-    limb(0, chestY, 26, chestY - 8 + fl, 9, P.top); stick(26, chestY - 8 + fl, 48, chestY - 12 + fl);
-    limb(0, chestY, 24, chestY + 8 - fl, 9, P.top); stick(24, chestY + 8 - fl, 46, chestY + 10 - fl);
-  } else if (f.state === 'victory') {
-    const up = Math.min(1, f.t / 12);
-    limb(0, chestY, 16, chestY - 20 * up, 9, P.top); stick(16, chestY - 20 * up, 28, chestY - 40 * up);
-    limb(0, chestY, -16, chestY - 18 * up, 9, P.top); stick(-16, chestY - 18 * up, -26, chestY - 38 * up);
-  } else {
-    const sw2 = Math.sin(t * 0.09) * 3 + beat * 4;
-    limb(0, chestY, 16, chestY + 12, 9, P.top);
-    stick(16, chestY + 12, 30, chestY + 2 - sw2);
-    limb(0, chestY, -14, chestY + 12, 9, P.top);
-    stick(-14, chestY + 12, -24, chestY + 2 + sw2);
-  }
-
-  // headphones around neck
-  ctx.strokeStyle = P.trim; ctx.lineWidth = 5;
-  ctx.beginPath(); ctx.arc(0, chestY - 6, 11, 0.4, Math.PI - 0.4); ctx.stroke();
-
-  // head
-  circle(2, headY, 14, P.skin);
-  // hair: short dreads w/ beads
-  for (let i = 0; i < 7; i++) {
-    const a = -2.4 + i * 0.42;
-    const hx = 2 + Math.cos(a) * 13, hy = headY - 3 + Math.sin(a) * 13;
-    limb(hx, hy, hx + Math.cos(a) * 8, hy + Math.sin(a) * 8 - 3, 5, P.hair);
-    if (i % 2 === 0) circle(hx + Math.cos(a) * 9, hy + Math.sin(a) * 9 - 3, 2.2, P.bead);
-  }
-  // face
-  circle(8, headY - 2, 1.8, '#171310');
-  ctx.strokeStyle = '#171310'; ctx.lineWidth = 1.6;
-  ctx.beginPath(); ctx.arc(7, headY + 4, 4, 0.2, Math.PI - 0.6); ctx.stroke();  // grin
-
-  ctx.restore();
+  return c;
 }
 
-/* ------------- MARIUS (tall strategist, black/purple, staff) ------------- */
-function drawMarius(f){
-  const P = f.alt ? { skin:'#7a4a2e', hair:'#14100c', coat:'#101014', lining:'#a63d3d', trim:'#c0c0c8', pant:'#0e0d10', boot:'#1a181c', glow:'#e06868' }
-                  : { skin:'#7a4a2e', hair:'#14100c', coat:'#101014', lining:'#5c3a80', trim:'#c0c0c8', pant:'#0e0d10', boot:'#1a181c', glow:'#b18ee0' };
+function drawSpriteFighter(f){
   const t = game.time;
-  const { p, ph } = moveProg(f);
+  const beat = AC && !f.silenced ? Math.max(0, 1 - beatPhase() * 4) : 0;
+  const S = f.c.sprites;
+  let spr = S.side, rot = 0, ox = 0, oy = 0, sy = 1;
+  const { ph } = moveProg(f);
   const anim = f.move ? f.move.anim : '';
-  const bob = f.state === 'idle' ? Math.sin(t * 0.07) * 1.5 : 0;
 
-  ctx.save();
-  ctx.translate(f.x, f.y);
-  ctx.scale(f.facing * 1.3, 1.3);
-
-  let lean = 0, crouch = 0;
-  if (f.state === 'walk') crouch = Math.abs(Math.sin(t * 0.2)) * 3;
-  if (f.state === 'hit') lean = -0.3;
-  if (f.state === 'block') lean = -0.12;
-  if (anim === 'slam') lean = ph === 'startup' ? -0.3 : 0.35;
-  if (anim === 'poke') lean = 0.18;
-  if (f.state === 'ko') ctx.rotate(-Math.PI / 2 * Math.min(1, f.t / 14));
-
-  const hipY = -66 - bob + crouch;
-  const chestY = hipY - 48;
-  const headY = chestY - 26;
-  ctx.rotate(lean * 0.5);
-
-  // legs
-  const ls = f.state === 'walk' ? Math.sin(t * 0.2) * 13 : 0;
-  const jump = !f.grounded ? 12 : 0;
-  limb(0, hipY, -11 - ls * 0.6, -30 + jump * 0.5, 12, P.pant);
-  limb(-11 - ls * 0.6, -30 + jump * 0.5, -14 - ls, -4 - jump, 10, P.boot);
-  limb(0, hipY, 11 + ls * 0.6, -30 + jump * 0.4, 12, P.pant);
-  limb(11 + ls * 0.6, -30 + jump * 0.4, 16 + ls, -4 - jump * 0.7, 10, P.boot);
-
-  // long coat: flared silhouette with purple lining flash
-  const flare = f.state === 'walk' ? Math.sin(t * 0.2) * 5 : (anim === 'slam' || anim === 'superM') && ph !== 'startup' ? 14 : 4;
-  ctx.fillStyle = P.coat;
-  ctx.beginPath();
-  ctx.moveTo(-15, chestY + 4);
-  ctx.lineTo(15, chestY + 4);
-  ctx.lineTo(24 + flare, hipY + 52);
-  ctx.lineTo(-24 - flare, hipY + 52);
-  ctx.closePath(); ctx.fill();
-  ctx.strokeStyle = P.lining; ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.moveTo(15, chestY + 4); ctx.lineTo(24 + flare, hipY + 52); ctx.stroke();
-  // silver chain-line embroidery
-  ctx.strokeStyle = P.trim; ctx.lineWidth = 1.2; ctx.globalAlpha = 0.7;
-  ctx.beginPath(); ctx.moveTo(-6, chestY + 8); ctx.lineTo(-12 - flare * 0.5, hipY + 44); ctx.stroke();
-  ctx.globalAlpha = 1;
-
-  // torso
-  limb(0, hipY, 0, chestY, 26, P.coat);
-  limb(0, chestY + 2, 0, hipY - 8, 4, P.lining);   // purple tie
-
-  // staff: held in rear hand normally
-  const staff = (x1, y1, x2, y2) => {
-    limb(x1, y1, x2, y2, 4.5, '#1c1a20');
-    // ornate head at (x2,y2)
-    const ang = Math.atan2(y2 - y1, x2 - x1);
-    ctx.save(); ctx.translate(x2, y2); ctx.rotate(ang);
-    ctx.fillStyle = P.glow;
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(14, -5); ctx.lineTo(20, 0); ctx.lineTo(14, 5); ctx.closePath(); ctx.fill();
-    ctx.restore();
-  };
-
-  const glowPalm = (x, y, r) => {
-    const g = ctx.createRadialGradient(x, y, 1, x, y, r);
-    g.addColorStop(0, P.glow); g.addColorStop(1, 'rgba(90,58,128,0)');
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
-  };
-
-  if (f.state === 'ko') {
-    limb(0, chestY, -22, chestY + 6, 8, P.coat); limb(0, chestY, 24, chestY + 2, 8, P.coat);
-  } else if (f.state === 'block') {
-    limb(0, chestY, 16, chestY - 4, 8, P.coat); limb(16, chestY - 4, 12, headY + 8, 7, P.skin);
-    staff(12, headY + 8, 12, headY - 30);
-    limb(0, chestY, -12, chestY + 12, 8, P.coat);
-  } else if (anim === 'poke' && f.state === 'attack') {
-    const ext = ph === 'startup' ? ease(p * 2.6) : ph === 'active' ? 1 : 1 - ease((p - 0.45) * 1.7);
-    limb(0, chestY, 16 + 20 * ext, chestY + 4, 8, P.coat);
-    limb(16 + 20 * ext, chestY + 4, 26 + 28 * ext, chestY + 2, 7, P.skin);
-    staff(26 + 28 * ext - 30, chestY + 6, 26 + 28 * ext + 58 * ext + 20, chestY - 2);
-    limb(0, chestY, -14, chestY + 12, 8, P.coat);
-  } else if (anim === 'slam' && f.state === 'attack') {
-    const sw = ph === 'startup' ? -2.1 * ease(p * 2.2) : -2.1 + 3.6 * ease(Math.min(1, (f.t - f.move.startup) / (f.move.active + 5)));
-    ctx.save(); ctx.translate(0, chestY); ctx.rotate(sw * 0.85);
-    limb(0, 0, 30, -4, 8, P.coat);
-    limb(30, -4, 44, -8, 7, P.skin);
-    staff(20, 0, 92, -14);
-    ctx.restore();
-    limb(0, chestY, -16, chestY + 10, 8, P.coat);
-  } else if (anim === 'pulse' && f.state === 'attack') {
-    const ext = ph === 'startup' ? ease(p * 2.2) : 1;
-    limb(0, chestY, 18 + 16 * ext, chestY - 2, 8, P.coat);
-    limb(18 + 16 * ext, chestY - 2, 30 + 22 * ext, chestY - 4, 7, P.skin);
-    glowPalm(34 + 24 * ext, chestY - 4, 16 + (ph === 'active' ? 14 : 4) + Math.sin(t * 0.6) * 3);
-    limb(0, chestY, -12, chestY + 10, 8, P.coat);
-    staff(-12, chestY + 10, -18, chestY - 38);
-  } else if (anim === 'superM' && f.state === 'attack') {
-    const ext = ph === 'startup' ? ease(p * 2) : 1;
-    limb(0, chestY, 20 + 18 * ext, chestY - 6, 8, P.coat);
-    limb(20 + 18 * ext, chestY - 6, 34 + 24 * ext, chestY - 10, 7, P.skin);
-    glowPalm(38 + 26 * ext, chestY - 10, 22 + Math.sin(t * 0.8) * 6);
-    limb(0, chestY, -14, chestY + 8, 8, P.coat);
-    staff(-14, chestY + 8, -20, chestY - 40);
-  } else if (f.state === 'victory') {
-    limb(0, chestY, 16, chestY + 10, 8, P.coat);
-    staff(16, chestY + 10, 16, chestY - 52);
-    limb(0, chestY, -14, chestY + 12, 8, P.coat);
-  } else {
-    limb(0, chestY, 14, chestY + 12, 8, P.coat);
-    staff(14, chestY + 12, 20, chestY - 46);
-    limb(0, chestY, -13, chestY + 12, 8, P.coat);
+  switch (f.state) {
+    case 'idle':
+      sy = 1 + Math.sin(t * 0.09) * 0.012 + beat * 0.025;
+      rot = Math.sin(t * 0.045) * 0.02;
+      break;
+    case 'walk':
+      oy = -Math.abs(Math.sin(t * 0.22)) * 7;
+      rot = 0.05; sy = 1 + Math.sin(t * 0.22) * 0.02;
+      break;
+    case 'jump': rot = -0.14; sy = 1.05; break;
+    case 'block': spr = S.front; rot = -0.09; ox = -5; break;
+    case 'hit': spr = S.front; rot = -0.3 * Math.min(1, f.t / 6); ox = -10; break;
+    case 'victory': spr = S.relax; sy = 1 + Math.sin(t * 0.08) * 0.02; break;
+    case 'ko': rot = -Math.PI / 2 * Math.min(1, f.t / 14); break;
+    case 'attack': {
+      spr = S.action;
+      const lunge = anim === 'pulse' || anim === 'superM' ? 10 : 26;
+      if (ph === 'startup') { ox = -16 * ease(Math.min(1, f.t / f.move.startup)); rot = -0.07; }
+      else if (ph === 'active') { ox = lunge; rot = 0.1; }
+      else {
+        const rp = (f.t - f.move.startup - f.move.active) / f.move.recovery;
+        ox = lunge * (1 - ease(Math.min(1, rp))); rot = 0.1 * (1 - rp);
+      }
+      break;
+    }
   }
 
-  // head: dreads pulled back
-  circle(2, headY, 14, P.skin);
-  ctx.fillStyle = P.hair;
-  ctx.beginPath(); ctx.arc(0, headY - 4, 14, Math.PI * 0.95, Math.PI * 2.1); ctx.fill();
-  circle(-12, headY - 6, 6, P.hair);   // bun at back
-  // goatee + stern eye
-  circle(9, headY + 8, 3.5, P.hair);
-  ctx.fillStyle = '#14100c'; ctx.fillRect(5, headY - 3, 6, 2);
-
+  const img = IMG[spr.k];
+  const s = f.c.height / img.height;
+  ctx.save();
+  ctx.translate(f.x + ox * f.facing, f.y + oy);
+  ctx.rotate(rot * f.facing);
+  ctx.scale(f.facing * spr.faces * s, s * sy);
+  if (f.alt) ctx.filter = 'hue-rotate(150deg)';
+  ctx.drawImage(img, -img.width / 2, -img.height);
+  if (f.state === 'hit' && f.t < 7) {
+    ctx.globalAlpha = 0.75 * (1 - f.t / 7);
+    ctx.drawImage(tinted(img, '#ffffff'), -img.width / 2, -img.height);
+    ctx.globalAlpha = 1;
+  }
+  ctx.filter = 'none';
   ctx.restore();
+
+  // weapon swing arc during melee active frames
+  if (f.state === 'attack' && ph === 'active' &&
+      ['jab','swing','poke','slam','superJ','superM'].includes(anim)) {
+    ctx.save();
+    ctx.translate(f.x, f.y - f.c.height * 0.55);
+    ctx.scale(f.facing, 1);
+    ctx.strokeStyle = f.c.accent; ctx.lineWidth = 6; ctx.globalAlpha = 0.8;
+    ctx.beginPath(); ctx.arc(0, 0, (f.move.range || 120) * 0.72, -0.9, 0.7); ctx.stroke();
+    ctx.globalAlpha = 0.35; ctx.lineWidth = 13;
+    ctx.beginPath(); ctx.arc(0, 0, (f.move.range || 120) * 0.6, -0.7, 0.5); ctx.stroke();
+    ctx.restore();
+    ctx.globalAlpha = 1;
+  }
+  // charge glow for Silence Pulse / Memory Theft
+  if (f.state === 'attack' && (anim === 'pulse' || anim === 'superM')) {
+    const gx = f.x + f.facing * f.c.height * 0.32, gy = f.y - f.c.height * 0.6;
+    const r = 20 + (ph === 'active' ? 26 : 8) + Math.sin(t * 0.6) * 4;
+    const g = ctx.createRadialGradient(gx, gy, 2, gx, gy, r);
+    g.addColorStop(0, 'rgba(220,190,255,0.9)'); g.addColorStop(1, 'rgba(125,90,166,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(gx, gy, r, 0, 7); ctx.fill();
+  }
+  // drum glow while charging Riddim Wave
+  if (f.state === 'attack' && anim === 'drumhit' && ph !== 'recovery') {
+    const gx = f.x + f.facing * 20, gy = f.y - f.c.height * 0.45;
+    const g = ctx.createRadialGradient(gx, gy, 2, gx, gy, 34);
+    g.addColorStop(0, 'rgba(255,210,120,0.8)'); g.addColorStop(1, 'rgba(244,123,32,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(gx, gy, 34, 0, 7); ctx.fill();
+  }
 }
 
 function drawFighter(f){
@@ -930,9 +778,9 @@ function drawFighter(f){
   // shadow
   ctx.globalAlpha = 0.35;
   ctx.fillStyle = '#000';
-  ctx.beginPath(); ctx.ellipse(f.x, FLOOR + 6, 40, 8, 0, 0, 7); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(f.x, FLOOR + 6, f.c.height * 0.24, 8, 0, 0, 7); ctx.fill();
   ctx.globalAlpha = 1;
-  (f.c.id === 'jabari' ? drawJabari : drawMarius)(f);
+  drawSpriteFighter(f);
 }
 
 /* ---------------- stage ---------------- */
@@ -1206,7 +1054,7 @@ function drawVS(){
   const ids = ['jabari', 'marius'];
   const c1 = CHARS[ids[game.sel[0]]], c2 = CHARS[ids[game.sel[1]]];
   const sl = Math.min(1, game.vsT / 22);
-  const im1 = IMG[c1.pose], im2 = IMG[c2.pose];
+  const im1 = IMG[c1.sprites.action.k], im2 = IMG[c2.sprites.action.k];
   const hgt = 470;
   const w1 = im1.width * hgt / im1.height, w2 = im2.width * hgt / im2.height;
   // diagonal split panels
@@ -1286,7 +1134,7 @@ function drawBattle(){
 function drawMatchEnd(){
   ctx.fillStyle = '#0a0708'; ctx.fillRect(0, 0, W, H);
   const wnr = game.winner;
-  const im = IMG[wnr.c.pose];
+  const im = IMG[wnr.c.sprites.action.k];
   const hgt = 430, w = im.width * hgt / im.height;
   ctx.globalAlpha = 0.95;
   ctx.drawImage(im, W/2 - w/2, 120, w, hgt);
