@@ -111,6 +111,37 @@ def trades(strategy_id: int):
     return d["trades"]
 
 
+FOOTPRINT_SOURCES = {
+    "ES": ("ES_1min.csv", "S&P 500 (ES)"),
+    "NQ": ("NQ_1min.csv", "Nasdaq (NQ)"),
+    "GC": ("GC_1min.csv", "Gold (GC)"),
+}
+
+
+@app.get("/api/footprint/{symbol}")
+def footprint(symbol: str, candle_minutes: int = 15, max_candles: int = 26, price_step: float | None = None):
+    """Order-flow footprint clusters, approximated from real 1-minute bars."""
+    src = FOOTPRINT_SOURCES.get(symbol.upper())
+    if src is None:
+        raise HTTPException(404, f"no footprint source for '{symbol}' -- one of {sorted(FOOTPRINT_SOURCES)}")
+    fname, label = src
+    csv_path = DATA_DIR / fname
+    if not csv_path.exists():
+        raise HTTPException(
+            404,
+            f"{fname} not found. Fetch it first: python scripts/fetch_yahoo_chart.py "
+            f"'{symbol}=F' --range 5d --interval 1m --out data/{fname}",
+        )
+    import pandas as pd
+
+    from ..analytics.footprint import build_footprint
+
+    bars = pd.read_csv(csv_path, parse_dates=["timestamp"], index_col="timestamp")
+    out = build_footprint(bars, candle_minutes=candle_minutes, max_candles=max_candles, price_step=price_step)
+    out["symbol"] = label
+    return out
+
+
 @app.get("/api/top_traders")
 def top_traders():
     """Leaderboard of famous fund managers' latest disclosed portfolios (SEC 13F)."""

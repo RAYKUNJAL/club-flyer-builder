@@ -11,6 +11,7 @@
     --gridline: #e1e0d9; --baseline: #c3c2b7; --border: rgba(11,11,11,0.10);
     --series-1: #2a78d6; --series-1-wash: rgba(42,120,214,0.10);
     --good: #006300; --good-status: #0ca30c; --warning: #fab219; --critical: #d03b3b;
+    --fp-buy: #0E7E9E; --fp-sell: #BE3A2E;
     --card-radius: 12px;
   }
   @media (prefers-color-scheme: dark) {
@@ -20,6 +21,7 @@
       --gridline: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.10);
       --series-1: #3987e5; --series-1-wash: rgba(57,135,229,0.14);
       --good: #0ca30c; --good-status: #0ca30c; --warning: #fab219; --critical: #e66767;
+      --fp-buy: #1E8FAF; --fp-sell: #C95145;
     }
   }
   :root[data-theme="dark"] {
@@ -28,6 +30,7 @@
     --gridline: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.10);
     --series-1: #3987e5; --series-1-wash: rgba(57,135,229,0.14);
     --good: #0ca30c; --good-status: #0ca30c; --warning: #fab219; --critical: #e66767;
+    --fp-buy: #1E8FAF; --fp-sell: #C95145;
   }
   :root[data-theme="light"] {
     --surface-1: #fcfcfb; --page: #f9f9f7;
@@ -35,6 +38,7 @@
     --gridline: #e1e0d9; --baseline: #c3c2b7; --border: rgba(11,11,11,0.10);
     --series-1: #2a78d6; --series-1-wash: rgba(42,120,214,0.10);
     --good: #006300; --good-status: #0ca30c; --warning: #fab219; --critical: #d03b3b;
+    --fp-buy: #0E7E9E; --fp-sell: #BE3A2E;
   }
 
   * { box-sizing: border-box; }
@@ -215,6 +219,20 @@
       <div class="chart-wrap">
         <svg class="equity-svg" id="equity-svg"></svg>
         <div class="tooltip" id="tooltip"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Order flow footprint — S&amp;P 500 (ES), 15-minute</h3>
+      <div class="card-sub" id="fp-sub">Volume clusters per price level. <b style="color:var(--fp-buy)">■</b> buying
+        (upticks) · <b style="color:var(--fp-sell)">■</b> selling (downticks) — tick-rule estimate from real 1-minute
+        bars (~75–85% accurate); true bid/ask footprints need the Tradovate market-data feed. Cells read
+        <b>sell × buy</b>; outlined cell = point of control.</div>
+      <div style="overflow-x:auto" id="fp-scroll">
+        <div class="chart-wrap" style="display:inline-block">
+          <canvas id="fp-canvas"></canvas>
+          <div class="tooltip" id="fp-tooltip"></div>
+        </div>
       </div>
     </div>
 
@@ -687,7 +705,126 @@ function tickClock() {
   document.getElementById("live-clock").textContent = new Date().toLocaleTimeString() + " · backend live";
 }
 
+/* ---------- footprint (order flow) chart ---------- */
+let fpData = null;
+
+function cssVar(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+function hexToRgba(hex, a) {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
+}
+
+function drawFootprint() {
+  if (!fpData || !fpData.candles.length) return;
+  const cv = document.getElementById("fp-canvas");
+  const candles = fpData.candles, step = fpData.price_step;
+
+  const COL_W = 96, ROW_H = 15, AXIS_W = 58, HEAD_H = 18, FOOT_H = 40;
+  const minP = Math.min(...candles.map(c => c.clusters.length ? c.clusters[c.clusters.length - 1].p : Infinity));
+  const maxP = Math.max(...candles.map(c => c.clusters.length ? c.clusters[0].p : -Infinity));
+  const nRows = Math.round((maxP - minP) / step) + 1;
+  const W = candles.length * COL_W + AXIS_W, H = HEAD_H + nRows * ROW_H + FOOT_H;
+
+  const dpr = window.devicePixelRatio || 1;
+  cv.width = W * dpr; cv.height = H * dpr;
+  cv.style.width = W + "px"; cv.style.height = H + "px";
+  const ctx = cv.getContext("2d");
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+
+  const buyC = cssVar("--fp-buy"), sellC = cssVar("--fp-sell");
+  const ink = cssVar("--text-primary"), muted = cssVar("--text-muted"), grid = cssVar("--gridline");
+  const rowY = p => HEAD_H + Math.round((maxP - p) / step) * ROW_H;
+  const maxCell = Math.max(...candles.flatMap(c => c.clusters.map(cl => cl.buy + cl.sell))) || 1;
+
+  ctx.font = "10px ui-monospace, Menlo, Consolas, monospace";
+  ctx.textBaseline = "middle";
+
+  /* price axis (right) */
+  ctx.fillStyle = muted; ctx.textAlign = "left";
+  for (let r = 0; r < nRows; r += Math.ceil(nRows / 14)) {
+    const p = maxP - r * step;
+    ctx.fillText(p.toFixed(step < 1 ? 2 : 0), candles.length * COL_W + 6, rowY(p) + ROW_H / 2);
+  }
+
+  candles.forEach((c, i) => {
+    const x = i * COL_W;
+    /* time label every 4th column */
+    if (i % 4 === 0) {
+      ctx.fillStyle = muted; ctx.textAlign = "left";
+      ctx.fillText(c.t.slice(11, 16), x + 2, HEAD_H / 2);
+    }
+    c.clusters.forEach(cl => {
+      const y = rowY(cl.p);
+      const total = cl.buy + cl.sell;
+      const dom = cl.buy >= cl.sell ? buyC : sellC;
+      const alpha = 0.10 + 0.65 * (total / maxCell);
+      ctx.fillStyle = hexToRgba(dom, alpha);
+      /* 2px gaps between cells and columns */
+      ctx.fillRect(x + 1, y + 1, COL_W - 2, ROW_H - 2);
+      if (cl.p === c.poc) {
+        ctx.strokeStyle = ink; ctx.lineWidth = 1.25;
+        ctx.strokeRect(x + 1.5, y + 1.5, COL_W - 3, ROW_H - 3);
+      }
+      ctx.fillStyle = ink; ctx.textAlign = "center";
+      const fmtV = v => v >= 1000 ? (v / 1000).toFixed(1) + "k" : Math.round(v);
+      ctx.fillText(fmtV(cl.sell) + " × " + fmtV(cl.buy), x + COL_W / 2, y + ROW_H / 2);
+    });
+    /* candle open/close tick marks on column edge */
+    ctx.strokeStyle = muted; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x + 1, rowY(c.open) + ROW_H / 2); ctx.lineTo(x + 5, rowY(c.open) + ROW_H / 2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x + COL_W - 5, rowY(c.close) + ROW_H / 2); ctx.lineTo(x + COL_W - 1, rowY(c.close) + ROW_H / 2); ctx.stroke();
+
+    /* delta + cumulative delta rows */
+    const fy = HEAD_H + nRows * ROW_H;
+    ctx.textAlign = "center";
+    ctx.fillStyle = c.delta >= 0 ? buyC : sellC;
+    ctx.fillText("Δ " + (c.delta >= 0 ? "+" : "") + Math.round(c.delta), x + COL_W / 2, fy + 12);
+    const cum = fpData.cum_delta[i];
+    ctx.fillStyle = cum >= 0 ? buyC : sellC;
+    ctx.fillText("Σ " + (cum >= 0 ? "+" : "") + Math.round(cum), x + COL_W / 2, fy + 27);
+    ctx.strokeStyle = grid;
+    ctx.beginPath(); ctx.moveTo(x, fy + 2); ctx.lineTo(x + COL_W * 0.9, fy + 2); ctx.stroke();
+  });
+
+  /* hover tooltip per cell */
+  const tip = document.getElementById("fp-tooltip");
+  cv.onpointermove = ev => {
+    const rect = cv.getBoundingClientRect();
+    const mx = ev.clientX - rect.left, my = ev.clientY - rect.top;
+    const i = Math.floor(mx / COL_W);
+    const p = maxP - Math.floor((my - HEAD_H) / ROW_H) * step;
+    const c = candles[i];
+    const cl = c && c.clusters.find(k => Math.abs(k.p - p) < step / 2);
+    if (!cl) { tip.style.opacity = "0"; return; }
+    tip.style.opacity = "1";
+    tip.style.left = (i * COL_W + COL_W / 2) + "px";
+    tip.style.top = rowY(cl.p) + "px";
+    tip.textContent = "";
+    const d1 = document.createElement("div"); d1.className = "tt-date";
+    d1.textContent = c.t.slice(11, 16) + " @ " + cl.p.toFixed(2) + (cl.p === c.poc ? " · POC" : "");
+    const d2 = document.createElement("div"); d2.className = "tt-val";
+    d2.textContent = "sell " + Math.round(cl.sell) + " × buy " + Math.round(cl.buy) +
+      "  (Δ " + Math.round(cl.buy - cl.sell) + ")";
+    tip.appendChild(d1); tip.appendChild(d2);
+  };
+  cv.onpointerleave = () => { tip.style.opacity = "0"; };
+}
+
+async function loadFootprint() {
+  try {
+    fpData = await api("/api/footprint/ES?candle_minutes=15&max_candles=26");
+  } catch (e) {
+    document.getElementById("fp-sub").textContent = e.message;
+    return;
+  }
+  drawFootprint();
+  const scroll = document.getElementById("fp-scroll");
+  scroll.scrollLeft = scroll.scrollWidth;  // latest candles in view
+}
+
 loadActive().then(loadStrategies);
+loadFootprint();
 loadTopTraders();
 pollBrokerStatus();
 tickClock();

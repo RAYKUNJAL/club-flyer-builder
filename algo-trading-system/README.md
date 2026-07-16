@@ -147,6 +147,23 @@ It serves:
   (written to `data/active_strategy.json`). Selecting never starts trading by itself — the runner
   is started separately and defaults to dry-run/demo.
 
+### Order-flow footprint chart
+
+`GET /api/footprint/{ES|NQ|GC}` serves footprint (cluster) candles for the dashboard's order-flow
+panel: per-price-level buy/sell volume clusters, per-candle delta, cumulative delta, and point of
+control, built by `src/algotrader/analytics/footprint.py` from real 1-minute bars:
+
+```bash
+python scripts/fetch_yahoo_chart.py "ES=F" --range 5d --interval 1m --out data/ES_1min.csv
+```
+
+Honesty note: a *true* footprint chart needs tick data with bid/ask aggressor tags, which is
+licensed for CME futures (Databento, IQFeed, or Tradovate's market-data feed on a connected
+account). This panel is the best public-data approximation — tick-rule classification
+(~75–85% accurate per Lee & Ready-line research) with volume spread uniformly across each
+1-minute bar's range — and says so in the UI. The JSON shape matches what a real tick feed
+would produce, so wiring Tradovate market data in later only swaps the builder.
+
 ### Top Traders leaderboard (real SEC 13F data)
 
 The dashboard also shows the latest disclosed portfolios of well-known fund managers (Buffett,
