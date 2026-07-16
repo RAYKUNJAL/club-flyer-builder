@@ -1,0 +1,607 @@
+{
+  "source": "SEC EDGAR Form 13F-HR (official, public). Long US equity positions only; filed up to 45 days after quarter end.",
+  "funds": [
+    {
+      "cik": 1067983,
+      "fund": "Berkshire Hathaway",
+      "manager": "Warren Buffett",
+      "filing_date": "2026-05-15",
+      "total_value": 263095703570.0,
+      "num_positions": 26,
+      "top_holdings": [
+        {
+          "issuer": "APPLE INC",
+          "value": 57843260493.0,
+          "weight": 0.21985634774005366
+        },
+        {
+          "issuer": "AMERICAN EXPRESS CO",
+          "value": 45859204536.0,
+          "weight": 0.17430617039247304
+        },
+        {
+          "issuer": "COCA COLA CO",
+          "value": 30420000000.0,
+          "weight": 0.11562332484804856
+        },
+        {
+          "issuer": "BANK AMERICA CORP",
+          "value": 25039178044.0,
+          "weight": 0.0951713680772366
+        },
+        {
+          "issuer": "CHEVRON CORPORATION",
+          "value": 17457364606.0,
+          "weight": 0.06635366662821707
+        },
+        {
+          "issuer": "OCCIDENTAL PETE CORP",
+          "value": 17221193015.0,
+          "weight": 0.06545600244064069
+        },
+        {
+          "issuer": "ALPHABET INC",
+          "value": 16628526688.0,
+          "weight": 0.06320333803389444
+        },
+        {
+          "issuer": "CHUBB LTD SWITZ",
+          "value": 11162836215.0,
+          "weight": 0.04242880466510539
+        },
+        {
+          "issuer": "MOODYS CORP",
+          "value": 10762190653.0,
+          "weight": 0.040905991648535533
+        },
+        {
+          "issuer": "KRAFT HEINZ CO",
+          "value": 7323527057.0,
+          "weight": 0.027835981194772652
+        }
+      ],
+      "reported_in_thousands": false
+    },
+    {
+      "cik": 1037389,
+      "fund": "Renaissance Technologies",
+      "manager": "Jim Simons (founder)",
+      "filing_date": "2026-05-14",
+      "total_value": 63929893013.0,
+      "num_positions": 2994,
+      "top_holdings": [
+        {
+          "issuer": "UNITED THERAPEUTICS CORP DEL",
+          "value": 1059666527.0,
+          "weight": 0.01657544658778827
+        },
+        {
+          "issuer": "PALANTIR TECHNOLOGIES INC",
+          "value": 1021901255.0,
+          "weight": 0.015984717114921478
+        },
+        {
+          "issuer": "APPLE INC",
+          "value": 780569445.0,
+          "weight": 0.012209772427450692
+        },
+        {
+          "issuer": "KINROSS GOLD CORP",
+          "value": 779676525.0,
+          "weight": 0.012195805252504561
+        },
+        {
+          "issuer": "MICRON TECHNOLOGY INC",
+          "value": 730739401.0,
+          "weight": 0.011430324165432371
+        },
+        {
+          "issuer": "VERISIGN INC",
+          "value": 699915982.0,
+          "weight": 0.010948180092490906
+        },
+        {
+          "issuer": "EXELIXIS INC",
+          "value": 588750730.0,
+          "weight": 0.009209318243036616
+        },
+        {
+          "issuer": "FRANCO NEV CORP",
+          "value": 548183692.0,
+          "weight": 0.008574763168906416
+        },
+        {
+          "issuer": "SANDISK CORP",
+          "value": 507997533.0,
+          "weight": 0.00794616585541133
+        },
+        {
+          "issuer": "NVIDIA CORPORATION",
+          "value": 440696066.0,
+          "weight": 0.006893427240843113
+        }
+      ],
+      "reported_in_thousands": false
+    },
+    {
+      "cik": 1350694,
+      "fund": "Bridgewater Associates",
+      "manager": "Ray Dalio",
+      "filing_date": "2026-05-15",
+      "total_value": 22404547213.0,
+      "num_positions": 985,
+      "top_holdings": [
+        {
+          "issuer": "STATE STR SPDR S&P 500 ETF T",
+          "value": 2838644353.0,
+          "weight": 0.1266994742635507
+        },
+        {
+          "issuer": "ISHARES TR",
+          "value": 1991058090.0,
+          "weight": 0.08886848152167565
+        },
+        {
+          "issuer": "AMAZON COM INC",
+          "value": 914036840.0,
+          "weight": 0.04079693427009495
+        },
+        {
+          "issuer": "NVIDIA CORPORATION",
+          "value": 818459723.0,
+          "weight": 0.03653096468403956
+        },
+        {
+          "issuer": "ALPHABET INC",
+          "value": 685466529.0,
+          "weight": 0.030594973532973937
+        },
+        {
+          "issuer": "BROADCOM INC",
+          "value": 568068464.0,
+          "weight": 0.025355052195403634
+        },
+        {
+          "issuer": "MICRON TECHNOLOGY INC",
+          "value": 498551839.0,
+          "weight": 0.022252261304826576
+        },
+        {
+          "issuer": "ISHARES INC",
+          "value": 409907307.0,
+          "weight": 0.018295719306577
+        },
+        {
+          "issuer": "MICROSOFT CORP",
+          "value": 401626676.0,
+          "weight": 0.017926123307993494
+        },
+        {
+          "issuer": "GE VERNOVA INC",
+          "value": 379621591.0,
+          "weight": 0.01694395282310051
+        }
+      ],
+      "reported_in_thousands": false
+    },
+    {
+      "cik": 1336528,
+      "fund": "Pershing Square Capital",
+      "manager": "Bill Ackman",
+      "filing_date": "2026-05-15",
+      "total_value": 13714299861.0,
+      "num_positions": 10,
+      "top_holdings": [
+        {
+          "issuer": "BROOKFIELD CORP",
+          "value": 2415946008.0,
+          "weight": 0.17616254803282663
+        },
+        {
+          "issuer": "AMAZON COM INC",
+          "value": 2385104083.0,
+          "weight": 0.1739136599880416
+        },
+        {
+          "issuer": "UBER TECHNOLOGIES INC",
+          "value": 2154934398.0,
+          "weight": 0.15713047110250872
+        },
+        {
+          "issuer": "MICROSOFT CORP",
+          "value": 2092970053.0,
+          "weight": 0.15261224227361964
+        },
+        {
+          "issuer": "RESTAURANT BRANDS INTL INC",
+          "value": 1673501194.0,
+          "weight": 0.1220260028555314
+        },
+        {
+          "issuer": "META PLATFORMS INC",
+          "value": 1522358404.0,
+          "weight": 0.11100518578634862
+        },
+        {
+          "issuer": "HOWARD HUGHES HOLDINGS INC",
+          "value": 1192581569.0,
+          "weight": 0.08695898303867486
+        },
+        {
+          "issuer": "SEAPORT ENTMT GROUP INC",
+          "value": 107910794.0,
+          "weight": 0.007868487279242815
+        },
+        {
+          "issuer": "ALPHABET INC",
+          "value": 98731763.0,
+          "weight": 0.007199183625900449
+        },
+        {
+          "issuer": "HERTZ GLOBAL HLDGS INC",
+          "value": 70261595.0,
+          "weight": 0.00512323601730528
+        }
+      ],
+      "reported_in_thousands": false
+    },
+    {
+      "cik": 1656456,
+      "fund": "Appaloosa",
+      "manager": "David Tepper",
+      "filing_date": "2026-05-15",
+      "total_value": 5933477986.0,
+      "num_positions": 31,
+      "top_holdings": [
+        {
+          "issuer": "AMAZON COM INC",
+          "value": 899726400.0,
+          "weight": 0.1516355840744498
+        },
+        {
+          "issuer": "MICRON TECHNOLOGY INC",
+          "value": 562503600.0,
+          "weight": 0.09480166629542122
+        },
+        {
+          "issuer": "ALPHABET INC",
+          "value": 497042322.0,
+          "weight": 0.08376913560187935
+        },
+        {
+          "issuer": "UBER TECHNOLOGIES INC",
+          "value": 455512550.0,
+          "weight": 0.07676990646544551
+        },
+        {
+          "issuer": "TAIWAN SEMICONDUCTOR MANUFAC",
+          "value": 448628625.0,
+          "weight": 0.07560972267168364
+        },
+        {
+          "issuer": "ALIBABA GROUP HLDG LTD",
+          "value": 434718900.0,
+          "weight": 0.07326544415024648
+        },
+        {
+          "issuer": "VISTRA CORP",
+          "value": 304017170.0,
+          "weight": 0.0512375997209944
+        },
+        {
+          "issuer": "ISHARES INC",
+          "value": 295224000.0,
+          "weight": 0.049755640906830524
+        },
+        {
+          "issuer": "NVIDIA CORPORATION",
+          "value": 256629600.0,
+          "weight": 0.04325112532742445
+        },
+        {
+          "issuer": "NRG ENERGY INC",
+          "value": 253471354.0,
+          "weight": 0.04271884965244059
+        }
+      ],
+      "reported_in_thousands": false
+    },
+    {
+      "cik": 1061768,
+      "fund": "Baupost Group",
+      "manager": "Seth Klarman",
+      "filing_date": "2026-05-14",
+      "total_value": 5115380000.0,
+      "num_positions": 22,
+      "top_holdings": [
+        {
+          "issuer": "AMAZON COM INC",
+          "value": 649543000.0,
+          "weight": 0.12697844539408606
+        },
+        {
+          "issuer": "RESTAURANT BRANDS INTL INC",
+          "value": 597208000.0,
+          "weight": 0.11674753390754938
+        },
+        {
+          "issuer": "WESCO INTL INC",
+          "value": 393159000.0,
+          "weight": 0.07685821972170201
+        },
+        {
+          "issuer": "UNION PAC CORP",
+          "value": 373876000.0,
+          "weight": 0.07308860729799155
+        },
+        {
+          "issuer": "ELEVANCE HEALTH INC FORMERLY",
+          "value": 373301000.0,
+          "weight": 0.0729762011815349
+        },
+        {
+          "issuer": "ALPHABET INC",
+          "value": 338819000.0,
+          "weight": 0.06623535299430346
+        },
+        {
+          "issuer": "FERGUSON ENTERPRISES INC",
+          "value": 336457000.0,
+          "weight": 0.06577360821678938
+        },
+        {
+          "issuer": "WILLIS TOWERS WATSON PLC LTD",
+          "value": 259632000.0,
+          "weight": 0.05075517361369048
+        },
+        {
+          "issuer": "AON PLC",
+          "value": 248218000.0,
+          "weight": 0.0485238633298015
+        },
+        {
+          "issuer": "VISA INC",
+          "value": 211978000.0,
+          "weight": 0.04143934565955999
+        }
+      ],
+      "reported_in_thousands": true
+    },
+    {
+      "cik": 1536411,
+      "fund": "Duquesne Family Office",
+      "manager": "Stanley Druckenmiller",
+      "filing_date": "2026-05-15",
+      "total_value": 3376828000.0,
+      "num_positions": 68,
+      "top_holdings": [
+        {
+          "issuer": "Natera Inc",
+          "value": 612691000.0,
+          "weight": 0.1814398009019115
+        },
+        {
+          "issuer": "Ishares Inc",
+          "value": 294228000.0,
+          "weight": 0.08713147367884891
+        },
+        {
+          "issuer": "Insmed Inc",
+          "value": 188717000.0,
+          "weight": 0.05588587870036614
+        },
+        {
+          "issuer": "Taiwan Semiconductor Manufac",
+          "value": 167380000.0,
+          "weight": 0.049567226995274855
+        },
+        {
+          "issuer": "Invesco Exchange Traded Fd T",
+          "value": 157566000.0,
+          "weight": 0.04666094926955119
+        },
+        {
+          "issuer": "Ypf Sociedad Anonima",
+          "value": 149566000.0,
+          "weight": 0.044291862067004896
+        },
+        {
+          "issuer": "Bbb Foods Inc",
+          "value": 109972000.0,
+          "weight": 0.03256665722980264
+        },
+        {
+          "issuer": "Alcoa Corp",
+          "value": 99057000.0,
+          "weight": 0.029334333877828543
+        },
+        {
+          "issuer": "Newamsterdam Pharma Company",
+          "value": 98275000.0,
+          "weight": 0.029102755603779642
+        },
+        {
+          "issuer": "Sea Ltd",
+          "value": 91083000.0,
+          "weight": 0.026972946208690524
+        }
+      ],
+      "reported_in_thousands": true
+    },
+    {
+      "cik": 1040273,
+      "fund": "Third Point",
+      "manager": "Daniel Loeb",
+      "filing_date": "2026-05-15",
+      "total_value": 2082795760.0,
+      "num_positions": 31,
+      "top_holdings": [
+        {
+          "issuer": "AMAZON COM INC",
+          "value": 404043800.0,
+          "weight": 0.19399108052726208
+        },
+        {
+          "issuer": "TELEPHONE & DATA SYS INC",
+          "value": 277860000.0,
+          "weight": 0.13340722375966427
+        },
+        {
+          "issuer": "CRH PLC",
+          "value": 199728000.0,
+          "weight": 0.09589418407496662
+        },
+        {
+          "issuer": "SOMNIGROUP INTERNATIONAL INC",
+          "value": 167855244.0,
+          "weight": 0.08059131251544319
+        },
+        {
+          "issuer": "CARPENTER TECHNOLOGY CORP",
+          "value": 122186500.0,
+          "weight": 0.05866465754664298
+        },
+        {
+          "issuer": "MASTEC INC",
+          "value": 102956800.0,
+          "weight": 0.04943201920096092
+        },
+        {
+          "issuer": "DANAHER CORP DEL",
+          "value": 99540000.0,
+          "weight": 0.047791531897491475
+        },
+        {
+          "issuer": "TAIWAN SEMICONDUCTOR MANUFAC",
+          "value": 92936250.0,
+          "weight": 0.0446209137664079
+        },
+        {
+          "issuer": "API GROUP CORP",
+          "value": 82255600.0,
+          "weight": 0.039492878552815955
+        },
+        {
+          "issuer": "LIVE NATION ENTERTAINMENT IN",
+          "value": 70917150.0,
+          "weight": 0.034049017845129474
+        }
+      ],
+      "reported_in_thousands": false
+    },
+    {
+      "cik": 1079114,
+      "fund": "Greenlight Capital",
+      "manager": "David Einhorn",
+      "filing_date": "2024-02-14",
+      "total_value": 2047998727.0,
+      "num_positions": 39,
+      "top_holdings": [
+        {
+          "issuer": "GREEN BRICK PARTNERS INC",
+          "value": 592369623.0,
+          "weight": 0.28924315976881954
+        },
+        {
+          "issuer": "CONSOL ENERGY INC NEW",
+          "value": 211673655.0,
+          "weight": 0.1033563410999132
+        },
+        {
+          "issuer": "BRIGHTHOUSE FINL INC",
+          "value": 161068530.0,
+          "weight": 0.07864679204949525
+        },
+        {
+          "issuer": "KYNDRYL HLDGS INC",
+          "value": 132079115.0,
+          "weight": 0.06449179545803498
+        },
+        {
+          "issuer": "TENET HEALTHCARE CORP",
+          "value": 99447853.0,
+          "weight": 0.048558552155779734
+        },
+        {
+          "issuer": "THE ODP CORP",
+          "value": 98418030.0,
+          "weight": 0.04805570858150245
+        },
+        {
+          "issuer": "ALIGHT INC",
+          "value": 78831446.0,
+          "weight": 0.038491940918086325
+        },
+        {
+          "issuer": "SPDR GOLD TR",
+          "value": 73972084.0,
+          "weight": 0.03611920409167325
+        },
+        {
+          "issuer": "TECK RESOURCES LTD",
+          "value": 65605702.0,
+          "weight": 0.03203405409147991
+        },
+        {
+          "issuer": "LIVANOVA PLC",
+          "value": 63604811.0,
+          "weight": 0.031057055925601658
+        }
+      ],
+      "reported_in_thousands": false
+    },
+    {
+      "cik": 1649339,
+      "fund": "Scion Asset Management",
+      "manager": "Michael Burry",
+      "filing_date": "2025-11-03",
+      "total_value": 1381198076.0,
+      "num_positions": 8,
+      "top_holdings": [
+        {
+          "issuer": "PALANTIR TECHNOLOGIES INC",
+          "value": 912100000.0,
+          "weight": 0.6603687160073919
+        },
+        {
+          "issuer": "NVIDIA CORPORATION",
+          "value": 186580000.0,
+          "weight": 0.13508562112998485
+        },
+        {
+          "issuer": "PFIZER INC",
+          "value": 152880000.0,
+          "weight": 0.11068651387261272
+        },
+        {
+          "issuer": "HALLIBURTON CO",
+          "value": 61500000.0,
+          "weight": 0.04452656072191053
+        },
+        {
+          "issuer": "MOLINA HEALTHCARE INC",
+          "value": 23920000.0,
+          "weight": 0.017318298088912193
+        },
+        {
+          "issuer": "LULULEMON ATHLETICA INC",
+          "value": 17793000.0,
+          "weight": 0.012882294226422019
+        },
+        {
+          "issuer": "SLM CORP",
+          "value": 13287895.0,
+          "weight": 0.009620557131445063
+        },
+        {
+          "issuer": "BRUKER CORP",
+          "value": 13137181.0,
+          "weight": 0.009511438821320802
+        }
+      ],
+      "reported_in_thousands": false
+    }
+  ],
+  "errors": [],
+  "fetched_at": "2026-07-16T18:35:35+00:00"
+}
