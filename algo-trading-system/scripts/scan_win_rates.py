@@ -13,6 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from algotrader.backtest.engine import BacktestEngine  # noqa: E402
 from algotrader.backtest.metrics import compute_metrics  # noqa: E402
+from algotrader.backtest.scoring import composite_score  # noqa: E402
 from algotrader.data.loader import load_csv  # noqa: E402
 from algotrader.risk.position_sizing import PositionSizer, RiskConfig  # noqa: E402
 from algotrader.strategies.fast_trend import FastTrend  # noqa: E402
@@ -144,12 +145,20 @@ def main():
             rows.append(("squeeze_breakout", label, "5m", params, result, m))
 
     qualified = [r for r in rows if r[5].num_trades >= MIN_TRADES]
-    qualified.sort(key=lambda r: r[5].win_rate, reverse=True)
+    # Rank by risk-adjusted composite score (see algotrader.backtest.scoring), not raw
+    # win rate -- a high win rate with a poor profit factor or deep drawdown should not
+    # top the leaderboard.
+    def score_of(r):
+        m = r[5]
+        return composite_score(m.win_rate, m.profit_factor, m.sharpe, m.max_drawdown_pct)
 
-    print(f"{'strategy':14s} {'symbol':16s} {'tf':4s} {'trades':>7s} {'win%':>7s} {'PF':>6s} {'return%':>8s} {'maxDD%':>7s}")
-    for strat_name, label, tf, params, result, m in qualified[:20]:
+    qualified.sort(key=score_of, reverse=True)
+
+    print(f"{'strategy':14s} {'symbol':16s} {'tf':4s} {'score':>6s} {'trades':>7s} {'win%':>7s} {'PF':>6s} {'return%':>8s} {'maxDD%':>7s}")
+    for r in qualified[:20]:
+        strat_name, label, tf, params, result, m = r
         print(
-            f"{strat_name:14s} {label:16s} {tf:4s} {m.num_trades:7d} {m.win_rate*100:6.1f}% "
+            f"{strat_name:14s} {label:16s} {tf:4s} {score_of(r):6.3f} {m.num_trades:7d} {m.win_rate*100:6.1f}% "
             f"{m.profit_factor:6.2f} {m.total_return_pct*100:7.1f}% {m.max_drawdown_pct*100:6.1f}%"
         )
 
@@ -162,6 +171,7 @@ def main():
                 "symbol": label,
                 "timeframe": tf,
                 "params": params,
+                "score": composite_score(m.win_rate, m.profit_factor, m.sharpe, m.max_drawdown_pct),
                 "metrics": {
                     "num_trades": m.num_trades,
                     "win_rate": m.win_rate,

@@ -135,11 +135,33 @@ uvicorn algotrader.webapp.main:app --reload --port 8000
 
 It serves:
 - `GET /api/strategies`, `/api/strategies/{id}/equity_curve`, `/api/strategies/{id}/trades` — real
-  backtest results, read from `data/win_rate_scan.json`
+  backtest results, read from `data/win_rate_scan.json`. Each strategy carries a composite
+  risk-adjusted `score` (35% profit factor, 25% win rate, 20% Sharpe, 20% drawdown — see
+  `src/algotrader/backtest/scoring.py`); the scanner and the dashboard leaderboard both rank by it.
 - `GET /api/broker/status`, `POST /api/broker/connect`, `POST /api/broker/disconnect`,
   `GET /api/broker/account` — a genuine (dry-run-by-default) `TradovateBroker` connection. Without
   credentials set, "Connect account" honestly reports it can't authenticate and tells you which
   environment variable is missing — see below to get real ones.
+- `POST /api/live/select`, `GET /api/live/active`, `POST /api/live/deselect` — dub-style
+  "copy this strategy": one tap marks a leaderboard config as the active one for the live runner
+  (written to `data/active_strategy.json`). Selecting never starts trading by itself — the runner
+  is started separately and defaults to dry-run/demo.
+
+### Top Traders leaderboard (real SEC 13F data)
+
+The dashboard also shows the latest disclosed portfolios of well-known fund managers (Buffett,
+Burry, Ackman, Druckenmiller, Dalio, Tepper, Klarman, Loeb, Einhorn, plus Renaissance), pulled
+straight from **SEC EDGAR Form 13F filings** — official, free, public data, no API key:
+
+```bash
+python scripts/fetch_top_traders.py   # writes data/top_traders.json
+```
+
+Know the limits before reading it as a signal: 13Fs cover long US equity positions only (no
+shorts, futures, cash, or international), and are filed up to 45 days after quarter end — always
+stale. Some filers still report values in thousands despite the 2023 dollars rule; the fetcher
+detects and corrects that (a 13F totaling under the $100M filing threshold is a units error).
+Copy-trading apps like dub have no public API, which is why this uses the SEC source directly.
 
 ### Tradovate demo account setup
 

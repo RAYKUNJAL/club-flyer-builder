@@ -140,6 +140,27 @@
   }
   .disclaimer strong { color: var(--text-secondary); }
 
+  .copy-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .copy-btn {
+    padding: 8px 16px; border-radius: 8px; border: 1px solid var(--series-1); background: var(--series-1);
+    color: white; font-weight: 600; font-size: 13px; cursor: pointer; font-family: inherit;
+  }
+  .copy-btn:hover { filter: brightness(1.08); }
+  .copy-btn:disabled { opacity: 0.6; cursor: default; }
+  .copy-btn.is-copied { background: transparent; color: var(--good); border-color: var(--good); }
+  .active-pill-note { font-size: 11.5px; color: var(--text-muted); }
+  .score-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 999px; font-weight: 700;
+    font-size: 11.5px; font-variant-numeric: tabular-nums;
+    background: var(--series-1-wash); color: var(--series-1);
+  }
+  .holding-chip {
+    display: inline-block; padding: 2px 8px; margin: 2px 3px 2px 0; border-radius: 999px;
+    font-size: 11px; background: rgba(128,128,128,0.10); white-space: nowrap;
+  }
+  .holding-chip b { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--text-secondary); }
+  .stale-note { color: var(--warning); font-size: 11px; }
+
   @media (max-width: 860px) {
     .app { flex-direction: column; }
     .sidebar { width: 100%; flex-direction: row; overflow-x: auto; }
@@ -178,7 +199,12 @@
         <h1 id="hdr-name">—</h1>
         <div class="sub" id="hdr-sub">—</div>
       </div>
+      <div class="copy-controls">
+        <span class="score-badge" id="hdr-score" hidden></span>
+        <button class="copy-btn" id="copy-btn" hidden>Copy strategy</button>
+      </div>
     </div>
+    <div class="active-pill-note" id="active-note"></div>
     <div class="data-badge"><span class="dot"></span><span id="data-badge-text">Real historical bars — served live from the FastAPI backend</span></div>
 
     <div class="stat-grid" id="stat-grid"></div>
@@ -208,14 +234,30 @@
 
     <div class="card">
       <h3>Full scan leaderboard</h3>
-      <div class="card-sub">All qualifying configs (≥8 trades) from the grid scan, ranked by win rate</div>
+      <div class="card-sub">All qualifying configs (≥8 trades) from the grid scan, ranked by composite score
+        (35% profit factor · 25% win rate · 20% Sharpe · 20% drawdown — see <code>backtest/scoring.py</code>)</div>
       <table>
         <thead><tr>
-          <th>Strategy</th><th>Symbol</th><th>Timeframe</th><th class="num">Trades</th>
+          <th>Strategy</th><th>Symbol</th><th>Timeframe</th><th class="num">Score</th><th class="num">Trades</th>
           <th class="num">Win rate</th><th class="num">Profit factor</th><th class="num">Return</th><th class="num">Max DD</th>
         </tr></thead>
         <tbody id="leaderboard-body"></tbody>
       </table>
+    </div>
+
+    <div class="card">
+      <h3>Top traders — real SEC 13F filings</h3>
+      <div class="card-sub" id="tt-sub">Latest disclosed portfolios of famous fund managers, straight from SEC EDGAR
+        (official, public data). Long US equity positions only, filed up to 45 days after quarter end.</div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr>
+            <th>Manager</th><th>Fund</th><th>Filed</th><th class="num">Positions</th>
+            <th class="num">Disclosed value</th><th>Top holdings (weight)</th>
+          </tr></thead>
+          <tbody id="tt-body"><tr><td colspan="6" class="empty-state">Loading…</td></tr></tbody>
+        </table>
+      </div>
     </div>
 
     <div class="disclaimer">
@@ -235,6 +277,8 @@
 const STRAT_LABELS = {
   fast_trend: "Fast Trend", swing_trend: "Swing Trend", orb: "Opening Range Breakout",
   pulse: "Pulse (All-Session Trend)", mean_reversion: "Mean Reversion",
+  rsi2_pullback: "RSI-2 Pullback", squeeze_breakout: "Squeeze Breakout",
+  vwap_reversion: "VWAP Reversion",
 };
 
 function fmtPct(x, d=1) { return (x*100).toFixed(d) + "%"; }
@@ -310,7 +354,62 @@ function renderHeader(s) {
   document.getElementById("hdr-name").textContent = (STRAT_LABELS[s.strategy] || s.strategy) + " — " + s.symbol;
   document.getElementById("hdr-sub").textContent =
     s.timeframe + " bars · " + s.metrics.num_trades + " trades · params: " + JSON.stringify(s.params);
+  const scoreEl = document.getElementById("hdr-score");
+  scoreEl.hidden = false;
+  scoreEl.textContent = "score " + (s.score !== undefined ? s.score.toFixed(3) : "—");
+  renderCopyButton(s);
 }
+
+let activeStrategy = null;  // the currently "copied" config, from /api/live/active
+
+function renderCopyButton(s) {
+  const btn = document.getElementById("copy-btn");
+  btn.hidden = false;
+  const isCopied = activeStrategy && activeStrategy.strategy_id === s.id;
+  btn.textContent = isCopied ? "✓ Copied — active for live runner" : "Copy strategy";
+  btn.className = "copy-btn" + (isCopied ? " is-copied" : "");
+}
+
+function renderActiveNote() {
+  const el = document.getElementById("active-note");
+  if (!activeStrategy) { el.textContent = ""; return; }
+  el.textContent = "Active for live runner: " + activeStrategy.label + " on " + activeStrategy.symbol +
+    " (" + activeStrategy.timeframe + ") — selected " + activeStrategy.selected_at +
+    ". Selecting only sets the config; the runner starts separately and defaults to dry-run/demo.";
+}
+
+async function loadActive() {
+  try {
+    const r = await api("/api/live/active");
+    activeStrategy = r.active;
+  } catch (e) { activeStrategy = null; }
+  renderActiveNote();
+}
+
+document.getElementById("copy-btn").addEventListener("click", async () => {
+  const btn = document.getElementById("copy-btn");
+  const s = strategies.find(x => x.id === activeId);
+  if (!s) return;
+  btn.disabled = true;
+  try {
+    const alreadyCopied = activeStrategy && activeStrategy.strategy_id === s.id;
+    if (alreadyCopied) {
+      await api("/api/live/deselect", { method: "POST" });
+      activeStrategy = null;
+    } else {
+      const r = await api("/api/live/select", {
+        method: "POST", headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({strategy_id: s.id}),
+      });
+      activeStrategy = r.active;
+    }
+  } catch (e) {
+    document.getElementById("active-note").textContent = "Copy failed: " + e.message;
+  }
+  btn.disabled = false;
+  renderActiveNote();
+  renderCopyButton(s);
+});
 
 function renderStats(s) {
   const m = s.metrics;
@@ -456,18 +555,70 @@ function renderTrades(list) {
 function renderLeaderboard() {
   const body = document.getElementById("leaderboard-body");
   body.textContent = "";
-  const rows = strategies.slice().sort((a, b) => b.metrics.win_rate - a.metrics.win_rate);
+  const rows = strategies.slice().sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
   rows.forEach((r, i) => {
     const tr = document.createElement("tr");
     if (i === 0) tr.className = "win-row-top";
-    [STRAT_LABELS[r.strategy] || r.strategy, r.symbol, r.timeframe, String(r.metrics.num_trades)].forEach((c, ci) => {
-      const td = document.createElement("td"); if (ci >= 3) td.className = "num"; td.textContent = c; tr.appendChild(td);
+    [STRAT_LABELS[r.strategy] || r.strategy, r.symbol, r.timeframe].forEach(c => {
+      const td = document.createElement("td"); td.textContent = c; tr.appendChild(td);
     });
+    const score = document.createElement("td"); score.className = "num";
+    const badge = document.createElement("span"); badge.className = "score-badge";
+    badge.textContent = (r.score ?? 0).toFixed(3); score.appendChild(badge); tr.appendChild(score);
+    const nt = document.createElement("td"); nt.className = "num"; nt.textContent = String(r.metrics.num_trades); tr.appendChild(nt);
     const win = document.createElement("td"); win.className = "num"; win.textContent = fmtPct(r.metrics.win_rate);
     const pf = document.createElement("td"); pf.className = "num"; pf.textContent = fmtNum(r.metrics.profit_factor);
     const ret = document.createElement("td"); ret.className = "num " + (r.metrics.total_return_pct >= 0 ? "pnl-pos" : "pnl-neg"); ret.textContent = fmtPct(r.metrics.total_return_pct);
     const dd = document.createElement("td"); dd.className = "num pnl-neg"; dd.textContent = fmtPct(r.metrics.max_drawdown_pct);
     [win, pf, ret, dd].forEach(td => tr.appendChild(td));
+    body.appendChild(tr);
+  });
+}
+
+function fmtBillions(x) {
+  if (x >= 1e9) return "$" + (x / 1e9).toFixed(1) + "B";
+  if (x >= 1e6) return "$" + (x / 1e6).toFixed(0) + "M";
+  return "$" + Math.round(x).toLocaleString();
+}
+
+async function loadTopTraders() {
+  const body = document.getElementById("tt-body");
+  let data;
+  try {
+    data = await api("/api/top_traders");
+  } catch (e) {
+    body.innerHTML = "";
+    const tr = document.createElement("tr"); const td = document.createElement("td");
+    td.colSpan = 6; td.className = "empty-state"; td.textContent = e.message;
+    tr.appendChild(td); body.appendChild(tr);
+    return;
+  }
+  document.getElementById("tt-sub").textContent =
+    data.source + " Snapshot fetched " + (data.fetched_at || "—") + ".";
+  body.textContent = "";
+  const now = new Date();
+  data.funds.forEach(f => {
+    const tr = document.createElement("tr");
+    const mgr = document.createElement("td"); mgr.textContent = f.manager;
+    const fund = document.createElement("td"); fund.textContent = f.fund;
+    const filed = document.createElement("td"); filed.textContent = f.filing_date;
+    // A filing older than ~2 quarters means the manager stopped filing or has
+    // confidential treatment -- flag it instead of presenting it as current.
+    if ((now - new Date(f.filing_date)) / 86400000 > 200) {
+      const stale = document.createElement("div"); stale.className = "stale-note";
+      stale.textContent = "stale filing"; filed.appendChild(stale);
+    }
+    const np = document.createElement("td"); np.className = "num"; np.textContent = String(f.num_positions);
+    const val = document.createElement("td"); val.className = "num"; val.textContent = fmtBillions(f.total_value);
+    const hold = document.createElement("td");
+    f.top_holdings.slice(0, 5).forEach(h => {
+      const chip = document.createElement("span"); chip.className = "holding-chip";
+      const b = document.createElement("b"); b.textContent = (h.weight * 100).toFixed(0) + "%";
+      chip.textContent = h.issuer + " ";
+      chip.appendChild(b);
+      hold.appendChild(chip);
+    });
+    [mgr, fund, filed, np, val, hold].forEach(td => tr.appendChild(td));
     body.appendChild(tr);
   });
 }
@@ -536,7 +687,8 @@ function tickClock() {
   document.getElementById("live-clock").textContent = new Date().toLocaleTimeString() + " · backend live";
 }
 
-loadStrategies();
+loadActive().then(loadStrategies);
+loadTopTraders();
 pollBrokerStatus();
 tickClock();
 setInterval(tickClock, 1000);

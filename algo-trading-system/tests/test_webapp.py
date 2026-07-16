@@ -30,6 +30,8 @@ def client(tmp_path, monkeypatch):
     ]
     (tmp_path / "win_rate_scan.json").write_text(json.dumps(scan))
     monkeypatch.setattr("algotrader.webapp.main.SCAN_FILE", tmp_path / "win_rate_scan.json")
+    monkeypatch.setattr("algotrader.webapp.main.TOP_TRADERS_FILE", tmp_path / "top_traders.json")
+    monkeypatch.setattr("algotrader.webapp.main.ACTIVE_STRATEGY_FILE", tmp_path / "active_strategy.json")
     broker_session.disconnect()
     return TestClient(app)
 
@@ -86,3 +88,50 @@ def test_broker_connect_without_credentials_fails_honestly(client, monkeypatch):
 def test_broker_account_requires_connection(client):
     resp = client.get("/api/broker/account")
     assert resp.status_code == 409
+
+
+def test_strategies_include_composite_score(client):
+    data = client.get("/api/strategies").json()
+    assert 0.0 <= data[0]["score"] <= 1.0
+
+
+def test_top_traders_404_when_no_snapshot(client):
+    resp = client.get("/api/top_traders")
+    assert resp.status_code == 404
+    assert "fetch_top_traders" in resp.json()["detail"]
+
+
+def test_top_traders_served_from_snapshot(client, tmp_path, monkeypatch):
+    snapshot = {
+        "source": "SEC EDGAR Form 13F-HR",
+        "fetched_at": "2026-07-16T00:00:00+00:00",
+        "funds": [{"cik": 1, "fund": "F", "manager": "M", "filing_date": "2026-05-15",
+                   "total_value": 1e9, "num_positions": 3,
+                   "top_holdings": [{"issuer": "APPLE INC", "value": 5e8, "weight": 0.5}],
+                   "reported_in_thousands": False}],
+        "errors": [],
+    }
+    monkeypatch.setattr("algotrader.webapp.main.TOP_TRADERS_FILE", tmp_path / "tt.json")
+    (tmp_path / "tt.json").write_text(json.dumps(snapshot))
+    data = client.get("/api/top_traders").json()
+    assert data["funds"][0]["manager"] == "M"
+
+
+def test_copy_strategy_select_active_deselect_cycle(client):
+    assert client.get("/api/live/active").json() == {"active": None}
+
+    resp = client.post("/api/live/select", json={"strategy_id": 0})
+    assert resp.status_code == 200
+    active = resp.json()["active"]
+    assert active["strategy"] == "orb"
+    assert active["strategy_id"] == 0
+    assert 0.0 <= active["score"] <= 1.0
+
+    assert client.get("/api/live/active").json()["active"]["strategy_id"] == 0
+
+    client.post("/api/live/deselect")
+    assert client.get("/api/live/active").json() == {"active": None}
+
+
+def test_copy_strategy_404_for_bad_id(client):
+    assert client.post("/api/live/select", json={"strategy_id": 42}).status_code == 404

@@ -19,12 +19,15 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
+from ..backtest.scoring import composite_score
 from . import broker_session
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DATA_DIR = REPO_ROOT / "data"
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 SCAN_FILE = DATA_DIR / "win_rate_scan.json"
+TOP_TRADERS_FILE = DATA_DIR / "top_traders.json"
+ACTIVE_STRATEGY_FILE = DATA_DIR / "active_strategy.json"
 
 STRATEGY_LABELS = {
     "orb": "Opening Range Breakout",
@@ -62,6 +65,7 @@ def list_strategies():
         )
     out = []
     for i, d in enumerate(scan):
+        m = d["metrics"]
         out.append(
             {
                 "id": i,
@@ -70,7 +74,12 @@ def list_strategies():
                 "symbol": d["symbol"],
                 "timeframe": d["timeframe"],
                 "params": d["params"],
-                "metrics": d["metrics"],
+                # Older scan files predate the composite score -- compute on the fly.
+                "score": d.get(
+                    "score",
+                    composite_score(m["win_rate"], m["profit_factor"], m["sharpe"], m["max_drawdown_pct"]),
+                ),
+                "metrics": m,
             }
         )
     return out
@@ -100,6 +109,65 @@ def equity_curve(strategy_id: int, points: int = 200):
 def trades(strategy_id: int):
     d = _get_strategy_or_404(strategy_id)
     return d["trades"]
+
+
+@app.get("/api/top_traders")
+def top_traders():
+    """Leaderboard of famous fund managers' latest disclosed portfolios (SEC 13F)."""
+    if not TOP_TRADERS_FILE.exists():
+        raise HTTPException(
+            404,
+            "No 13F snapshot found. Run `python scripts/fetch_top_traders.py` from the "
+            "repo root to pull the latest filings from SEC EDGAR (free, no API key).",
+        )
+    return json.loads(TOP_TRADERS_FILE.read_text())
+
+
+class SelectRequest(BaseModel):
+    strategy_id: int
+
+
+@app.post("/api/live/select")
+def live_select(req: SelectRequest):
+    """'Copy' a leaderboard strategy: mark it as the active config for the live runner.
+
+    This only selects -- it never starts trading by itself. The live runner (and its
+    dry-run/demo defaults) still has to be started explicitly on the server.
+    """
+    from datetime import datetime, timezone
+
+    d = _get_strategy_or_404(req.strategy_id)
+    m = d["metrics"]
+    active = {
+        "strategy_id": req.strategy_id,
+        "strategy": d["strategy"],
+        "label": STRATEGY_LABELS.get(d["strategy"], d["strategy"]),
+        "symbol": d["symbol"],
+        "timeframe": d["timeframe"],
+        "params": d["params"],
+        "score": d.get(
+            "score",
+            composite_score(m["win_rate"], m["profit_factor"], m["sharpe"], m["max_drawdown_pct"]),
+        ),
+        "selected_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+    }
+    ACTIVE_STRATEGY_FILE.parent.mkdir(parents=True, exist_ok=True)
+    ACTIVE_STRATEGY_FILE.write_text(json.dumps(active, indent=2))
+    return {"active": active}
+
+
+@app.get("/api/live/active")
+def live_active():
+    if not ACTIVE_STRATEGY_FILE.exists():
+        return {"active": None}
+    return {"active": json.loads(ACTIVE_STRATEGY_FILE.read_text())}
+
+
+@app.post("/api/live/deselect")
+def live_deselect():
+    if ACTIVE_STRATEGY_FILE.exists():
+        ACTIVE_STRATEGY_FILE.unlink()
+    return {"active": None}
 
 
 class ConnectRequest(BaseModel):
