@@ -90,6 +90,23 @@ button.btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .rect.card { border-color: #2f7dd1; background: rgba(47, 125, 209, 0.15); }
 .rect.skin { border-color: #2e7d4f; background: rgba(46, 125, 79, 0.15); }
 
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 18px; }
+.step-card { position: relative; padding-top: 22px; margin-bottom: 0; }
+.step-n {
+  position: absolute; top: -14px; left: 16px; width: 32px; height: 32px;
+  border-radius: 50%; background: var(--accent); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.95rem; box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.hint a, p.hint a { color: var(--accent); }
+
+.mode-toggle { display: flex; gap: 6px; padding: 10px 18px; }
+.mode-toggle button {
+  flex: 1; border: 1px solid #574a41; border-radius: 6px; padding: 5px 0;
+  font-size: 0.72rem; text-align: center; color: #b3a89e; background: none;
+}
+.mode-toggle button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+
 .login-shell { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
 .login-card { width: 400px; }
 .recipe-row { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
