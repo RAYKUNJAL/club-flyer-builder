@@ -90,33 +90,6 @@ button.btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .rect.card { border-color: #2f7dd1; background: rgba(47, 125, 209, 0.15); }
 .rect.skin { border-color: #2e7d4f; background: rgba(46, 125, 79, 0.15); }
 
-.funnel { margin-top: 6px; }
-.funnel-row { display: flex; align-items: center; gap: 10px; padding: 3px 0; }
-.funnel-label { width: 170px; font-size: 0.82rem; color: var(--muted); text-align: right; flex-shrink: 0; }
-.funnel-track { flex: 1; }
-.funnel-bar { display: block; height: 16px; border-radius: 0 4px 4px 0; min-width: 2px; }
-.funnel-count { width: 46px; font-size: 0.85rem; font-weight: 600; font-variant-numeric: tabular-nums; }
-
-.fp-legend { display: flex; gap: 16px; align-items: center; font-size: 0.75rem; color: var(--muted); margin: 6px 0 10px; flex-wrap: wrap; }
-.fp-legend i { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px; margin-right: 5px; border: 1px solid var(--line); }
-.fp-table { border-collapse: separate; border-spacing: 2px; width: auto; }
-.fp-table th { border-bottom: none; padding: 4px 8px; }
-.fp-table td { border-bottom: none; }
-.fp-week { font-variant-numeric: tabular-nums; text-align: center; }
-.fp-name { padding: 4px 10px 4px 0; white-space: nowrap; }
-.fp-cell {
-  min-width: 74px; text-align: center; font-size: 0.78rem; padding: 7px 8px;
-  border-radius: 4px; font-variant-numeric: tabular-nums; color: var(--ink); cursor: default;
-}
-.fp-total { text-align: right; font-size: 0.78rem; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
-
-.chart-tip {
-  position: absolute; z-index: 20; pointer-events: none;
-  background: #2a2320; color: #efe9e3; border-radius: 6px;
-  padding: 7px 10px; font-size: 0.75rem; line-height: 1.5;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.25); max-width: 260px;
-}
-
 .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 18px; }
 .step-card { position: relative; padding-top: 22px; margin-bottom: 0; }
 .step-n {

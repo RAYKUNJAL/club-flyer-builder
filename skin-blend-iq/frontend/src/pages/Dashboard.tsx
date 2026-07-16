@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react'
 import { api } from '../api'
 import type { PageId } from '../App'
-import FlowCharts from './FlowCharts'
 
-// Compact operational tiles; throughput lives in the order-flow chart.
-const TILE_LABELS: Record<string, string> = {
+const LABELS: Record<string, string> = {
+  clients: 'Clients',
+  cases: 'Cases',
+  formulas: 'Formulas',
+  locked_formulas: 'Locked formulas',
+  treatment_sessions: 'Treatment sessions',
   test_spots_pending: 'Test spots healing',
   blocked_lots: 'Blocked lots',
   active_lots: 'Active lots',
@@ -134,17 +137,16 @@ function AdvancedDashboard({
           switch to simple view
         </a>
       </h2>
-      <div className="grid" style={{ marginBottom: 18 }}>
+      <div className="grid">
         {stats &&
-          Object.entries(TILE_LABELS).map(([k, label]) => (
+          Object.entries(stats).map(([k, v]) => (
             <div className="stat" key={k}>
-              <div className="n">{stats[k] ?? 0}</div>
-              <div className="l">{label}</div>
+              <div className="n">{v}</div>
+              <div className="l">{LABELS[k] ?? k}</div>
             </div>
           ))}
       </div>
-      <FlowCharts />
-      <div className="panel">
+      <div className="panel" style={{ marginTop: 18 }}>
         <h2>Workflow</h2>
         <p className="hint">
           Client → consent → calibrated capture (reference card, 3+ photos) → patch selection →
