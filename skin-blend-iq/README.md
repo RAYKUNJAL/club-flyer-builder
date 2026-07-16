@@ -50,6 +50,29 @@ treatment sessions (spec Appendix B, warning 1).
 Config via env vars: `SBI_DATABASE_URL` (any SQLAlchemy URL — point at Postgres
 in production), `SBI_JWT_SECRET`, `SBI_UPLOAD_DIR`, `SBI_FRONTEND_DIST`.
 
+## Deployment
+
+**Docker (recommended):** with Docker installed, from `skin-blend-iq/`:
+
+```bash
+SBI_JWT_SECRET="$(openssl rand -hex 32)" docker compose up --build
+```
+
+Open http://localhost:8000. The database and uploaded images persist in the
+`sbi-data` volume. The image is multi-stage (Node builds the frontend, Python
+runs the API) and includes the PostgreSQL driver — set `SBI_DATABASE_URL` to a
+Postgres URL for multi-instance deployments.
+
+**Render (one-click hosting):** a `render.yaml` blueprint sits at the
+repository root. In Render choose *New + → Blueprint*, point it at this
+repository and branch, and it provisions the service with a persistent disk,
+an auto-generated `SBI_JWT_SECRET`, and a `/v1/health` health check.
+
+**Any other host (Railway, Fly.io, a VPS):** anything that can run a
+Dockerfile works — use `skin-blend-iq/Dockerfile`, expose port 8000, mount a
+volume at `/data`, and set `SBI_JWT_SECRET` to a long random string. The app
+refuses nothing but warns loudly if the development secret is left in place.
+
 ### Run the tests
 
 ```bash

@@ -19,6 +19,14 @@ from .routers import (
 
 
 def create_app(seed_demo: bool = True) -> FastAPI:
+    if config.JWT_SECRET == "dev-secret-change-in-production":
+        import warnings
+
+        warnings.warn(
+            "SBI_JWT_SECRET is using the development default. "
+            "Set a long random SBI_JWT_SECRET before exposing this server.",
+            stacklevel=1,
+        )
     app = FastAPI(
         title="Skin Blend IQ",
         version="1.0.0",

@@ -1,0 +1,21 @@
+# Render Blueprint for Skin Blend IQ (one-click deploy).
+# In Render: New + -> Blueprint -> point at this repository/branch.
+services:
+  - type: web
+    name: skin-blend-iq
+    runtime: docker
+    dockerfilePath: skin-blend-iq/Dockerfile
+    dockerContext: skin-blend-iq
+    plan: starter
+    envVars:
+      - key: SBI_JWT_SECRET
+        generateValue: true
+      - key: SBI_DATABASE_URL
+        value: sqlite:////data/skin_blend_iq.db
+      - key: SBI_UPLOAD_DIR
+        value: /data/uploads
+    disk:
+      name: sbi-data
+      mountPath: /data
+      sizeGB: 1
+    healthCheckPath: /v1/health
