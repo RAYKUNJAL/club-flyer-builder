@@ -1,0 +1,49 @@
+# No-code strategy definitions -- edit these, no Python required, mirroring the
+# "set your rules, zero code" pitch. Loaded by algotrader.cli / build_from_config().
+
+orb_nq:
+  type: orb
+  params:
+    range_minutes: 30
+    session_open: "09:30"
+    atr_period: 14
+    atr_stop_mult: 1.5
+    reward_risk: 2.0
+    max_risk_points: 50
+    session_close: "16:00"
+
+fast_trend_nq:
+  type: fast_trend
+  params:
+    drive_minutes: 5
+    session_open: "09:30"
+    momentum_threshold_points: 15
+    target_points: 20
+    stop_points: 10
+    max_hold_minutes: 30
+
+pulse_nq:
+  type: pulse
+  params:
+    fast_period: 9
+    slow_period: 21
+    atr_period: 14
+    trail_atr_mult: 2.0
+    min_spread_atr_mult: 0.15
+    session_close: "15:55"
+
+mean_reversion_nq:
+  type: mean_reversion
+  params:
+    band_period: 20
+    band_std: 2.0
+    stop_std: 3.0
+
+swing_trend_multi_asset:
+  type: swing_trend
+  params:
+    entry_period: 55
+    exit_period: 20
+    atr_period: 20
+    atr_stop_mult: 3.0
+    allow_short: true
