@@ -20,7 +20,9 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from ..backtest.scoring import composite_score
+from ..live.paper_tracker import PaperTracker
 from . import broker_session
+from .volume_profile import profile_for_config
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DATA_DIR = REPO_ROOT / "data"
@@ -28,6 +30,7 @@ STATIC_DIR = Path(__file__).resolve().parent / "static"
 SCAN_FILE = DATA_DIR / "win_rate_scan.json"
 TOP_TRADERS_FILE = DATA_DIR / "top_traders.json"
 ACTIVE_STRATEGY_FILE = DATA_DIR / "active_strategy.json"
+PAPER_TRADES_FILE = DATA_DIR / "paper_trades.json"
 
 STRATEGY_LABELS = {
     "orb": "Opening Range Breakout",
@@ -109,6 +112,40 @@ def equity_curve(strategy_id: int, points: int = 200):
 def trades(strategy_id: int):
     d = _get_strategy_or_404(strategy_id)
     return d["trades"]
+
+
+@app.get("/api/strategies/{strategy_id}/volume_profile")
+def volume_profile(strategy_id: int, bins: int = 36, bars: int = 240):
+    """Volume-at-price clusters (footprint approximation) for this config's market data."""
+    d = _get_strategy_or_404(strategy_id)
+    profile = profile_for_config(DATA_DIR, d["symbol"], d["timeframe"], bins, bars)
+    if profile is None:
+        raise HTTPException(
+            404,
+            f"no market data file for {d['symbol']} {d['timeframe']} -- run "
+            "scripts/fetch_yahoo_chart.py for that symbol first",
+        )
+    return profile
+
+
+@app.get("/api/paper/summary")
+def paper_summary():
+    """Live paper-trading performance vs the active strategy's backtest, with kill criteria."""
+    tracker = PaperTracker(PAPER_TRADES_FILE)
+    backtest = None
+    if ACTIVE_STRATEGY_FILE.exists():
+        active = json.loads(ACTIVE_STRATEGY_FILE.read_text())
+        scan = _load_scan()
+        sid = active.get("strategy_id")
+        if isinstance(sid, int) and 0 <= sid < len(scan):
+            backtest = scan[sid]["metrics"]
+    return tracker.summary(backtest)
+
+
+@app.get("/api/paper/trades")
+def paper_trades():
+    tracker = PaperTracker(PAPER_TRADES_FILE)
+    return tracker.trades
 
 
 FOOTPRINT_SOURCES = {

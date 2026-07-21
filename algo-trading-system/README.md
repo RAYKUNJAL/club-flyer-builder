@@ -164,6 +164,32 @@ account). This panel is the best public-data approximation — tick-rule classif
 1-minute bar's range — and says so in the UI. The JSON shape matches what a real tick feed
 would produce, so wiring Tradovate market data in later only swaps the builder.
 
+### Automated paper trading (the AI trades the copied strategy)
+
+The full hands-free loop: tap **Copy strategy** on the dashboard, then run
+
+```bash
+python scripts/run_paper_trading.py
+```
+
+It builds that exact strategy from the registry, polls real market bars, and trades a
+$50,000 **paper** account (same size as the backtests, so results compare directly). No
+credentials needed and no real orders — ever — from this script. Every closed trade is
+logged to `data/paper_trades.json`, and the dashboard's **Paper trading validation** card
+compares live results against the backtest with kill criteria committed in code
+(`src/algotrader/live/paper_tracker.py`): stop if live drawdown exceeds the backtest's max,
+or if expectancy falls below half the backtest's after 30 trades. Below 30 trades the
+verdict is "insufficient data" on purpose — small samples read like coin flips.
+
+### Order-flow / footprint chart (honest approximation)
+
+`GET /api/strategies/{id}/volume_profile` powers the dashboard's volume-cluster chart:
+volume traded at each price level over the recent window, split into buy pressure
+(close ≥ open) and sell pressure, with the point of control highlighted. This is the
+standard OHLCV approximation — a true bid×ask footprint requires tick data, which plugs
+into `src/algotrader/webapp/volume_profile.py` once Tradovate market data is connected
+(the output schema is already shaped for it).
+
 ### Top Traders leaderboard (real SEC 13F data)
 
 The dashboard also shows the latest disclosed portfolios of well-known fund managers (Buffett,

@@ -25,6 +25,8 @@ from typing import Callable, Optional
 
 import pandas as pd
 
+TradeCallback = Callable[[dict], None]
+
 from ..risk.position_sizing import PositionSizer
 from ..strategies.base import OrderAction, PositionState, Strategy, StrategyContext
 from .broker_base import Broker
@@ -42,12 +44,14 @@ class LiveRunner:
         risk_sizer: PositionSizer,
         symbol: str,
         max_history_bars: int = 500,
+        on_trade_closed: Optional[TradeCallback] = None,
     ):
         self.strategy = strategy
         self.broker = broker
         self.risk_sizer = risk_sizer
         self.symbol = symbol
         self.max_history_bars = max_history_bars
+        self.on_trade_closed = on_trade_closed
         self._history = pd.DataFrame(columns=["open", "high", "low", "close", "volume"])
         self._pos = PositionState()
         self._stop_order_id: Optional[str] = None
@@ -72,7 +76,7 @@ class LiveRunner:
             self._pos.bars_held += 1
             hit_price, reason = self._check_stop_target(bar)
             if hit_price is not None:
-                self._exit(reason)
+                self._exit(reason, hit_price, ts)
                 return
 
         ctx = StrategyContext(history=self._history, position=self._pos)
@@ -80,7 +84,7 @@ class LiveRunner:
             if order.action == OrderAction.UPDATE_STOP and self._pos.side is not None:
                 self._update_stop(order.stop_price)
             elif order.action == OrderAction.EXIT and self._pos.side is not None:
-                self._exit(order.reason)
+                self._exit(order.reason, bar["close"], ts)
             elif order.action in (OrderAction.ENTER_LONG, OrderAction.ENTER_SHORT) and self._pos.side is None:
                 self._enter(order, bar["close"], ts)
 
@@ -159,10 +163,26 @@ class LiveRunner:
         self._cancel_protective_stop()
         self._place_protective_stop(contracts, new_stop)
 
-    def _exit(self, reason: str) -> None:
+    def _exit(self, reason: str, exit_price: float, ts: Optional[pd.Timestamp] = None) -> None:
         self._cancel_protective_stop()
         self.broker.flatten(self.symbol)
-        logger.info("EXIT %s %s (%s)", self._pos.side, self.symbol, reason)
+        pos = self._pos
+        logger.info("EXIT %s %s (%s)", pos.side, self.symbol, reason)
+        if self.on_trade_closed is not None and pos.side is not None:
+            direction = 1 if pos.side == "long" else -1
+            contracts = pos.meta.get("contracts", 0)
+            point_value = getattr(self.risk_sizer.config, "point_value", 1.0)
+            self.on_trade_closed({
+                "side": pos.side,
+                "entry_time": str(pos.entry_time),
+                "exit_time": str(ts) if ts is not None else None,
+                "entry_price": pos.entry_price,
+                "exit_price": exit_price,
+                "contracts": contracts,
+                "pnl": (exit_price - pos.entry_price) * direction * contracts * point_value,
+                "entry_reason": pos.meta.get("entry_reason", ""),
+                "exit_reason": reason,
+            })
         self._pos = PositionState()
 
     def _check_stop_target(self, bar: pd.Series) -> tuple[Optional[float], str]:

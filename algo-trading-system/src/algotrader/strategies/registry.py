@@ -12,7 +12,10 @@ from .fast_trend import FastTrend
 from .mean_reversion import MeanReversion
 from .orb import OpeningRangeBreakout
 from .pulse import Pulse
+from .rsi2_pullback import Rsi2Pullback
+from .squeeze_breakout import SqueezeBreakout
 from .swing_trend import SwingTrend
+from .vwap_reversion import VwapReversion
 
 STRATEGY_TYPES: dict[str, type[Strategy]] = {
     "orb": OpeningRangeBreakout,
@@ -20,6 +23,9 @@ STRATEGY_TYPES: dict[str, type[Strategy]] = {
     "pulse": Pulse,
     "mean_reversion": MeanReversion,
     "swing_trend": SwingTrend,
+    "rsi2_pullback": Rsi2Pullback,
+    "squeeze_breakout": SqueezeBreakout,
+    "vwap_reversion": VwapReversion,
 }
 
 _TIME_PARAMS = {"session_open", "session_close"}

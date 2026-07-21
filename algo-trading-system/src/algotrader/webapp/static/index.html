@@ -237,6 +237,23 @@
     </div>
 
     <div class="card">
+      <h3>Order flow — volume clusters</h3>
+      <div class="card-sub" id="vp-sub">Volume traded at each price level over the recent window: sell-pressure
+        left, buy-pressure right, point of control highlighted. Approximated from OHLCV bars — a true bid×ask
+        footprint needs tick data (plugs in once Tradovate market data is connected).</div>
+      <div class="chart-wrap">
+        <svg id="vp-svg" style="width:100%;height:300px;display:block"></svg>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Paper trading validation</h3>
+      <div class="card-sub">Live paper results vs the backtest for the copied strategy, with pre-committed kill
+        criteria. Start the loop with <code>python scripts/run_paper_trading.py</code>.</div>
+      <div id="paper-body" class="empty-state">Loading…</div>
+    </div>
+
+    <div class="card">
       <h3>Trade log</h3>
       <div class="card-sub">Every simulated fill for this strategy/symbol combination</div>
       <div class="table-scroll">
@@ -641,6 +658,107 @@ async function loadTopTraders() {
   });
 }
 
+function renderVolumeProfile(profile) {
+  const svg = document.getElementById("vp-svg");
+  svg.textContent = "";
+  const ns = "http://www.w3.org/2000/svg";
+  if (!profile || !profile.bins || !profile.bins.length) {
+    document.getElementById("vp-sub").textContent = "No market data file available for this config.";
+    return;
+  }
+  const W = svg.clientWidth || 800, H = 300;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const padL = 64, padR = 16, padT = 6, padB = 6;
+  const mid = padL + (W - padL - padR) / 2;
+  const halfW = (W - padL - padR) / 2 - 6;
+  const bins = profile.bins;
+  const rowH = (H - padT - padB) / bins.length;
+  const maxSide = Math.max(...bins.map(b => Math.max(b.up, b.down))) || 1;
+
+  // Center axis
+  const axis = document.createElementNS(ns, "line");
+  axis.setAttribute("x1", mid); axis.setAttribute("x2", mid);
+  axis.setAttribute("y1", padT); axis.setAttribute("y2", H - padB);
+  axis.setAttribute("stroke", "var(--gridline)"); axis.setAttribute("stroke-width", "1");
+  svg.appendChild(axis);
+
+  bins.forEach((b, i) => {
+    // bins come low->high; draw high prices at the top
+    const y = padT + (bins.length - 1 - i) * rowH;
+    const h = Math.max(1, rowH - 2);  // 2px surface gap between rows
+    const isPoc = i === profile.poc_index;
+
+    const downW = (b.down / maxSide) * halfW;
+    const upW = (b.up / maxSide) * halfW;
+    const mk = (x, w, fill) => {
+      if (w < 0.5) return;
+      const r = document.createElementNS(ns, "rect");
+      r.setAttribute("x", x); r.setAttribute("y", y);
+      r.setAttribute("width", w); r.setAttribute("height", h);
+      r.setAttribute("rx", "1.5");
+      r.setAttribute("fill", fill);
+      r.setAttribute("opacity", isPoc ? "1" : "0.72");
+      const tip = document.createElementNS(ns, "title");
+      tip.textContent = `${b.p0.toFixed(2)}–${b.p1.toFixed(2)}  buy ${Math.round(b.up).toLocaleString()} · sell ${Math.round(b.down).toLocaleString()}${isPoc ? "  (POC)" : ""}`;
+      r.appendChild(tip);
+      svg.appendChild(r);
+    };
+    mk(mid - downW, downW, "var(--critical)");
+    mk(mid, upW, "var(--good-status)");
+
+    if (isPoc) {
+      const ring = document.createElementNS(ns, "rect");
+      ring.setAttribute("x", padL - 2); ring.setAttribute("y", y - 1);
+      ring.setAttribute("width", W - padL - padR + 4); ring.setAttribute("height", h + 2);
+      ring.setAttribute("fill", "none"); ring.setAttribute("stroke", "var(--baseline)");
+      ring.setAttribute("stroke-width", "1"); ring.setAttribute("rx", "3");
+      svg.appendChild(ring);
+    }
+    // Price labels on ~6 rows
+    if (i % Math.ceil(bins.length / 6) === 0 || isPoc) {
+      const label = document.createElementNS(ns, "text");
+      label.setAttribute("x", padL - 8); label.setAttribute("y", y + h / 2 + 3.5);
+      label.setAttribute("text-anchor", "end"); label.setAttribute("font-size", "10.5");
+      label.setAttribute("fill", "var(--text-muted)");
+      label.textContent = ((b.p0 + b.p1) / 2).toFixed(b.p1 - b.p0 < 1 ? 2 : 0);
+      svg.appendChild(label);
+    }
+  });
+}
+
+function fmtOrDash(v, f) { return v === null || v === undefined ? "—" : f(v); }
+
+async function loadPaperSummary() {
+  const el = document.getElementById("paper-body");
+  let s;
+  try { s = await api("/api/paper/summary"); }
+  catch (e) { el.textContent = e.message; return; }
+  const live = s.live;
+  if (live.num_trades === 0) {
+    el.textContent = "No paper trades logged yet. Copy a strategy, then start scripts/run_paper_trading.py — results appear here as trades close.";
+    return;
+  }
+  const bt = s.backtest || {};
+  const statusColor = {healthy: "var(--good)", kill: "var(--critical)",
+                       insufficient_data: "var(--warning)", no_backtest_baseline: "var(--text-muted)"}[s.status];
+  const rows = [
+    ["Trades", live.num_trades, bt.num_trades],
+    ["Win rate", fmtOrDash(live.win_rate, fmtPct), fmtOrDash(bt.win_rate, fmtPct)],
+    ["Profit factor", fmtOrDash(live.profit_factor, fmtNum), fmtOrDash(bt.profit_factor, fmtNum)],
+    ["Expectancy / trade", fmtOrDash(live.expectancy, fmtMoney), fmtOrDash(bt.expectancy, fmtMoney)],
+    ["Max drawdown", fmtOrDash(live.max_drawdown_pct, fmtPct), fmtOrDash(bt.max_drawdown_pct, fmtPct)],
+  ];
+  el.className = "";
+  el.innerHTML = `
+    <div style="margin-bottom:10px"><span class="pill" style="background:rgba(128,128,128,0.10);color:${statusColor}">
+      <span class="dot" style="background:${statusColor}"></span>${s.status.replace(/_/g, " ")}</span>
+      ${s.violations && s.violations.length ? `<div style="color:var(--critical);font-size:12px;margin-top:6px">${s.violations.join("<br>")}</div>` : ""}
+      ${s.status === "insufficient_data" ? `<span style="font-size:11.5px;color:var(--text-muted);margin-left:8px">judged after ${s.min_trades_to_judge} trades</span>` : ""}
+    </div>
+    <table><thead><tr><th></th><th class="num">Live (paper)</th><th class="num">Backtest</th></tr></thead>
+    <tbody>${rows.map(r => `<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="num">${r[2] ?? "—"}</td></tr>`).join("")}</tbody></table>`;
+}
+
 async function selectStrategy(id) {
   activeId = id;
   const s = strategies.find(x => x.id === id);
@@ -653,6 +771,8 @@ async function selectStrategy(id) {
   ]);
   renderChart(curve);
   renderTrades(trades);
+  try { renderVolumeProfile(await api(`/api/strategies/${id}/volume_profile`)); }
+  catch (e) { renderVolumeProfile(null); }
 }
 
 async function loadStrategies() {
@@ -826,6 +946,8 @@ async function loadFootprint() {
 loadActive().then(loadStrategies);
 loadFootprint();
 loadTopTraders();
+loadPaperSummary();
+setInterval(loadPaperSummary, 30000);
 pollBrokerStatus();
 tickClock();
 setInterval(tickClock, 1000);
