@@ -1,0 +1,3461 @@
+[
+  {
+    "strategy": "swing_trend",
+    "symbol": "Gold ETF (GLD)",
+    "timeframe": "1d",
+    "params": {
+      "entry_period": 55,
+      "exit_period": 20,
+      "atr_period": 20,
+      "atr_stop_mult": 3.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 29,
+      "win_rate": 0.4482758620689655,
+      "profit_factor": 2.543205167995116,
+      "total_pnl": 14831.327085113506,
+      "total_return_pct": 0.2966265417022701,
+      "max_drawdown_pct": -0.09529124745640992,
+      "sharpe": 0.6667810040068932,
+      "avg_win": 1880.1581815338113,
+      "avg_loss": -600.6705796766277
+    },
+    "oos": {
+      "num_trades": 15,
+      "win_rate": 0.4666666666666667,
+      "profit_factor": 3.82885828813462,
+      "total_pnl": 14275.42314331052,
+      "total_return_pct": 0.2855084628662104,
+      "max_drawdown_pct": -0.05835210733531603,
+      "sharpe": 1.1549954440276218,
+      "avg_win": 2760.254019295826,
+      "avg_loss": -630.7943739700324
+    },
+    "is_score": 0.6278,
+    "oos_pass": true
+  },
+  {
+    "strategy": "swing_trend",
+    "symbol": "Gold ETF (GLD)",
+    "timeframe": "1d",
+    "params": {
+      "entry_period": 20,
+      "exit_period": 10,
+      "atr_period": 14,
+      "atr_stop_mult": 2.5
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 66,
+      "win_rate": 0.3939393939393939,
+      "profit_factor": 1.3355611190184187,
+      "total_pnl": 10285.986316680799,
+      "total_return_pct": 0.205719726333616,
+      "max_drawdown_pct": -0.10825531135190625,
+      "sharpe": 0.38102143119109483,
+      "avg_win": 1574.5799884154758,
+      "avg_loss": -766.3273345530393
+    },
+    "oos": {
+      "num_trades": 35,
+      "win_rate": 0.37142857142857144,
+      "profit_factor": 1.167342090080871,
+      "total_pnl": 3162.417625884995,
+      "total_return_pct": 0.06324835251769989,
+      "max_drawdown_pct": -0.12059231818312073,
+      "sharpe": 0.2689519032291784,
+      "avg_win": 1696.9491377375673,
+      "avg_loss": -858.9964165774264
+    },
+    "is_score": 0.4383,
+    "oos_pass": true
+  },
+  {
+    "strategy": "swing_trend",
+    "symbol": "Gold ETF (GLD)",
+    "timeframe": "1d",
+    "params": {
+      "entry_period": 40,
+      "exit_period": 15,
+      "atr_period": 20,
+      "atr_stop_mult": 3.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 35,
+      "win_rate": 0.45714285714285713,
+      "profit_factor": 2.1660645155345466,
+      "total_pnl": 14892.260819396954,
+      "total_return_pct": 0.2978452163879391,
+      "max_drawdown_pct": -0.0949469480546057,
+      "sharpe": 0.6272882460717231,
+      "avg_win": 1728.9779685878732,
+      "avg_loss": -672.178246211001
+    },
+    "oos": {
+      "num_trades": 19,
+      "win_rate": 0.47368421052631576,
+      "profit_factor": 2.757605436185992,
+      "total_pnl": 13206.051808776836,
+      "total_return_pct": 0.2641210361755367,
+      "max_drawdown_pct": -0.07182527375640471,
+      "sharpe": 1.0402122924637869,
+      "avg_win": 2302.19033671061,
+      "avg_loss": -751.3661221618656
+    },
+    "is_score": 0.5822,
+    "oos_pass": true
+  },
+  {
+    "strategy": "mean_reversion",
+    "symbol": "Gold ETF (GLD)",
+    "timeframe": "1d",
+    "params": {
+      "band_period": 20,
+      "band_std": 2.0,
+      "stop_std": 3.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 153,
+      "win_rate": 0.27450980392156865,
+      "profit_factor": 0.7071799546179399,
+      "total_pnl": -30001.059326947605,
+      "total_return_pct": -0.6000211865389521,
+      "max_drawdown_pct": -0.6361111522611594,
+      "sharpe": -0.5508722965881514,
+      "avg_win": 1725.108589803565,
+      "avg_loss": -923.0236044927696
+    },
+    "oos": {
+      "num_trades": 72,
+      "win_rate": 0.3194444444444444,
+      "profit_factor": 0.9552229206915558,
+      "total_pnl": -2957.655133706673,
+      "total_return_pct": -0.05915310267413346,
+      "max_drawdown_pct": -0.2893369118768608,
+      "sharpe": -0.011996788618582393,
+      "avg_win": 2743.270731221074,
+      "avg_loss": -1348.0179990161503
+    },
+    "is_score": 0.1511,
+    "oos_pass": false
+  },
+  {
+    "strategy": "mean_reversion",
+    "symbol": "Gold ETF (GLD)",
+    "timeframe": "1d",
+    "params": {
+      "band_period": 14,
+      "band_std": 1.5,
+      "stop_std": 2.5
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 293,
+      "win_rate": 0.3003412969283277,
+      "profit_factor": 0.7905722727657445,
+      "total_pnl": -38584.69947885127,
+      "total_return_pct": -0.7716939895770254,
+      "max_drawdown_pct": -0.8377852593252842,
+      "sharpe": -0.37568430773979516,
+      "avg_win": 1655.1594912641938,
+      "avg_loss": -898.725535171221
+    },
+    "oos": {
+      "num_trades": 131,
+      "win_rate": 0.3282442748091603,
+      "profit_factor": 0.7993842641870464,
+      "total_pnl": -22592.270577277715,
+      "total_return_pct": -0.4518454115455543,
+      "max_drawdown_pct": -0.5946926880061383,
+      "sharpe": -0.4133106649609704,
+      "avg_win": 2093.5436732164867,
+      "avg_loss": -1279.7119150634846
+    },
+    "is_score": 0.1673,
+    "oos_pass": false
+  },
+  {
+    "strategy": "mean_reversion",
+    "symbol": "Gold ETF (GLD)",
+    "timeframe": "1d",
+    "params": {
+      "band_period": 10,
+      "band_std": 2.5,
+      "stop_std": 3.5
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 8,
+      "win_rate": 0.375,
+      "profit_factor": 1.425274377839499,
+      "total_pnl": 2057.666622229886,
+      "total_return_pct": 0.04115333244459772,
+      "max_drawdown_pct": -0.07798334346373041,
+      "sharpe": 0.18645710426114423,
+      "avg_win": 2298.703823242194,
+      "avg_loss": -967.6889694993391
+    },
+    "oos": {
+      "num_trades": 2,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "total_pnl": -1979.5488295073437,
+      "total_return_pct": -0.039590976590146876,
+      "max_drawdown_pct": -0.03959097659014689,
+      "sharpe": -0.747355988248376,
+      "avg_win": 0.0,
+      "avg_loss": -989.7744147536719
+    },
+    "is_score": 0.4397,
+    "oos_pass": false
+  },
+  {
+    "strategy": "rsi2_pullback",
+    "symbol": "Gold ETF (GLD)",
+    "timeframe": "1d",
+    "params": {
+      "rsi_period": 2,
+      "oversold": 10.0,
+      "trend_period": 200,
+      "exit_ma_period": 5,
+      "max_hold_bars": 10,
+      "stop_atr_mult": 3.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 40,
+      "win_rate": 0.65,
+      "profit_factor": 0.9311377052492102,
+      "total_pnl": -589.4646956307901,
+      "total_return_pct": -0.011789293912615802,
+      "max_drawdown_pct": -0.04416732591656231,
+      "sharpe": -0.057373273728913675,
+      "avg_win": 306.560978522667,
+      "avg_loss": -611.432152658581
+    },
+    "oos": {
+      "num_trades": 20,
+      "win_rate": 0.8,
+      "profit_factor": 2.0021976179472967,
+      "total_pnl": 3101.7405108642643,
+      "total_return_pct": 0.06203481021728528,
+      "max_drawdown_pct": -0.03480405125049343,
+      "sharpe": 0.6785360795935576,
+      "avg_win": 387.2924705123905,
+      "avg_loss": -773.7347543334957
+    },
+    "is_score": 0.449,
+    "oos_pass": true
+  },
+  {
+    "strategy": "rsi2_pullback",
+    "symbol": "Gold ETF (GLD)",
+    "timeframe": "1d",
+    "params": {
+      "rsi_period": 2,
+      "oversold": 25.0,
+      "trend_period": 100,
+      "exit_ma_period": 5,
+      "max_hold_bars": 8,
+      "stop_atr_mult": 3.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 94,
+      "win_rate": 0.6595744680851063,
+      "profit_factor": 1.0898062410816298,
+      "total_pnl": 1708.2951167950062,
+      "total_return_pct": 0.034165902335900125,
+      "max_drawdown_pct": -0.07971185176859885,
+      "sharpe": 0.15549923023467208,
+      "avg_win": 334.35974214615203,
+      "avg_loss": -594.4377780083255
+    },
+    "oos": {
+      "num_trades": 48,
+      "win_rate": 0.7291666666666666,
+      "profit_factor": 1.6693460905576236,
+      "total_pnl": 3787.392521493085,
+      "total_return_pct": 0.07574785042986171,
+      "max_drawdown_pct": -0.04549691983825636,
+      "sharpe": 0.6211173847074637,
+      "avg_win": 269.87827537318606,
+      "avg_loss": -435.2574705052639
+    },
+    "is_score": 0.4677,
+    "oos_pass": true
+  },
+  {
+    "strategy": "rsi2_pullback",
+    "symbol": "Gold ETF (GLD)",
+    "timeframe": "1d",
+    "params": {
+      "rsi_period": 4,
+      "oversold": 20.0,
+      "trend_period": 150,
+      "exit_ma_period": 10,
+      "max_hold_bars": 12,
+      "stop_atr_mult": 2.5
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 19,
+      "win_rate": 0.5263157894736842,
+      "profit_factor": 0.9320658148484121,
+      "total_pnl": -339.7159187317185,
+      "total_return_pct": -0.00679431837463437,
+      "max_drawdown_pct": -0.06198632715568688,
+      "sharpe": -0.034476304968488705,
+      "avg_win": 466.09463836669727,
+      "avg_loss": -555.6291447109656
+    },
+    "oos": {
+      "num_trades": 12,
+      "win_rate": 0.8333333333333334,
+      "profit_factor": 3.3628554489807594,
+      "total_pnl": 5010.791492592939,
+      "total_return_pct": 0.10021582985185878,
+      "max_drawdown_pct": -0.03722575090241318,
+      "sharpe": 1.0320711620539718,
+      "avg_win": 713.1442374877927,
+      "avg_loss": -1060.3254411424941
+    },
+    "is_score": 0.4093,
+    "oos_pass": true
+  },
+  {
+    "strategy": "squeeze_breakout",
+    "symbol": "Gold ETF (GLD)",
+    "timeframe": "1d",
+    "params": {
+      "bb_period": 20,
+      "bb_std": 2.0,
+      "kc_period": 20,
+      "kc_atr_mult": 1.5,
+      "min_squeeze_bars": 5,
+      "stop_atr_mult": 2.0,
+      "trail_atr_mult": 2.5
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 6,
+      "win_rate": 0.16666666666666666,
+      "profit_factor": 0.6083598991451984,
+      "total_pnl": -1182.211185346337,
+      "total_return_pct": -0.023644223706926742,
+      "max_drawdown_pct": -0.05726231620309001,
+      "sharpe": -0.2113114269387302,
+      "avg_win": 1836.4050972202817,
+      "avg_loss": -603.7232565133238
+    },
+    "oos": {
+      "num_trades": 2,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "total_pnl": -1156.2630065917951,
+      "total_return_pct": -0.0231252601318359,
+      "max_drawdown_pct": -0.02364722186678135,
+      "sharpe": -1.0233513802412295,
+      "avg_win": 0.0,
+      "avg_loss": -578.1315032958976
+    },
+    "is_score": 0.284,
+    "oos_pass": false
+  },
+  {
+    "strategy": "squeeze_breakout",
+    "symbol": "Gold ETF (GLD)",
+    "timeframe": "1d",
+    "params": {
+      "bb_period": 20,
+      "bb_std": 2.0,
+      "kc_period": 20,
+      "kc_atr_mult": 1.2,
+      "min_squeeze_bars": 3,
+      "stop_atr_mult": 1.5,
+      "trail_atr_mult": 2.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 1,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "total_pnl": -999.0998114013644,
+      "total_return_pct": -0.019981996228027286,
+      "max_drawdown_pct": -0.019981996228027273,
+      "sharpe": -0.3842231323377366,
+      "avg_win": 0.0,
+      "avg_loss": -999.0998114013644
+    },
+    "oos": {
+      "num_trades": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "total_pnl": 0,
+      "total_return_pct": 0.0,
+      "max_drawdown_pct": 0.0,
+      "sharpe": 0.0,
+      "avg_win": 0.0,
+      "avg_loss": 0.0
+    },
+    "is_score": 0.19,
+    "oos_pass": false
+  },
+  {
+    "strategy": "squeeze_breakout",
+    "symbol": "Gold ETF (GLD)",
+    "timeframe": "1d",
+    "params": {
+      "bb_period": 14,
+      "bb_std": 1.8,
+      "kc_period": 14,
+      "kc_atr_mult": 1.5,
+      "min_squeeze_bars": 6,
+      "stop_atr_mult": 2.5,
+      "trail_atr_mult": 3.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 24,
+      "win_rate": 0.375,
+      "profit_factor": 1.1563559464112978,
+      "total_pnl": 1390.6924211011,
+      "total_return_pct": 0.027813848422022003,
+      "max_drawdown_pct": -0.09894711805984151,
+      "sharpe": 0.11820560119560913,
+      "avg_win": 1142.788111698209,
+      "avg_loss": -592.9600389455188
+    },
+    "oos": {
+      "num_trades": 4,
+      "win_rate": 0.5,
+      "profit_factor": 0.4380188328880826,
+      "total_pnl": -984.3769580078131,
+      "total_return_pct": -0.01968753916015626,
+      "max_drawdown_pct": -0.036111865147822116,
+      "sharpe": -0.26935980419423655,
+      "avg_win": 383.62108154296527,
+      "avg_loss": -875.8095605468718
+    },
+    "is_score": 0.391,
+    "oos_pass": false
+  },
+  {
+    "strategy": "swing_trend",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "1d",
+    "params": {
+      "entry_period": 55,
+      "exit_period": 20,
+      "atr_period": 20,
+      "atr_stop_mult": 3.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 40,
+      "win_rate": 0.4,
+      "profit_factor": 1.2107986806121396,
+      "total_pnl": 3009.031864318916,
+      "total_return_pct": 0.060180637286378326,
+      "max_drawdown_pct": -0.13933569141892782,
+      "sharpe": 0.18639013475481364,
+      "avg_win": 1080.2166196727762,
+      "avg_loss": -594.7680854352294
+    },
+    "oos": {
+      "num_trades": 14,
+      "win_rate": 0.5,
+      "profit_factor": 2.301305101063742,
+      "total_pnl": 5611.792910156268,
+      "total_return_pct": 0.11223585820312536,
+      "max_drawdown_pct": -0.05380553984080059,
+      "sharpe": 0.6920048581977222,
+      "avg_win": 1417.7467616054005,
+      "avg_loss": -616.0620601545052
+    },
+    "is_score": 0.3902,
+    "oos_pass": true
+  },
+  {
+    "strategy": "swing_trend",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "1d",
+    "params": {
+      "entry_period": 20,
+      "exit_period": 10,
+      "atr_period": 14,
+      "atr_stop_mult": 2.5
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 73,
+      "win_rate": 0.3972602739726027,
+      "profit_factor": 0.8828343987106839,
+      "total_pnl": -3040.054024091257,
+      "total_return_pct": -0.060801080481825136,
+      "max_drawdown_pct": -0.18082837972312965,
+      "sharpe": -0.09242057524984644,
+      "avg_win": 789.8823771720122,
+      "avg_loss": -589.6964309563548
+    },
+    "oos": {
+      "num_trades": 30,
+      "win_rate": 0.4,
+      "profit_factor": 0.9850098547627596,
+      "total_pnl": -160.31977260036547,
+      "total_return_pct": -0.0032063954520073095,
+      "max_drawdown_pct": -0.1262505806045406,
+      "sharpe": 0.0175195476110067,
+      "avg_win": 877.8909600575795,
+      "avg_loss": -594.1672940717399
+    },
+    "is_score": 0.3119,
+    "oos_pass": false
+  },
+  {
+    "strategy": "swing_trend",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "1d",
+    "params": {
+      "entry_period": 40,
+      "exit_period": 15,
+      "atr_period": 20,
+      "atr_stop_mult": 3.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 47,
+      "win_rate": 0.3617021276595745,
+      "profit_factor": 1.0934023714105168,
+      "total_pnl": 1581.7869325257222,
+      "total_return_pct": 0.031635738650514444,
+      "max_drawdown_pct": -0.16007187553520724,
+      "sharpe": 0.10752957975130019,
+      "avg_win": 1089.233953731763,
+      "avg_loss": -564.5063426971415
+    },
+    "oos": {
+      "num_trades": 18,
+      "win_rate": 0.3888888888888889,
+      "profit_factor": 1.2825572997352128,
+      "total_pnl": 2128.4173257446546,
+      "total_return_pct": 0.04256834651489309,
+      "max_drawdown_pct": -0.07114953464299341,
+      "sharpe": 0.28232407537927684,
+      "avg_win": 1380.1585835484107,
+      "avg_loss": -684.7902508267473
+    },
+    "is_score": 0.3487,
+    "oos_pass": true
+  },
+  {
+    "strategy": "mean_reversion",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "1d",
+    "params": {
+      "band_period": 20,
+      "band_std": 2.0,
+      "stop_std": 3.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 129,
+      "win_rate": 0.26356589147286824,
+      "profit_factor": 0.8458579073938014,
+      "total_pnl": -15094.001168860908,
+      "total_return_pct": -0.30188002337721814,
+      "max_drawdown_pct": -0.5507121525070774,
+      "sharpe": -0.041876480763786715,
+      "avg_win": 2436.1365365256374,
+      "avg_loss": -1030.7646674813955
+    },
+    "oos": {
+      "num_trades": 55,
+      "win_rate": 0.3090909090909091,
+      "profit_factor": 0.6708251361749205,
+      "total_pnl": -15320.15523032515,
+      "total_return_pct": -0.306403104606503,
+      "max_drawdown_pct": -0.4754221478598267,
+      "sharpe": -0.3529834120326852,
+      "avg_win": 1836.5252650541452,
+      "avg_loss": -1224.765387795937
+    },
+    "is_score": 0.1646,
+    "oos_pass": false
+  },
+  {
+    "strategy": "mean_reversion",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "1d",
+    "params": {
+      "band_period": 14,
+      "band_std": 1.5,
+      "stop_std": 2.5
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 338,
+      "win_rate": 0.2988165680473373,
+      "profit_factor": 0.9311336598228026,
+      "total_pnl": -23109.68821234708,
+      "total_return_pct": -0.4621937642469416,
+      "max_drawdown_pct": -0.7514662582272107,
+      "sharpe": -0.016949402533321528,
+      "avg_win": 3093.696708403717,
+      "avg_loss": -1415.9200665026265
+    },
+    "oos": {
+      "num_trades": 139,
+      "win_rate": 0.2949640287769784,
+      "profit_factor": 0.8293656640431813,
+      "total_pnl": -15339.415023469333,
+      "total_return_pct": -0.30678830046938665,
+      "max_drawdown_pct": -0.5916451369901334,
+      "sharpe": -0.08696932606219211,
+      "avg_win": 1818.4634062066305,
+      "avg_loss": -917.3103538565422
+    },
+    "is_score": 0.1833,
+    "oos_pass": false
+  },
+  {
+    "strategy": "mean_reversion",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "1d",
+    "params": {
+      "band_period": 10,
+      "band_std": 2.5,
+      "stop_std": 3.5
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 8,
+      "win_rate": 0.5,
+      "profit_factor": 2.4907624612094916,
+      "total_pnl": 6847.00862003977,
+      "total_return_pct": 0.1369401724007954,
+      "max_drawdown_pct": -0.07425972950568982,
+      "sharpe": 0.3700612506128759,
+      "avg_win": 2859.9915288543552,
+      "avg_loss": -1148.2393738444127
+    },
+    "oos": {
+      "num_trades": 3,
+      "win_rate": 0.6666666666666666,
+      "profit_factor": 5.550842321454152,
+      "total_pnl": 4545.927480097813,
+      "total_return_pct": 0.09091854960195625,
+      "max_drawdown_pct": -0.020047200300387487,
+      "sharpe": 0.8411533349952455,
+      "avg_win": 2772.423747558596,
+      "avg_loss": -998.9200150193801
+    },
+    "is_score": 0.6155,
+    "oos_pass": true
+  },
+  {
+    "strategy": "rsi2_pullback",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "1d",
+    "params": {
+      "rsi_period": 2,
+      "oversold": 10.0,
+      "trend_period": 200,
+      "exit_ma_period": 5,
+      "max_hold_bars": 10,
+      "stop_atr_mult": 3.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 51,
+      "win_rate": 0.7058823529411765,
+      "profit_factor": 1.5651909511780042,
+      "total_pnl": 5843.8684813582395,
+      "total_return_pct": 0.11687736962716479,
+      "max_drawdown_pct": -0.08505512706898871,
+      "sharpe": 0.4730762645705602,
+      "avg_win": 449.54178012424256,
+      "avg_loss": -689.3090402076328
+    },
+    "oos": {
+      "num_trades": 25,
+      "win_rate": 0.88,
+      "profit_factor": 5.43124656797323,
+      "total_pnl": 6739.824164690343,
+      "total_return_pct": 0.13479648329380686,
+      "max_drawdown_pct": -0.027695744798844592,
+      "sharpe": 1.5064528390101566,
+      "avg_win": 375.4909625799026,
+      "avg_loss": -506.99233735583766
+    },
+    "is_score": 0.5639,
+    "oos_pass": true
+  },
+  {
+    "strategy": "rsi2_pullback",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "1d",
+    "params": {
+      "rsi_period": 2,
+      "oversold": 25.0,
+      "trend_period": 100,
+      "exit_ma_period": 5,
+      "max_hold_bars": 8,
+      "stop_atr_mult": 3.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 109,
+      "win_rate": 0.7614678899082569,
+      "profit_factor": 1.5158536341706452,
+      "total_pnl": 9122.226553170613,
+      "total_return_pct": 0.18244453106341224,
+      "max_drawdown_pct": -0.10215321936577655,
+      "sharpe": 0.5622139930300503,
+      "avg_win": 322.9635694241834,
+      "avg_loss": -680.1442195783309
+    },
+    "oos": {
+      "num_trades": 53,
+      "win_rate": 0.7735849056603774,
+      "profit_factor": 2.482417962442039,
+      "total_pnl": 8195.338965018262,
+      "total_return_pct": 0.16390677930036524,
+      "max_drawdown_pct": -0.03156757574697095,
+      "sharpe": 1.2221705313258142,
+      "avg_win": 334.7243452267555,
+      "avg_loss": -460.69659910655906
+    },
+    "is_score": 0.5724,
+    "oos_pass": true
+  },
+  {
+    "strategy": "rsi2_pullback",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "1d",
+    "params": {
+      "rsi_period": 4,
+      "oversold": 20.0,
+      "trend_period": 150,
+      "exit_ma_period": 10,
+      "max_hold_bars": 12,
+      "stop_atr_mult": 2.5
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 33,
+      "win_rate": 0.6060606060606061,
+      "profit_factor": 0.9977080542366263,
+      "total_pnl": -31.751883283254983,
+      "total_return_pct": -0.0006350376656650996,
+      "max_drawdown_pct": -0.13000216387791344,
+      "sharpe": 0.017614396846768864,
+      "avg_win": 691.0964080200216,
+      "avg_loss": -1065.667695667976
+    },
+    "oos": {
+      "num_trades": 15,
+      "win_rate": 0.8666666666666667,
+      "profit_factor": 5.422151114148967,
+      "total_pnl": 9143.434464765312,
+      "total_return_pct": 0.18286868929530625,
+      "max_drawdown_pct": -0.03737150192473817,
+      "sharpe": 1.6756755995101387,
+      "avg_win": 862.39065542368,
+      "avg_loss": -1033.8220278712643
+    },
+    "is_score": 0.4047,
+    "oos_pass": true
+  },
+  {
+    "strategy": "squeeze_breakout",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "1d",
+    "params": {
+      "bb_period": 20,
+      "bb_std": 2.0,
+      "kc_period": 20,
+      "kc_atr_mult": 1.5,
+      "min_squeeze_bars": 5,
+      "stop_atr_mult": 2.0,
+      "trail_atr_mult": 2.5
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 6,
+      "win_rate": 0.3333333333333333,
+      "profit_factor": 1.111870648803726,
+      "total_pnl": 332.4749013410095,
+      "total_return_pct": 0.00664949802682019,
+      "max_drawdown_pct": -0.05792730954995613,
+      "sharpe": 0.05515932298696791,
+      "avg_win": 1652.21659218924,
+      "avg_loss": -742.9895707593676
+    },
+    "oos": {
+      "num_trades": 2,
+      "win_rate": 0.5,
+      "profit_factor": 0.47796284055666927,
+      "total_pnl": -278.30787946428427,
+      "total_return_pct": -0.005566157589285686,
+      "max_drawdown_pct": -0.023557720676473975,
+      "sharpe": -0.08956811041090278,
+      "avg_win": 254.8110267857137,
+      "avg_loss": -533.118906249998
+    },
+    "is_score": 0.3896,
+    "oos_pass": false
+  },
+  {
+    "strategy": "squeeze_breakout",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "1d",
+    "params": {
+      "bb_period": 20,
+      "bb_std": 2.0,
+      "kc_period": 20,
+      "kc_atr_mult": 1.2,
+      "min_squeeze_bars": 3,
+      "stop_atr_mult": 1.5,
+      "trail_atr_mult": 2.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 2,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "total_pnl": -1134.447774680006,
+      "total_return_pct": -0.02268895549360012,
+      "max_drawdown_pct": -0.02335730554940368,
+      "sharpe": -0.3073465051402382,
+      "avg_win": 0.0,
+      "avg_loss": -567.223887340003
+    },
+    "oos": {
+      "num_trades": 1,
+      "win_rate": 1.0,
+      "profit_factor": Infinity,
+      "total_pnl": 1364.5585546875027,
+      "total_return_pct": 0.027291171093750052,
+      "max_drawdown_pct": -0.03065368639893564,
+      "sharpe": 0.34061601339601677,
+      "avg_win": 1364.5585546875027,
+      "avg_loss": 0.0
+    },
+    "is_score": 0.1883,
+    "oos_pass": true
+  },
+  {
+    "strategy": "squeeze_breakout",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "1d",
+    "params": {
+      "bb_period": 14,
+      "bb_std": 1.8,
+      "kc_period": 14,
+      "kc_atr_mult": 1.5,
+      "min_squeeze_bars": 6,
+      "stop_atr_mult": 2.5,
+      "trail_atr_mult": 3.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 18,
+      "win_rate": 0.4444444444444444,
+      "profit_factor": 1.9558102762315632,
+      "total_pnl": 6973.0125953238685,
+      "total_return_pct": 0.13946025190647737,
+      "max_drawdown_pct": -0.0635741219132034,
+      "sharpe": 0.48041676407213535,
+      "avg_win": 1783.5508297729505,
+      "avg_loss": -729.5394042859737
+    },
+    "oos": {
+      "num_trades": 5,
+      "win_rate": 0.2,
+      "profit_factor": 0.11586694227084769,
+      "total_pnl": -1861.5472554233966,
+      "total_return_pct": -0.03723094510846793,
+      "max_drawdown_pct": -0.04103814376717413,
+      "sharpe": -0.6339081210597205,
+      "avg_win": 243.95851562500138,
+      "avg_loss": -526.3764427620995
+    },
+    "is_score": 0.5555,
+    "oos_pass": false
+  },
+  {
+    "strategy": "swing_trend",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "1d",
+    "params": {
+      "entry_period": 55,
+      "exit_period": 20,
+      "atr_period": 20,
+      "atr_stop_mult": 3.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 34,
+      "win_rate": 0.47058823529411764,
+      "profit_factor": 2.262312301638419,
+      "total_pnl": 14113.990696182196,
+      "total_return_pct": 0.28227981392364393,
+      "max_drawdown_pct": -0.09975402232981484,
+      "sharpe": 0.6608216231094557,
+      "avg_win": 1580.9407236099225,
+      "avg_loss": -621.1700489764758
+    },
+    "oos": {
+      "num_trades": 17,
+      "win_rate": 0.47058823529411764,
+      "profit_factor": 1.2168162038263257,
+      "total_pnl": 1572.7254321289508,
+      "total_return_pct": 0.03145450864257902,
+      "max_drawdown_pct": -0.05784809689146884,
+      "sharpe": 0.21032714333991984,
+      "avg_win": 1103.3064850616483,
+      "avg_loss": -805.969605373804
+    },
+    "is_score": 0.5978,
+    "oos_pass": true
+  },
+  {
+    "strategy": "swing_trend",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "1d",
+    "params": {
+      "entry_period": 20,
+      "exit_period": 10,
+      "atr_period": 14,
+      "atr_stop_mult": 2.5
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 73,
+      "win_rate": 0.3835616438356164,
+      "profit_factor": 1.1100040762851704,
+      "total_pnl": 2785.8530927167285,
+      "total_return_pct": 0.05571706185433457,
+      "max_drawdown_pct": -0.12629908114589836,
+      "sharpe": 0.14423472444222152,
+      "avg_win": 1003.9589938307765,
+      "avg_loss": -562.7777496565558
+    },
+    "oos": {
+      "num_trades": 27,
+      "win_rate": 0.37037037037037035,
+      "profit_factor": 1.3973655073553948,
+      "total_pnl": 3739.0485488892236,
+      "total_return_pct": 0.07478097097778447,
+      "max_drawdown_pct": -0.07588157226247164,
+      "sharpe": 0.381897114978906,
+      "avg_win": 1314.8643694109269,
+      "avg_loss": -553.5055967776498
+    },
+    "is_score": 0.3767,
+    "oos_pass": true
+  },
+  {
+    "strategy": "swing_trend",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "1d",
+    "params": {
+      "entry_period": 40,
+      "exit_period": 15,
+      "atr_period": 20,
+      "atr_stop_mult": 3.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 43,
+      "win_rate": 0.3953488372093023,
+      "profit_factor": 1.5013736177835537,
+      "total_pnl": 8554.30431426998,
+      "total_return_pct": 0.17108608628539962,
+      "max_drawdown_pct": -0.11251382052527732,
+      "sharpe": 0.41259946593001146,
+      "avg_win": 1506.825902045753,
+      "avg_loss": -656.2206161733777
+    },
+    "oos": {
+      "num_trades": 20,
+      "win_rate": 0.4,
+      "profit_factor": 1.1065701947784383,
+      "total_pnl": 912.430447998091,
+      "total_return_pct": 0.01824860895996182,
+      "max_drawdown_pct": -0.073606049574114,
+      "sharpe": 0.13153592521807012,
+      "avg_win": 1184.2761719894438,
+      "avg_loss": -713.4815773264548
+    },
+    "is_score": 0.459,
+    "oos_pass": true
+  },
+  {
+    "strategy": "mean_reversion",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "1d",
+    "params": {
+      "band_period": 20,
+      "band_std": 2.0,
+      "stop_std": 3.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 129,
+      "win_rate": 0.21705426356589147,
+      "profit_factor": 0.6461360785284254,
+      "total_pnl": -28404.85680897356,
+      "total_return_pct": -0.5680971361794712,
+      "max_drawdown_pct": -0.6057503828931731,
+      "sharpe": -0.5270785313847536,
+      "avg_win": 1852.346710948274,
+      "avg_loss": -794.758066490349
+    },
+    "oos": {
+      "num_trades": 54,
+      "win_rate": 0.3148148148148148,
+      "profit_factor": 1.1546959604907432,
+      "total_pnl": 7110.925009593618,
+      "total_return_pct": 0.14221850019187235,
+      "max_drawdown_pct": -0.2316233479669432,
+      "sharpe": 0.323524761055047,
+      "avg_win": 3122.236888517498,
+      "avg_loss": -1242.354110681185
+    },
+    "is_score": 0.1296,
+    "oos_pass": true
+  },
+  {
+    "strategy": "mean_reversion",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "1d",
+    "params": {
+      "band_period": 14,
+      "band_std": 1.5,
+      "stop_std": 2.5
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 346,
+      "win_rate": 0.26011560693641617,
+      "profit_factor": 0.8424233076165087,
+      "total_pnl": -33709.39070901136,
+      "total_return_pct": -0.6741878141802271,
+      "max_drawdown_pct": -0.8503073770629038,
+      "sharpe": -0.2692196708171873,
+      "avg_win": 2002.381330025069,
+      "avg_loss": -835.639493794014
+    },
+    "oos": {
+      "num_trades": 156,
+      "win_rate": 0.28205128205128205,
+      "profit_factor": 1.1672211517731432,
+      "total_pnl": 26534.14126685546,
+      "total_return_pct": 0.5306828253371092,
+      "max_drawdown_pct": -0.5627099386512882,
+      "sharpe": 0.5383599065969695,
+      "avg_win": 4209.342837641333,
+      "avg_loss": -1416.758424905029
+    },
+    "is_score": 0.1633,
+    "oos_pass": true
+  },
+  {
+    "strategy": "mean_reversion",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "1d",
+    "params": {
+      "band_period": 10,
+      "band_std": 2.5,
+      "stop_std": 3.5
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 6,
+      "win_rate": 0.3333333333333333,
+      "profit_factor": 1.1349246802126973,
+      "total_pnl": 645.8052259782653,
+      "total_return_pct": 0.012916104519565305,
+      "max_drawdown_pct": -0.061439385728356714,
+      "sharpe": 0.07041383866220915,
+      "avg_win": 2716.109048461901,
+      "avg_loss": -1196.603217736384
+    },
+    "oos": {
+      "num_trades": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "total_pnl": 0,
+      "total_return_pct": 0.0,
+      "max_drawdown_pct": 0.0,
+      "sharpe": 0.0,
+      "avg_win": 0.0,
+      "avg_loss": 0.0
+    },
+    "is_score": 0.3921,
+    "oos_pass": false
+  },
+  {
+    "strategy": "rsi2_pullback",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "1d",
+    "params": {
+      "rsi_period": 2,
+      "oversold": 10.0,
+      "trend_period": 200,
+      "exit_ma_period": 5,
+      "max_hold_bars": 10,
+      "stop_atr_mult": 3.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 50,
+      "win_rate": 0.66,
+      "profit_factor": 1.504010026682397,
+      "total_pnl": 5054.307991986936,
+      "total_return_pct": 0.10108615983973872,
+      "max_drawdown_pct": -0.058668400428679525,
+      "sharpe": 0.4205982399411347,
+      "avg_win": 457.0453746078952,
+      "avg_loss": -589.8934923572713
+    },
+    "oos": {
+      "num_trades": 25,
+      "win_rate": 0.88,
+      "profit_factor": 5.640199478891571,
+      "total_pnl": 6082.998855154894,
+      "total_return_pct": 0.12165997710309788,
+      "max_drawdown_pct": -0.02344924692290873,
+      "sharpe": 1.4117785412924941,
+      "avg_win": 336.08789223411014,
+      "avg_loss": -436.9782579985097
+    },
+    "is_score": 0.5532,
+    "oos_pass": true
+  },
+  {
+    "strategy": "rsi2_pullback",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "1d",
+    "params": {
+      "rsi_period": 2,
+      "oversold": 25.0,
+      "trend_period": 100,
+      "exit_ma_period": 5,
+      "max_hold_bars": 8,
+      "stop_atr_mult": 3.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 101,
+      "win_rate": 0.7524752475247525,
+      "profit_factor": 1.4866757716032422,
+      "total_pnl": 7672.544664306608,
+      "total_return_pct": 0.15345089328613215,
+      "max_drawdown_pct": -0.09201516750794803,
+      "sharpe": 0.4917973937915924,
+      "avg_win": 308.39147962469775,
+      "avg_loss": -630.6083114868169
+    },
+    "oos": {
+      "num_trades": 48,
+      "win_rate": 0.7708333333333334,
+      "profit_factor": 2.623174285960546,
+      "total_pnl": 7416.422045636955,
+      "total_return_pct": 0.14832844091273908,
+      "max_drawdown_pct": -0.02816056538983266,
+      "sharpe": 1.1612356835815725,
+      "avg_win": 323.9326355640328,
+      "avg_loss": -415.37140638475097
+    },
+    "is_score": 0.5647,
+    "oos_pass": true
+  },
+  {
+    "strategy": "rsi2_pullback",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "1d",
+    "params": {
+      "rsi_period": 4,
+      "oversold": 20.0,
+      "trend_period": 150,
+      "exit_ma_period": 10,
+      "max_hold_bars": 12,
+      "stop_atr_mult": 2.5
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 32,
+      "win_rate": 0.59375,
+      "profit_factor": 1.0514085918826608,
+      "total_pnl": 617.2740380204999,
+      "total_return_pct": 0.012345480760409998,
+      "max_drawdown_pct": -0.10214363102459902,
+      "sharpe": 0.06455424052338193,
+      "avg_win": 664.446814446698,
+      "avg_loss": -923.6319566512891
+    },
+    "oos": {
+      "num_trades": 13,
+      "win_rate": 0.7692307692307693,
+      "profit_factor": 1.8370825726686986,
+      "total_pnl": 2493.2359654890047,
+      "total_return_pct": 0.04986471930978009,
+      "max_drawdown_pct": -0.050050060377847316,
+      "sharpe": 0.48102059312531037,
+      "avg_win": 547.1718670654318,
+      "avg_loss": -992.8275683884376
+    },
+    "is_score": 0.4265,
+    "oos_pass": true
+  },
+  {
+    "strategy": "squeeze_breakout",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "1d",
+    "params": {
+      "bb_period": 20,
+      "bb_std": 2.0,
+      "kc_period": 20,
+      "kc_atr_mult": 1.5,
+      "min_squeeze_bars": 5,
+      "stop_atr_mult": 2.0,
+      "trail_atr_mult": 2.5
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 1,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "total_pnl": -999.3806118338389,
+      "total_return_pct": -0.019987612236676777,
+      "max_drawdown_pct": -0.019987612236676795,
+      "sharpe": -0.38247277972921545,
+      "avg_win": 0.0,
+      "avg_loss": -999.3806118338389
+    },
+    "oos": {
+      "num_trades": 5,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "total_pnl": -2020.9307256207994,
+      "total_return_pct": -0.04041861451241599,
+      "max_drawdown_pct": -0.0639320584856435,
+      "sharpe": -0.5327777580162886,
+      "avg_win": 0.0,
+      "avg_loss": -404.1861451241599
+    },
+    "is_score": 0.19,
+    "oos_pass": false
+  },
+  {
+    "strategy": "squeeze_breakout",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "1d",
+    "params": {
+      "bb_period": 20,
+      "bb_std": 2.0,
+      "kc_period": 20,
+      "kc_atr_mult": 1.2,
+      "min_squeeze_bars": 3,
+      "stop_atr_mult": 1.5,
+      "trail_atr_mult": 2.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "total_pnl": 0,
+      "total_return_pct": 0.0,
+      "max_drawdown_pct": 0.0,
+      "sharpe": 0.0,
+      "avg_win": 0.0,
+      "avg_loss": 0.0
+    },
+    "oos": {
+      "num_trades": 1,
+      "win_rate": 1.0,
+      "profit_factor": Infinity,
+      "total_pnl": 891.736256277901,
+      "total_return_pct": 0.01783472512555802,
+      "max_drawdown_pct": -0.024177168267835916,
+      "sharpe": 0.28607330864413705,
+      "avg_win": 891.736256277901,
+      "avg_loss": 0.0
+    },
+    "is_score": 0.2,
+    "oos_pass": true
+  },
+  {
+    "strategy": "squeeze_breakout",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "1d",
+    "params": {
+      "bb_period": 14,
+      "bb_std": 1.8,
+      "kc_period": 14,
+      "kc_atr_mult": 1.5,
+      "min_squeeze_bars": 6,
+      "stop_atr_mult": 2.5,
+      "trail_atr_mult": 3.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 16,
+      "win_rate": 0.5,
+      "profit_factor": 2.1840105627080537,
+      "total_pnl": 6550.458514578686,
+      "total_return_pct": 0.13100917029157372,
+      "max_drawdown_pct": -0.058472302124620304,
+      "sharpe": 0.5506804787950078,
+      "avg_win": 1510.3613765171608,
+      "avg_loss": -691.5540621948253
+    },
+    "oos": {
+      "num_trades": 12,
+      "win_rate": 0.16666666666666666,
+      "profit_factor": 0.09385915465183217,
+      "total_pnl": -5014.473009905112,
+      "total_return_pct": -0.10028946019810224,
+      "max_drawdown_pct": -0.12034710847516639,
+      "sharpe": -1.054970135251902,
+      "avg_win": 259.7025617762999,
+      "avg_loss": -553.3878133457713
+    },
+    "is_score": 0.6056,
+    "oos_pass": false
+  },
+  {
+    "strategy": "swing_trend",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "1d",
+    "params": {
+      "entry_period": 55,
+      "exit_period": 20,
+      "atr_period": 20,
+      "atr_stop_mult": 3.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 32,
+      "win_rate": 0.34375,
+      "profit_factor": 2.9596604365776167,
+      "total_pnl": 34380.11315309526,
+      "total_return_pct": 0.6876022630619053,
+      "max_drawdown_pct": -0.1137352383515508,
+      "sharpe": 0.9804640179727013,
+      "avg_win": 4720.366057721051,
+      "avg_loss": -835.4244515160144
+    },
+    "oos": {
+      "num_trades": 10,
+      "win_rate": 0.5,
+      "profit_factor": 2.3850863726329448,
+      "total_pnl": 4352.3336706543,
+      "total_return_pct": 0.08704667341308599,
+      "max_drawdown_pct": -0.05897411723697713,
+      "sharpe": 0.5123359449639086,
+      "avg_win": 1498.9233786621091,
+      "avg_loss": -628.4566445312491
+    },
+    "is_score": 0.6724,
+    "oos_pass": true
+  },
+  {
+    "strategy": "swing_trend",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "1d",
+    "params": {
+      "entry_period": 20,
+      "exit_period": 10,
+      "atr_period": 14,
+      "atr_stop_mult": 2.5
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 61,
+      "win_rate": 0.4262295081967213,
+      "profit_factor": 2.807676819114734,
+      "total_pnl": 50357.982940680646,
+      "total_return_pct": 1.007159658813613,
+      "max_drawdown_pct": -0.16303268567811963,
+      "sharpe": 1.0592773842067555,
+      "avg_win": 3008.3011236566504,
+      "avg_loss": -795.938464982636
+    },
+    "oos": {
+      "num_trades": 23,
+      "win_rate": 0.43478260869565216,
+      "profit_factor": 1.7973760560045815,
+      "total_pnl": 6464.151725376676,
+      "total_return_pct": 0.12928303450753353,
+      "max_drawdown_pct": -0.06670882437299853,
+      "sharpe": 0.5971132014112832,
+      "avg_win": 1457.0931050763813,
+      "avg_loss": -623.5984096451643
+    },
+    "is_score": 0.6585,
+    "oos_pass": true
+  },
+  {
+    "strategy": "swing_trend",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "1d",
+    "params": {
+      "entry_period": 40,
+      "exit_period": 15,
+      "atr_period": 20,
+      "atr_stop_mult": 3.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 36,
+      "win_rate": 0.3333333333333333,
+      "profit_factor": 3.48944522087204,
+      "total_pnl": 39113.72695338252,
+      "total_return_pct": 0.7822745390676503,
+      "max_drawdown_pct": -0.12145758018748613,
+      "sharpe": 1.0568806839890175,
+      "avg_win": 4568.795972547532,
+      "avg_loss": -654.6593632161611
+    },
+    "oos": {
+      "num_trades": 14,
+      "win_rate": 0.5714285714285714,
+      "profit_factor": 2.3197136049632054,
+      "total_pnl": 6003.830118408205,
+      "total_return_pct": 0.1200766023681641,
+      "max_drawdown_pct": -0.06001692789812211,
+      "sharpe": 0.6605787414185756,
+      "avg_win": 1319.1466651535034,
+      "avg_loss": -758.2238671366372
+    },
+    "is_score": 0.6783,
+    "oos_pass": true
+  },
+  {
+    "strategy": "mean_reversion",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "1d",
+    "params": {
+      "band_period": 20,
+      "band_std": 2.0,
+      "stop_std": 3.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 162,
+      "win_rate": 0.1728395061728395,
+      "profit_factor": 0.48516446851640077,
+      "total_pnl": -44953.32451145826,
+      "total_return_pct": -0.8990664902291652,
+      "max_drawdown_pct": -0.9054248675955561,
+      "sharpe": -1.4156039358215418,
+      "avg_win": 1512.9488976104833,
+      "avg_loss": -651.6111466011325
+    },
+    "oos": {
+      "num_trades": 61,
+      "win_rate": 0.2786885245901639,
+      "profit_factor": 0.3931444709135561,
+      "total_pnl": -30225.64798982134,
+      "total_return_pct": -0.6045129597964268,
+      "max_drawdown_pct": -0.6472054681660352,
+      "sharpe": -0.9807602866213438,
+      "avg_win": 1151.8437175616093,
+      "avg_loss": -1131.9770724629248
+    },
+    "is_score": 0.0998,
+    "oos_pass": false
+  },
+  {
+    "strategy": "mean_reversion",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "1d",
+    "params": {
+      "band_period": 14,
+      "band_std": 1.5,
+      "stop_std": 2.5
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 324,
+      "win_rate": 0.23765432098765432,
+      "profit_factor": 0.6258583503240545,
+      "total_pnl": -49675.58098451091,
+      "total_return_pct": -0.9935116196902182,
+      "max_drawdown_pct": -0.9939001166198849,
+      "sharpe": -1.0851094048216965,
+      "avg_win": 1079.1758652740277,
+      "avg_loss": -537.5389579376968
+    },
+    "oos": {
+      "num_trades": 139,
+      "win_rate": 0.30935251798561153,
+      "profit_factor": 0.4652803984969143,
+      "total_pnl": -43229.16846377751,
+      "total_return_pct": -0.8645833692755502,
+      "max_drawdown_pct": -0.9451498888808085,
+      "sharpe": -0.5055847332305653,
+      "avg_win": 874.7764410990268,
+      "avg_loss": -842.1307857399547
+    },
+    "is_score": 0.1324,
+    "oos_pass": false
+  },
+  {
+    "strategy": "mean_reversion",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "1d",
+    "params": {
+      "band_period": 10,
+      "band_std": 2.5,
+      "stop_std": 3.5
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 7,
+      "win_rate": 0.14285714285714285,
+      "profit_factor": 0.4211095674968225,
+      "total_pnl": -3405.9037112384854,
+      "total_return_pct": -0.0681180742247697,
+      "max_drawdown_pct": -0.08610643413898905,
+      "sharpe": -0.33904748316800604,
+      "avg_win": 2477.599487304687,
+      "avg_loss": -980.5838664238621
+    },
+    "oos": {
+      "num_trades": 3,
+      "win_rate": 0.3333333333333333,
+      "profit_factor": 0.4735876434542111,
+      "total_pnl": -1984.1899237060563,
+      "total_return_pct": -0.039683798474121124,
+      "max_drawdown_pct": -0.1017083787594384,
+      "sharpe": -0.3175183128580443,
+      "avg_win": 1785.079355468749,
+      "avg_loss": -1884.6346395874027
+    },
+    "is_score": 0.2418,
+    "oos_pass": false
+  },
+  {
+    "strategy": "rsi2_pullback",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "1d",
+    "params": {
+      "rsi_period": 2,
+      "oversold": 10.0,
+      "trend_period": 200,
+      "exit_ma_period": 5,
+      "max_hold_bars": 10,
+      "stop_atr_mult": 3.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 37,
+      "win_rate": 0.7027027027027027,
+      "profit_factor": 1.6010418232601866,
+      "total_pnl": 3657.5011623873033,
+      "total_return_pct": 0.07315002324774607,
+      "max_drawdown_pct": -0.05071819766788716,
+      "sharpe": 0.42712744848977663,
+      "avg_win": 374.72192852900565,
+      "avg_loss": -553.2062708515313
+    },
+    "oos": {
+      "num_trades": 19,
+      "win_rate": 0.631578947368421,
+      "profit_factor": 1.3836986102040796,
+      "total_pnl": 1276.0179686628173,
+      "total_return_pct": 0.025520359373256345,
+      "max_drawdown_pct": -0.047979554612352586,
+      "sharpe": 0.2669614009355024,
+      "avg_win": 383.46596410115603,
+      "avg_loss": -475.081942935865
+    },
+    "is_score": 0.5798,
+    "oos_pass": true
+  },
+  {
+    "strategy": "rsi2_pullback",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "1d",
+    "params": {
+      "rsi_period": 2,
+      "oversold": 25.0,
+      "trend_period": 100,
+      "exit_ma_period": 5,
+      "max_hold_bars": 8,
+      "stop_atr_mult": 3.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 80,
+      "win_rate": 0.6375,
+      "profit_factor": 0.9513294639187186,
+      "total_pnl": -776.1554070145564,
+      "total_return_pct": -0.015523108140291128,
+      "max_drawdown_pct": -0.0736286042921377,
+      "sharpe": -0.04336782201948705,
+      "avg_win": 297.47010655870645,
+      "avg_loss": -549.9010635002961
+    },
+    "oos": {
+      "num_trades": 35,
+      "win_rate": 0.6571428571428571,
+      "profit_factor": 1.3543555030459458,
+      "total_pnl": 1882.7640741838864,
+      "total_return_pct": 0.03765528148367773,
+      "max_drawdown_pct": -0.024683941941142623,
+      "sharpe": 0.41979800572864007,
+      "avg_win": 312.8682995870844,
+      "avg_loss": -442.7672346932545
+    },
+    "is_score": 0.4335,
+    "oos_pass": true
+  },
+  {
+    "strategy": "rsi2_pullback",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "1d",
+    "params": {
+      "rsi_period": 4,
+      "oversold": 20.0,
+      "trend_period": 150,
+      "exit_ma_period": 10,
+      "max_hold_bars": 12,
+      "stop_atr_mult": 2.5
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 17,
+      "win_rate": 0.5882352941176471,
+      "profit_factor": 0.8213687350991347,
+      "total_pnl": -1099.0006547982339,
+      "total_return_pct": -0.021980013095964677,
+      "max_drawdown_pct": -0.07793200630212502,
+      "sharpe": -0.114858592562132,
+      "avg_win": 505.33414640808115,
+      "avg_loss": -878.9060169827208
+    },
+    "oos": {
+      "num_trades": 6,
+      "win_rate": 0.6666666666666666,
+      "profit_factor": 3.6532819269672454,
+      "total_pnl": 2823.497144775395,
+      "total_return_pct": 0.0564699428955079,
+      "max_drawdown_pct": -0.02603666111416103,
+      "sharpe": 0.7179948504823319,
+      "avg_win": 971.9124629211433,
+      "avg_loss": -532.0763534545891
+    },
+    "is_score": 0.4039,
+    "oos_pass": true
+  },
+  {
+    "strategy": "squeeze_breakout",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "1d",
+    "params": {
+      "bb_period": 20,
+      "bb_std": 2.0,
+      "kc_period": 20,
+      "kc_atr_mult": 1.5,
+      "min_squeeze_bars": 5,
+      "stop_atr_mult": 2.0,
+      "trail_atr_mult": 2.5
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 2,
+      "win_rate": 1.0,
+      "profit_factor": Infinity,
+      "total_pnl": 7722.025222573965,
+      "total_return_pct": 0.1544405044514793,
+      "max_drawdown_pct": -0.03472658911833727,
+      "sharpe": 0.7006456872577522,
+      "avg_win": 3861.0126112869825,
+      "avg_loss": 0.0
+    },
+    "oos": {
+      "num_trades": 5,
+      "win_rate": 0.4,
+      "profit_factor": 2.057550606584152,
+      "total_pnl": 2836.517182638984,
+      "total_return_pct": 0.05673034365277969,
+      "max_drawdown_pct": -0.0598912864179386,
+      "sharpe": 0.4801928337332259,
+      "avg_win": 2759.3372900499608,
+      "avg_loss": -894.0524658203125
+    },
+    "is_score": 0.8527,
+    "oos_pass": true
+  },
+  {
+    "strategy": "squeeze_breakout",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "1d",
+    "params": {
+      "bb_period": 20,
+      "bb_std": 2.0,
+      "kc_period": 20,
+      "kc_atr_mult": 1.2,
+      "min_squeeze_bars": 3,
+      "stop_atr_mult": 1.5,
+      "trail_atr_mult": 2.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "total_pnl": 0,
+      "total_return_pct": 0.0,
+      "max_drawdown_pct": 0.0,
+      "sharpe": 0.0,
+      "avg_win": 0.0,
+      "avg_loss": 0.0
+    },
+    "oos": {
+      "num_trades": 5,
+      "win_rate": 0.4,
+      "profit_factor": 2.5141099356216263,
+      "total_pnl": 3459.934435947962,
+      "total_return_pct": 0.06919868871895923,
+      "max_drawdown_pct": -0.04347293783081903,
+      "sharpe": 0.4954381612127629,
+      "avg_win": 2872.5310287475586,
+      "avg_loss": -761.709207182385
+    },
+    "is_score": 0.2,
+    "oos_pass": true
+  },
+  {
+    "strategy": "squeeze_breakout",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "1d",
+    "params": {
+      "bb_period": 14,
+      "bb_std": 1.8,
+      "kc_period": 14,
+      "kc_atr_mult": 1.5,
+      "min_squeeze_bars": 6,
+      "stop_atr_mult": 2.5,
+      "trail_atr_mult": 3.0
+    },
+    "slippage": 0.02,
+    "is": {
+      "num_trades": 23,
+      "win_rate": 0.30434782608695654,
+      "profit_factor": 1.4210996813157635,
+      "total_pnl": 4031.572316556663,
+      "total_return_pct": 0.08063144633113326,
+      "max_drawdown_pct": -0.1425855433822599,
+      "sharpe": 0.24618004882534733,
+      "avg_win": 1943.6409641803043,
+      "avg_loss": -598.3696520440918
+    },
+    "oos": {
+      "num_trades": 10,
+      "win_rate": 0.4,
+      "profit_factor": 2.2941810732359005,
+      "total_pnl": 3884.515690438412,
+      "total_return_pct": 0.07769031380876824,
+      "max_drawdown_pct": -0.0508133280795184,
+      "sharpe": 0.5954085620965316,
+      "avg_win": 1721.5099494171147,
+      "avg_loss": -500.25401787167465
+    },
+    "is_score": 0.3952,
+    "oos_pass": true
+  },
+  {
+    "strategy": "orb",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "5m",
+    "params": {
+      "range_minutes": 15,
+      "atr_period": 14,
+      "atr_stop_mult": 1.5,
+      "reward_risk": 2.0,
+      "max_risk_points": 7.43
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 41,
+      "win_rate": 0.24390243902439024,
+      "profit_factor": 0.5702196578565722,
+      "total_pnl": -12271.868903110246,
+      "total_return_pct": -0.24543737806220492,
+      "max_drawdown_pct": -0.2786707252008852,
+      "sharpe": -5.2277001181736535,
+      "avg_win": 1628.1947313581302,
+      "avg_loss": -921.0908456997275
+    },
+    "oos": {
+      "num_trades": 18,
+      "win_rate": 0.4444444444444444,
+      "profit_factor": 1.5578815318144998,
+      "total_pnl": 5336.625377807772,
+      "total_return_pct": 0.10673250755615543,
+      "max_drawdown_pct": -0.10355438341504698,
+      "sharpe": 3.876486828367207,
+      "avg_win": 1862.8126322937057,
+      "avg_loss": -956.5875680541874
+    },
+    "is_score": 0.1882,
+    "oos_pass": true
+  },
+  {
+    "strategy": "orb",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "5m",
+    "params": {
+      "range_minutes": 30,
+      "atr_period": 14,
+      "atr_stop_mult": 1.5,
+      "reward_risk": 2.0,
+      "max_risk_points": 7.43
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 41,
+      "win_rate": 0.36585365853658536,
+      "profit_factor": 1.036323690117885,
+      "total_pnl": 923.1353441514107,
+      "total_return_pct": 0.018462706883028212,
+      "max_drawdown_pct": -0.14621899764504276,
+      "sharpe": -0.08601427165443667,
+      "avg_win": 1755.8183529343355,
+      "avg_loss": -977.4669211486009
+    },
+    "oos": {
+      "num_trades": 17,
+      "win_rate": 0.35294117647058826,
+      "profit_factor": 1.0211473616987172,
+      "total_pnl": 212.77805324023188,
+      "total_return_pct": 0.004255561064804638,
+      "max_drawdown_pct": -0.10326830256413926,
+      "sharpe": 0.34942498159244517,
+      "avg_win": 1712.4102034505247,
+      "avg_loss": -914.6984697693558
+    },
+    "is_score": 0.3393,
+    "oos_pass": true
+  },
+  {
+    "strategy": "orb",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "5m",
+    "params": {
+      "range_minutes": 30,
+      "atr_period": 14,
+      "atr_stop_mult": 1.0,
+      "reward_risk": 1.5,
+      "max_risk_points": 4.46
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 41,
+      "win_rate": 0.36585365853658536,
+      "profit_factor": 0.8066649312442323,
+      "total_pnl": -4765.948482752252,
+      "total_return_pct": -0.09531896965504504,
+      "max_drawdown_pct": -0.15620969326204537,
+      "sharpe": -1.996777152799512,
+      "avg_win": 1325.6858606131548,
+      "avg_loss": -948.1244766134453
+    },
+    "oos": {
+      "num_trades": 17,
+      "win_rate": 0.47058823529411764,
+      "profit_factor": 1.258617887111663,
+      "total_pnl": 2530.246139700713,
+      "total_return_pct": 0.050604922794014254,
+      "max_drawdown_pct": -0.14423549803007898,
+      "sharpe": 2.0089062522564665,
+      "avg_win": 1539.2463209860741,
+      "avg_loss": -1087.0804920208757
+    },
+    "is_score": 0.3075,
+    "oos_pass": true
+  },
+  {
+    "strategy": "fast_trend",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "5m",
+    "params": {
+      "drive_minutes": 5,
+      "momentum_threshold_points": 1.11,
+      "target_points": 1.67,
+      "stop_points": 0.83,
+      "max_hold_minutes": 30
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 16,
+      "win_rate": 0.375,
+      "profit_factor": 0.7646135529599186,
+      "total_pnl": -2243.312832031518,
+      "total_return_pct": -0.04486625664063036,
+      "max_drawdown_pct": -0.12936791891870095,
+      "sharpe": -1.1028995596028228,
+      "avg_win": 1214.504499918612,
+      "avg_loss": -953.0339831543191
+    },
+    "oos": {
+      "num_trades": 5,
+      "win_rate": 0.4,
+      "profit_factor": 1.261520551046089,
+      "total_pnl": 808.6999999998425,
+      "total_return_pct": 0.01617399999999685,
+      "max_drawdown_pct": -0.03980373482065124,
+      "sharpe": -1.5031778040276806,
+      "avg_win": 1950.4999999999627,
+      "avg_loss": -1030.7666666666944
+    },
+    "is_score": 0.3183,
+    "oos_pass": true
+  },
+  {
+    "strategy": "fast_trend",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "5m",
+    "params": {
+      "drive_minutes": 10,
+      "momentum_threshold_points": 1.86,
+      "target_points": 2.79,
+      "stop_points": 1.4,
+      "max_hold_minutes": 45
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 8,
+      "win_rate": 0.375,
+      "profit_factor": 0.8191780640742419,
+      "total_pnl": -592.6040258787873,
+      "total_return_pct": -0.011852080517575745,
+      "max_drawdown_pct": -0.04961889557558768,
+      "sharpe": -0.4690354740180796,
+      "avg_win": 894.8918286132835,
+      "avg_loss": -655.4559023437275
+    },
+    "oos": {
+      "num_trades": 4,
+      "win_rate": 0.25,
+      "profit_factor": 0.6410481493612962,
+      "total_pnl": -1095.879999999931,
+      "total_return_pct": -0.021917599999998618,
+      "max_drawdown_pct": -0.05875999285564546,
+      "sharpe": -7.129061533345086,
+      "avg_win": 1957.1199999999808,
+      "avg_loss": -1017.6666666666373
+    },
+    "is_score": 0.3645,
+    "oos_pass": false
+  },
+  {
+    "strategy": "fast_trend",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "5m",
+    "params": {
+      "drive_minutes": 5,
+      "momentum_threshold_points": 2.6,
+      "target_points": 3.9,
+      "stop_points": 1.95,
+      "max_hold_minutes": 20
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 3,
+      "win_rate": 0.3333333333333333,
+      "profit_factor": 2.4854099577444804,
+      "total_pnl": 166.65744873049653,
+      "total_return_pct": 0.0033331489746099307,
+      "max_drawdown_pct": -0.017915788232318527,
+      "sharpe": 1.3917404931038602,
+      "avg_win": 278.8537133789155,
+      "avg_loss": -56.09813232420947
+    },
+    "oos": {
+      "num_trades": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "total_pnl": 0,
+      "total_return_pct": 0.0,
+      "max_drawdown_pct": 0.0,
+      "sharpe": 0.0,
+      "avg_win": 0.0,
+      "avg_loss": 0.0
+    },
+    "is_score": 0.7035,
+    "oos_pass": false
+  },
+  {
+    "strategy": "pulse",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "5m",
+    "params": {
+      "fast_period": 9,
+      "slow_period": 21,
+      "atr_period": 14,
+      "trail_atr_mult": 2.0,
+      "min_spread_atr_mult": 0.15
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 23,
+      "win_rate": 0.34782608695652173,
+      "profit_factor": 1.0640568855289643,
+      "total_pnl": 551.647435826324,
+      "total_return_pct": 0.01103294871652648,
+      "max_drawdown_pct": -0.06842803584681693,
+      "sharpe": 0.4062023125347162,
+      "avg_win": 1145.4355133492732,
+      "avg_loss": -574.1224447311906
+    },
+    "oos": {
+      "num_trades": 6,
+      "win_rate": 0.3333333333333333,
+      "profit_factor": 1.08859572897509,
+      "total_pnl": 303.04232177744643,
+      "total_return_pct": 0.0060608464355489285,
+      "max_drawdown_pct": -0.0750610130647025,
+      "sharpe": 0.46441639502355847,
+      "avg_win": 1861.7747209821855,
+      "avg_loss": -855.1267800467311
+    },
+    "is_score": 0.4175,
+    "oos_pass": true
+  },
+  {
+    "strategy": "pulse",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "5m",
+    "params": {
+      "fast_period": 5,
+      "slow_period": 13,
+      "atr_period": 10,
+      "trail_atr_mult": 1.5,
+      "min_spread_atr_mult": 0.1
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 83,
+      "win_rate": 0.3493975903614458,
+      "profit_factor": 0.8065736087238395,
+      "total_pnl": -9536.080679319479,
+      "total_return_pct": -0.1907216135863896,
+      "max_drawdown_pct": -0.3535934132445293,
+      "sharpe": -1.253330795323797,
+      "avg_win": 1371.1980822754092,
+      "avg_loss": -912.9782419501176
+    },
+    "oos": {
+      "num_trades": 28,
+      "win_rate": 0.2857142857142857,
+      "profit_factor": 0.771418371617435,
+      "total_pnl": -3557.6460180659224,
+      "total_return_pct": -0.07115292036131844,
+      "max_drawdown_pct": -0.17780497828187072,
+      "sharpe": -1.4442416962526181,
+      "avg_win": 1500.7950975036645,
+      "avg_loss": -778.2003399047619
+    },
+    "is_score": 0.2047,
+    "oos_pass": false
+  },
+  {
+    "strategy": "pulse",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "5m",
+    "params": {
+      "fast_period": 12,
+      "slow_period": 26,
+      "atr_period": 14,
+      "trail_atr_mult": 2.5,
+      "min_spread_atr_mult": 0.2
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 8,
+      "win_rate": 0.875,
+      "profit_factor": 21.89064461113123,
+      "total_pnl": 11737.326924961708,
+      "total_return_pct": 0.23474653849923416,
+      "max_drawdown_pct": -0.03277964562197394,
+      "sharpe": 3.6789564176787692,
+      "avg_win": 1757.0247159623214,
+      "avg_loss": -561.8460867745398
+    },
+    "oos": {
+      "num_trades": 5,
+      "win_rate": 0.4,
+      "profit_factor": 1.7667066655245331,
+      "total_pnl": 1974.646380440981,
+      "total_return_pct": 0.03949292760881962,
+      "max_drawdown_pct": -0.0426889794991618,
+      "sharpe": 2.1091757216810234,
+      "avg_win": 2275.0688622175194,
+      "avg_loss": -858.4971146646857
+    },
+    "is_score": 0.9524,
+    "oos_pass": true
+  },
+  {
+    "strategy": "vwap_reversion",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "5m",
+    "params": {
+      "entry_dev": 2.0,
+      "stop_dev": 3.5,
+      "dev_period": 30,
+      "warmup_bars": 30,
+      "max_hold_bars": 60
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 49,
+      "win_rate": 0.6122448979591837,
+      "profit_factor": 1.172421956460326,
+      "total_pnl": 2741.512974968896,
+      "total_return_pct": 0.05483025949937791,
+      "max_drawdown_pct": -0.08448369238272053,
+      "sharpe": 1.3532883393307904,
+      "avg_win": 621.3845134651755,
+      "avg_loss": -836.8432857361248
+    },
+    "oos": {
+      "num_trades": 19,
+      "win_rate": 0.42105263157894735,
+      "profit_factor": 0.6632355680168983,
+      "total_pnl": -2203.652505549659,
+      "total_return_pct": -0.04407305011099318,
+      "max_drawdown_pct": -0.0743833923401058,
+      "sharpe": -4.570602521018156,
+      "avg_win": 542.4937220297907,
+      "avg_loss": -594.8729347079985
+    },
+    "is_score": 0.5829,
+    "oos_pass": false
+  },
+  {
+    "strategy": "vwap_reversion",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "5m",
+    "params": {
+      "entry_dev": 2.5,
+      "stop_dev": 4.0,
+      "dev_period": 24,
+      "warmup_bars": 24,
+      "max_hold_bars": 48
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 45,
+      "win_rate": 0.6,
+      "profit_factor": 1.2968548985742818,
+      "total_pnl": 4018.1379648950906,
+      "total_return_pct": 0.0803627592979018,
+      "max_drawdown_pct": -0.10489129963737884,
+      "sharpe": 2.1263693468320044,
+      "avg_win": 650.1420363392039,
+      "avg_loss": -751.9831675701898
+    },
+    "oos": {
+      "num_trades": 20,
+      "win_rate": 0.45,
+      "profit_factor": 0.7488636028885353,
+      "total_pnl": -1600.1736069097674,
+      "total_return_pct": -0.03200347213819535,
+      "max_drawdown_pct": -0.05204537372095983,
+      "sharpe": -1.8076743142139335,
+      "avg_win": 530.173061465316,
+      "avg_loss": -579.248287281601
+    },
+    "is_score": 0.6489,
+    "oos_pass": false
+  },
+  {
+    "strategy": "vwap_reversion",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "5m",
+    "params": {
+      "entry_dev": 1.5,
+      "stop_dev": 3.0,
+      "dev_period": 36,
+      "warmup_bars": 36,
+      "max_hold_bars": 36
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 54,
+      "win_rate": 0.5740740740740741,
+      "profit_factor": 1.1264316622033443,
+      "total_pnl": 2222.0834622713414,
+      "total_return_pct": 0.04444166924542683,
+      "max_drawdown_pct": -0.08438798782145314,
+      "sharpe": 1.0765053090686625,
+      "avg_win": 638.6275870020206,
+      "avg_loss": -764.146597164839
+    },
+    "oos": {
+      "num_trades": 19,
+      "win_rate": 0.5263157894736842,
+      "profit_factor": 0.7842991839265802,
+      "total_pnl": -1335.8965725082546,
+      "total_return_pct": -0.026717931450165093,
+      "max_drawdown_pct": -0.06903625503857132,
+      "sharpe": -3.374306666005189,
+      "avg_win": 485.73881670985963,
+      "avg_loss": -688.1427488452058
+    },
+    "is_score": 0.5404,
+    "oos_pass": false
+  },
+  {
+    "strategy": "squeeze_breakout",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "5m",
+    "params": {
+      "bb_period": 20,
+      "bb_std": 2.0,
+      "kc_period": 20,
+      "kc_atr_mult": 1.5,
+      "min_squeeze_bars": 5,
+      "stop_atr_mult": 2.0,
+      "trail_atr_mult": 2.5
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 26,
+      "win_rate": 0.38461538461538464,
+      "profit_factor": 0.4655193429455853,
+      "total_pnl": -5694.506089564351,
+      "total_return_pct": -0.11389012179128702,
+      "max_drawdown_pct": -0.13099373719010585,
+      "sharpe": -2.838748216061297,
+      "avg_win": 495.97730024937937,
+      "avg_loss": -665.8924432536339
+    },
+    "oos": {
+      "num_trades": 12,
+      "win_rate": 0.3333333333333333,
+      "profit_factor": 0.22134126010388447,
+      "total_pnl": -3442.240128348093,
+      "total_return_pct": -0.06884480256696186,
+      "max_drawdown_pct": -0.08384698981871092,
+      "sharpe": -5.294299809496766,
+      "avg_win": 244.62249267579466,
+      "avg_loss": -552.591262381409
+    },
+    "is_score": 0.285,
+    "oos_pass": false
+  },
+  {
+    "strategy": "squeeze_breakout",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "5m",
+    "params": {
+      "bb_period": 20,
+      "bb_std": 2.0,
+      "kc_period": 20,
+      "kc_atr_mult": 1.2,
+      "min_squeeze_bars": 3,
+      "stop_atr_mult": 1.5,
+      "trail_atr_mult": 2.0
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 11,
+      "win_rate": 0.2727272727272727,
+      "profit_factor": 0.3515755472973297,
+      "total_pnl": -4714.811377650509,
+      "total_return_pct": -0.09429622755301018,
+      "max_drawdown_pct": -0.12522168369832762,
+      "sharpe": -1.7371218160858568,
+      "avg_win": 852.1231134905187,
+      "avg_loss": -908.8975897652582
+    },
+    "oos": {
+      "num_trades": 5,
+      "win_rate": 0.2,
+      "profit_factor": 0.7457983464322745,
+      "total_pnl": -483.49606314516484,
+      "total_return_pct": -0.009669921262903296,
+      "max_drawdown_pct": -0.07321363777624737,
+      "sharpe": -0.7831291626067474,
+      "avg_win": 1418.5217103794662,
+      "avg_loss": -475.5044433811578
+    },
+    "is_score": 0.2466,
+    "oos_pass": false
+  },
+  {
+    "strategy": "squeeze_breakout",
+    "symbol": "S&P 500 ETF (SPY)",
+    "timeframe": "5m",
+    "params": {
+      "bb_period": 14,
+      "bb_std": 1.8,
+      "kc_period": 14,
+      "kc_atr_mult": 1.5,
+      "min_squeeze_bars": 6,
+      "stop_atr_mult": 2.5,
+      "trail_atr_mult": 3.0
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 53,
+      "win_rate": 0.3018867924528302,
+      "profit_factor": 0.6306264256958642,
+      "total_pnl": -8684.004236536719,
+      "total_return_pct": -0.17368008473073437,
+      "max_drawdown_pct": -0.20433717337329346,
+      "sharpe": -1.7104078370476514,
+      "avg_win": 926.6300659724773,
+      "avg_loss": -635.4077105971988
+    },
+    "oos": {
+      "num_trades": 29,
+      "win_rate": 0.3793103448275862,
+      "profit_factor": 0.7141692928460635,
+      "total_pnl": -2564.4827354210697,
+      "total_return_pct": -0.051289654708421395,
+      "max_drawdown_pct": -0.09897963571608205,
+      "sharpe": -2.1201918557232897,
+      "avg_win": 582.5046326159295,
+      "avg_loss": -498.44631634423877
+    },
+    "is_score": 0.2469,
+    "oos_pass": false
+  },
+  {
+    "strategy": "orb",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "5m",
+    "params": {
+      "range_minutes": 15,
+      "atr_period": 14,
+      "atr_stop_mult": 1.5,
+      "reward_risk": 2.0,
+      "max_risk_points": 7.14
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 42,
+      "win_rate": 0.23809523809523808,
+      "profit_factor": 0.4909007727271423,
+      "total_pnl": -14576.084084385242,
+      "total_return_pct": -0.2915216816877048,
+      "max_drawdown_pct": -0.31841041821468613,
+      "sharpe": -6.7826826360149495,
+      "avg_win": 1405.5041840645908,
+      "avg_loss": -894.7226851572235
+    },
+    "oos": {
+      "num_trades": 16,
+      "win_rate": 0.1875,
+      "profit_factor": 0.3711153276396711,
+      "total_pnl": -9052.331188441538,
+      "total_return_pct": -0.18104662376883077,
+      "max_drawdown_pct": -0.2158535740592435,
+      "sharpe": -4.937225853296527,
+      "avg_win": 1780.6438406226791,
+      "avg_loss": -1107.250977716121
+    },
+    "is_score": 0.1576,
+    "oos_pass": false
+  },
+  {
+    "strategy": "orb",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "5m",
+    "params": {
+      "range_minutes": 30,
+      "atr_period": 14,
+      "atr_stop_mult": 1.5,
+      "reward_risk": 2.0,
+      "max_risk_points": 7.14
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 41,
+      "win_rate": 0.34146341463414637,
+      "profit_factor": 0.9003271862778167,
+      "total_pnl": -2582.0921263773116,
+      "total_return_pct": -0.05164184252754623,
+      "max_drawdown_pct": -0.18329302907097925,
+      "sharpe": -1.1330864141386898,
+      "avg_win": 1665.970640794413,
+      "avg_loss": -959.4696702777443
+    },
+    "oos": {
+      "num_trades": 16,
+      "win_rate": 0.25,
+      "profit_factor": 0.5339021233976469,
+      "total_pnl": -5990.668652779576,
+      "total_return_pct": -0.11981337305559153,
+      "max_drawdown_pct": -0.20523975878523215,
+      "sharpe": -4.418180310712757,
+      "avg_win": 1715.5359822736564,
+      "avg_loss": -1071.067715156183
+    },
+    "is_score": 0.2988,
+    "oos_pass": false
+  },
+  {
+    "strategy": "orb",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "5m",
+    "params": {
+      "range_minutes": 30,
+      "atr_period": 14,
+      "atr_stop_mult": 1.0,
+      "reward_risk": 1.5,
+      "max_risk_points": 4.28
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 41,
+      "win_rate": 0.3902439024390244,
+      "profit_factor": 0.9277885171226574,
+      "total_pnl": -1910.8436570517856,
+      "total_return_pct": -0.03821687314103571,
+      "max_drawdown_pct": -0.18879736312448703,
+      "sharpe": -0.8845830823324645,
+      "avg_win": 1534.4329014478415,
+      "avg_loss": -1058.4708032086899
+    },
+    "oos": {
+      "num_trades": 17,
+      "win_rate": 0.29411764705882354,
+      "profit_factor": 0.5998605088669599,
+      "total_pnl": -4630.505676966966,
+      "total_return_pct": -0.09261011353933933,
+      "max_drawdown_pct": -0.11293639590948439,
+      "sharpe": -3.725896250940918,
+      "avg_win": 1388.3445914480967,
+      "avg_loss": -964.3523861839541
+    },
+    "is_score": 0.3114,
+    "oos_pass": false
+  },
+  {
+    "strategy": "fast_trend",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "5m",
+    "params": {
+      "drive_minutes": 5,
+      "momentum_threshold_points": 1.07,
+      "target_points": 1.6,
+      "stop_points": 0.8,
+      "max_hold_minutes": 30
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 32,
+      "win_rate": 0.3125,
+      "profit_factor": 0.8529524212821912,
+      "total_pnl": -3448.8009741188816,
+      "total_return_pct": -0.06897601948237764,
+      "max_drawdown_pct": -0.20481139397341927,
+      "sharpe": -0.9640707741153103,
+      "avg_win": 2000.4839025879296,
+      "avg_loss": -1066.0745454544629
+    },
+    "oos": {
+      "num_trades": 18,
+      "win_rate": 0.2777777777777778,
+      "profit_factor": 0.7249567696996103,
+      "total_pnl": -3489.7099999988313,
+      "total_return_pct": -0.06979419999997663,
+      "max_drawdown_pct": -0.13406411195147572,
+      "sharpe": -3.8100426116658417,
+      "avg_win": 1839.6300000000367,
+      "avg_loss": -975.989230769155
+    },
+    "is_score": 0.2752,
+    "oos_pass": false
+  },
+  {
+    "strategy": "fast_trend",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "5m",
+    "params": {
+      "drive_minutes": 10,
+      "momentum_threshold_points": 1.78,
+      "target_points": 2.67,
+      "stop_points": 1.33,
+      "max_hold_minutes": 45
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 29,
+      "win_rate": 0.27586206896551724,
+      "profit_factor": 0.6951794203681366,
+      "total_pnl": -6537.624140625517,
+      "total_return_pct": -0.13075248281251034,
+      "max_drawdown_pct": -0.22070126079261793,
+      "sharpe": -2.3175236646406683,
+      "avg_win": 1863.7282324218554,
+      "avg_loss": -1021.30714285716
+    },
+    "oos": {
+      "num_trades": 15,
+      "win_rate": 0.3333333333333333,
+      "profit_factor": 0.9569398971575493,
+      "total_pnl": -437.96000000028755,
+      "total_return_pct": -0.00875920000000575,
+      "max_drawdown_pct": -0.08832965775987421,
+      "sharpe": -1.575053586572814,
+      "avg_win": 1946.5879999999768,
+      "avg_loss": -1017.0900000000172
+    },
+    "is_score": 0.2397,
+    "oos_pass": false
+  },
+  {
+    "strategy": "fast_trend",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "5m",
+    "params": {
+      "drive_minutes": 5,
+      "momentum_threshold_points": 2.5,
+      "target_points": 3.75,
+      "stop_points": 1.88,
+      "max_hold_minutes": 20
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 15,
+      "win_rate": 0.2,
+      "profit_factor": 0.24333589954874557,
+      "total_pnl": -8295.220737304524,
+      "total_return_pct": -0.16590441474609047,
+      "max_drawdown_pct": -0.20731598381014046,
+      "sharpe": -6.134108659749278,
+      "avg_win": 889.2210774739679,
+      "avg_loss": -913.5736641438692
+    },
+    "oos": {
+      "num_trades": 9,
+      "win_rate": 0.4444444444444444,
+      "profit_factor": 0.9220500395220136,
+      "total_pnl": -399.58708740224847,
+      "total_return_pct": -0.00799174174804497,
+      "max_drawdown_pct": -0.04554459862409951,
+      "sharpe": -3.036112027428879,
+      "avg_win": 1181.6532281494224,
+      "avg_loss": -1025.2399999999877
+    },
+    "is_score": 0.1747,
+    "oos_pass": false
+  },
+  {
+    "strategy": "pulse",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "5m",
+    "params": {
+      "fast_period": 9,
+      "slow_period": 21,
+      "atr_period": 14,
+      "trail_atr_mult": 2.0,
+      "min_spread_atr_mult": 0.15
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 17,
+      "win_rate": 0.35294117647058826,
+      "profit_factor": 0.3531722591395319,
+      "total_pnl": -4999.245751255297,
+      "total_return_pct": -0.09998491502510595,
+      "max_drawdown_pct": -0.1079410368764084,
+      "sharpe": -4.437628821948443,
+      "avg_win": 454.9369186546707,
+      "avg_loss": -702.6242966530291
+    },
+    "oos": {
+      "num_trades": 10,
+      "win_rate": 0.5,
+      "profit_factor": 1.413244143743962,
+      "total_pnl": 1426.9813030134537,
+      "total_return_pct": 0.028539626060269073,
+      "max_drawdown_pct": -0.05745422461366809,
+      "sharpe": 1.7651244645598283,
+      "avg_win": 976.0201083286898,
+      "avg_loss": -690.623847725999
+    },
+    "is_score": 0.2755,
+    "oos_pass": true
+  },
+  {
+    "strategy": "pulse",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "5m",
+    "params": {
+      "fast_period": 5,
+      "slow_period": 13,
+      "atr_period": 10,
+      "trail_atr_mult": 1.5,
+      "min_spread_atr_mult": 0.1
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 88,
+      "win_rate": 0.3522727272727273,
+      "profit_factor": 0.7938755487670299,
+      "total_pnl": -8171.580976561237,
+      "total_return_pct": -0.16343161953122473,
+      "max_drawdown_pct": -0.2004044391330593,
+      "sharpe": -2.405238158702343,
+      "avg_win": 1015.2366991596928,
+      "avg_loss": -695.5073447458195
+    },
+    "oos": {
+      "num_trades": 28,
+      "win_rate": 0.4642857142857143,
+      "profit_factor": 1.4207744519670602,
+      "total_pnl": 5520.680195312931,
+      "total_return_pct": 0.11041360390625861,
+      "max_drawdown_pct": -0.12192535694580016,
+      "sharpe": 3.7175090660783168,
+      "avg_win": 1433.9203017953841,
+      "avg_loss": -874.6855818684711
+    },
+    "is_score": 0.2805,
+    "oos_pass": true
+  },
+  {
+    "strategy": "pulse",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "5m",
+    "params": {
+      "fast_period": 12,
+      "slow_period": 26,
+      "atr_period": 14,
+      "trail_atr_mult": 2.5,
+      "min_spread_atr_mult": 0.2
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 9,
+      "win_rate": 0.4444444444444444,
+      "profit_factor": 1.1391580492074396,
+      "total_pnl": 548.9379185268617,
+      "total_return_pct": 0.010978758370537234,
+      "max_drawdown_pct": -0.05312455585894421,
+      "sharpe": 0.5126686826460027,
+      "avg_win": 1123.4115668596578,
+      "avg_loss": -788.9416697823539
+    },
+    "oos": {
+      "num_trades": 4,
+      "win_rate": 0.5,
+      "profit_factor": 1.1546530813868994,
+      "total_pnl": 214.10577401298008,
+      "total_return_pct": 0.004282115480259602,
+      "max_drawdown_pct": -0.0364455887686064,
+      "sharpe": 0.5603875560171919,
+      "avg_win": 799.2659748186438,
+      "avg_loss": -692.2130878121538
+    },
+    "is_score": 0.4687,
+    "oos_pass": true
+  },
+  {
+    "strategy": "vwap_reversion",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "5m",
+    "params": {
+      "entry_dev": 2.0,
+      "stop_dev": 3.5,
+      "dev_period": 30,
+      "warmup_bars": 30,
+      "max_hold_bars": 60
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 48,
+      "win_rate": 0.5,
+      "profit_factor": 0.8648105883265955,
+      "total_pnl": -1969.1414253490793,
+      "total_return_pct": -0.03938282850698158,
+      "max_drawdown_pct": -0.07366366455190755,
+      "sharpe": -0.7931214948165684,
+      "avg_win": 524.8606176188623,
+      "avg_loss": -606.9081770084073
+    },
+    "oos": {
+      "num_trades": 19,
+      "win_rate": 0.5263157894736842,
+      "profit_factor": 1.7567654042684757,
+      "total_pnl": 2723.0430801019893,
+      "total_return_pct": 0.054460861602039785,
+      "max_drawdown_pct": -0.03251009942137036,
+      "sharpe": 2.7199283065556377,
+      "avg_win": 632.1308889747727,
+      "avg_loss": -399.8073121828596
+    },
+    "is_score": 0.3891,
+    "oos_pass": true
+  },
+  {
+    "strategy": "vwap_reversion",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "5m",
+    "params": {
+      "entry_dev": 2.5,
+      "stop_dev": 4.0,
+      "dev_period": 24,
+      "warmup_bars": 24,
+      "max_hold_bars": 48
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 43,
+      "win_rate": 0.4186046511627907,
+      "profit_factor": 0.6931520214874364,
+      "total_pnl": -3864.517252824975,
+      "total_return_pct": -0.0772903450564995,
+      "max_drawdown_pct": -0.11310235143990828,
+      "sharpe": -2.0458433180009434,
+      "avg_win": 484.98462746811987,
+      "avg_loss": -503.76962189004524
+    },
+    "oos": {
+      "num_trades": 20,
+      "win_rate": 0.55,
+      "profit_factor": 1.904893837929791,
+      "total_pnl": 3434.568560012013,
+      "total_return_pct": 0.06869137120024027,
+      "max_drawdown_pct": -0.03742891974077338,
+      "sharpe": 3.487877422563368,
+      "avg_win": 657.2833802232267,
+      "avg_loss": -421.7276247159423
+    },
+    "is_score": 0.329,
+    "oos_pass": true
+  },
+  {
+    "strategy": "vwap_reversion",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "5m",
+    "params": {
+      "entry_dev": 1.5,
+      "stop_dev": 3.0,
+      "dev_period": 36,
+      "warmup_bars": 36,
+      "max_hold_bars": 36
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 53,
+      "win_rate": 0.5094339622641509,
+      "profit_factor": 0.9608537320640466,
+      "total_pnl": -603.8634449861437,
+      "total_return_pct": -0.012077268899722873,
+      "max_drawdown_pct": -0.07746799622465558,
+      "sharpe": -0.08590434908102387,
+      "avg_win": 548.9615072878366,
+      "avg_loss": -593.3009285291438
+    },
+    "oos": {
+      "num_trades": 18,
+      "win_rate": 0.5,
+      "profit_factor": 1.3835529389292054,
+      "total_pnl": 1514.276935377898,
+      "total_return_pct": 0.03028553870755796,
+      "max_drawdown_pct": -0.030077607262362048,
+      "sharpe": 0.6822014884479305,
+      "avg_win": 606.9225368193287,
+      "avg_loss": -438.66954399956217
+    },
+    "is_score": 0.4007,
+    "oos_pass": true
+  },
+  {
+    "strategy": "squeeze_breakout",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "5m",
+    "params": {
+      "bb_period": 20,
+      "bb_std": 2.0,
+      "kc_period": 20,
+      "kc_atr_mult": 1.5,
+      "min_squeeze_bars": 5,
+      "stop_atr_mult": 2.0,
+      "trail_atr_mult": 2.5
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 24,
+      "win_rate": 0.3333333333333333,
+      "profit_factor": 0.36583846914130674,
+      "total_pnl": -6418.759700230037,
+      "total_return_pct": -0.12837519400460073,
+      "max_drawdown_pct": -0.1481874498741621,
+      "sharpe": -3.3709817262530852,
+      "avg_win": 462.8610196794861,
+      "avg_loss": -632.6029911041203
+    },
+    "oos": {
+      "num_trades": 12,
+      "win_rate": 0.16666666666666666,
+      "profit_factor": 0.33604610859097067,
+      "total_pnl": -4196.024744001053,
+      "total_return_pct": -0.08392049488002105,
+      "max_drawdown_pct": -0.10773424084253412,
+      "sharpe": -3.67022005148836,
+      "avg_win": 1061.8642386300212,
+      "avg_loss": -631.9753221261094
+    },
+    "is_score": 0.2519,
+    "oos_pass": false
+  },
+  {
+    "strategy": "squeeze_breakout",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "5m",
+    "params": {
+      "bb_period": 20,
+      "bb_std": 2.0,
+      "kc_period": 20,
+      "kc_atr_mult": 1.2,
+      "min_squeeze_bars": 3,
+      "stop_atr_mult": 1.5,
+      "trail_atr_mult": 2.0
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 10,
+      "win_rate": 0.2,
+      "profit_factor": 0.36848336946596105,
+      "total_pnl": -4767.036485857206,
+      "total_return_pct": -0.09534072971714411,
+      "max_drawdown_pct": -0.11411256267264078,
+      "sharpe": -2.1006325491637803,
+      "avg_win": 1390.7580432128918,
+      "avg_loss": -943.5690715353737
+    },
+    "oos": {
+      "num_trades": 6,
+      "win_rate": 0.3333333333333333,
+      "profit_factor": 2.6488472041194457,
+      "total_pnl": 3762.1944803293263,
+      "total_return_pct": 0.07524388960658653,
+      "max_drawdown_pct": -0.07753380710911542,
+      "sharpe": 2.8737826583645663,
+      "avg_win": 3021.953248814203,
+      "avg_loss": -570.4280043247697
+    },
+    "is_score": 0.2359,
+    "oos_pass": true
+  },
+  {
+    "strategy": "squeeze_breakout",
+    "symbol": "Nasdaq ETF (QQQ)",
+    "timeframe": "5m",
+    "params": {
+      "bb_period": 14,
+      "bb_std": 1.8,
+      "kc_period": 14,
+      "kc_atr_mult": 1.5,
+      "min_squeeze_bars": 6,
+      "stop_atr_mult": 2.5,
+      "trail_atr_mult": 3.0
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 56,
+      "win_rate": 0.42857142857142855,
+      "profit_factor": 0.5664673646554611,
+      "total_pnl": -10953.049873395208,
+      "total_return_pct": -0.21906099746790417,
+      "max_drawdown_pct": -0.2883384114795371,
+      "sharpe": -1.9334835511520527,
+      "avg_win": 596.316631368009,
+      "avg_loss": -789.5202820696073
+    },
+    "oos": {
+      "num_trades": 27,
+      "win_rate": 0.3333333333333333,
+      "profit_factor": 0.49590042774086784,
+      "total_pnl": -4696.711644984517,
+      "total_return_pct": -0.09393423289969034,
+      "max_drawdown_pct": -0.1227487485911314,
+      "sharpe": -6.751081071384168,
+      "avg_win": 513.3688840448335,
+      "avg_loss": -517.6128667437788
+    },
+    "is_score": 0.2291,
+    "oos_pass": false
+  },
+  {
+    "strategy": "orb",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "5m",
+    "params": {
+      "range_minutes": 15,
+      "atr_period": 14,
+      "atr_stop_mult": 1.5,
+      "reward_risk": 2.0,
+      "max_risk_points": 4.03
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 41,
+      "win_rate": 0.4146341463414634,
+      "profit_factor": 1.3773208989406491,
+      "total_pnl": 9646.017344622236,
+      "total_return_pct": 0.19292034689244472,
+      "max_drawdown_pct": -0.1581015883464235,
+      "sharpe": 2.6548823935957,
+      "avg_win": 2071.206469798375,
+      "avg_loss": -1065.187193414589
+    },
+    "oos": {
+      "num_trades": 17,
+      "win_rate": 0.5294117647058824,
+      "profit_factor": 2.149838098748591,
+      "total_pnl": 9863.967071446114,
+      "total_return_pct": 0.19727934142892228,
+      "max_drawdown_pct": -0.09700037131444565,
+      "sharpe": 6.139631633258098,
+      "avg_win": 2049.170829458084,
+      "avg_loss": -1072.321299209581
+    },
+    "is_score": 0.5853,
+    "oos_pass": true
+  },
+  {
+    "strategy": "orb",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "5m",
+    "params": {
+      "range_minutes": 30,
+      "atr_period": 14,
+      "atr_stop_mult": 1.5,
+      "reward_risk": 2.0,
+      "max_risk_points": 4.03
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 39,
+      "win_rate": 0.38461538461538464,
+      "profit_factor": 1.2117631225899157,
+      "total_pnl": 5196.1865580534195,
+      "total_return_pct": 0.10392373116106839,
+      "max_drawdown_pct": -0.19074268759062118,
+      "sharpe": 1.5155480406771853,
+      "avg_win": 1982.2611769031412,
+      "avg_loss": -1022.4054623122374
+    },
+    "oos": {
+      "num_trades": 16,
+      "win_rate": 0.5625,
+      "profit_factor": 2.3080005528739123,
+      "total_pnl": 10023.7265759715,
+      "total_return_pct": 0.20047453151942998,
+      "max_drawdown_pct": -0.09386005658346463,
+      "sharpe": 7.017076329422362,
+      "avg_win": 1965.2358732968346,
+      "avg_loss": -1094.7708976714302
+    },
+    "is_score": 0.4937,
+    "oos_pass": true
+  },
+  {
+    "strategy": "orb",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "5m",
+    "params": {
+      "range_minutes": 30,
+      "atr_period": 14,
+      "atr_stop_mult": 1.0,
+      "reward_risk": 1.5,
+      "max_risk_points": 2.42
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 39,
+      "win_rate": 0.358974358974359,
+      "profit_factor": 0.8026089030169269,
+      "total_pnl": -4580.875642830822,
+      "total_return_pct": -0.09161751285661643,
+      "max_drawdown_pct": -0.17902978735751676,
+      "sharpe": -1.401654733190483,
+      "avg_win": 1330.444856047345,
+      "avg_loss": -928.2841450997464
+    },
+    "oos": {
+      "num_trades": 16,
+      "win_rate": 0.625,
+      "profit_factor": 2.381513466820545,
+      "total_pnl": 9289.304468994214,
+      "total_return_pct": 0.18578608937988428,
+      "max_drawdown_pct": -0.08821409595182711,
+      "sharpe": 6.805554604379941,
+      "avg_win": 1601.3310200456895,
+      "avg_loss": -1120.667621910446
+    },
+    "is_score": 0.2939,
+    "oos_pass": true
+  },
+  {
+    "strategy": "fast_trend",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "5m",
+    "params": {
+      "drive_minutes": 5,
+      "momentum_threshold_points": 0.6,
+      "target_points": 0.9,
+      "stop_points": 0.45,
+      "max_hold_minutes": 30
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 42,
+      "win_rate": 0.14285714285714285,
+      "profit_factor": 0.28311791984352513,
+      "total_pnl": -22080.44427734223,
+      "total_return_pct": -0.44160888554684463,
+      "max_drawdown_pct": -0.48897841652113677,
+      "sharpe": -10.923920336977861,
+      "avg_win": 1453.3699999999778,
+      "avg_loss": -855.574007703947
+    },
+    "oos": {
+      "num_trades": 18,
+      "win_rate": 0.2777777777777778,
+      "profit_factor": 0.7191256085510851,
+      "total_pnl": -3419.4799999993684,
+      "total_return_pct": -0.06838959999998737,
+      "max_drawdown_pct": -0.10239255702279602,
+      "sharpe": -1.6046279219326554,
+      "avg_win": 1750.985999999973,
+      "avg_loss": -936.493076923018
+    },
+    "is_score": 0.0687,
+    "oos_pass": false
+  },
+  {
+    "strategy": "fast_trend",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "5m",
+    "params": {
+      "drive_minutes": 10,
+      "momentum_threshold_points": 1.01,
+      "target_points": 1.52,
+      "stop_points": 0.76,
+      "max_hold_minutes": 45
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 42,
+      "win_rate": 0.11904761904761904,
+      "profit_factor": 0.26403926179929976,
+      "total_pnl": -22315.30397827055,
+      "total_return_pct": -0.44630607956541096,
+      "max_drawdown_pct": -0.4959816853626074,
+      "sharpe": -13.09861563201763,
+      "avg_win": 1601.2039999999902,
+      "avg_loss": -819.4952426559596
+    },
+    "oos": {
+      "num_trades": 18,
+      "win_rate": 0.5,
+      "profit_factor": 1.8624678791061586,
+      "total_pnl": 8672.77000000024,
+      "total_return_pct": 0.1734554000000048,
+      "max_drawdown_pct": -0.04447490866795694,
+      "sharpe": 5.824053533205972,
+      "avg_win": 2080.9477777777656,
+      "avg_loss": -1117.3066666666275
+    },
+    "is_score": 0.0606,
+    "oos_pass": true
+  },
+  {
+    "strategy": "fast_trend",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "5m",
+    "params": {
+      "drive_minutes": 5,
+      "momentum_threshold_points": 1.41,
+      "target_points": 2.11,
+      "stop_points": 1.06,
+      "max_hold_minutes": 20
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 36,
+      "win_rate": 0.2222222222222222,
+      "profit_factor": 0.5259510108869135,
+      "total_pnl": -11960.396596679173,
+      "total_return_pct": -0.23920793193358345,
+      "max_drawdown_pct": -0.2935884772536574,
+      "sharpe": -5.181427663394289,
+      "avg_win": 1658.737500000018,
+      "avg_loss": -901.0820213099759
+    },
+    "oos": {
+      "num_trades": 16,
+      "win_rate": 0.5,
+      "profit_factor": 1.9186951801377592,
+      "total_pnl": 7717.2600000002985,
+      "total_return_pct": 0.15434520000000598,
+      "max_drawdown_pct": -0.04192733368966411,
+      "sharpe": 5.5682679169238325,
+      "avg_win": 2014.6875000000216,
+      "avg_loss": -1050.0299999999845
+    },
+    "is_score": 0.1701,
+    "oos_pass": true
+  },
+  {
+    "strategy": "pulse",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "5m",
+    "params": {
+      "fast_period": 9,
+      "slow_period": 21,
+      "atr_period": 14,
+      "trail_atr_mult": 2.0,
+      "min_spread_atr_mult": 0.15
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 19,
+      "win_rate": 0.3157894736842105,
+      "profit_factor": 0.57016792169862,
+      "total_pnl": -4653.044395751755,
+      "total_return_pct": -0.0930608879150351,
+      "max_drawdown_pct": -0.16887745252087302,
+      "sharpe": -2.07842223936114,
+      "avg_win": 1028.7027526274285,
+      "avg_loss": -832.712377808948
+    },
+    "oos": {
+      "num_trades": 12,
+      "win_rate": 0.5833333333333334,
+      "profit_factor": 4.562806396652449,
+      "total_pnl": 14310.478417620001,
+      "total_return_pct": 0.2862095683524,
+      "max_drawdown_pct": -0.06074944925611406,
+      "sharpe": 5.775736286403326,
+      "avg_win": 2618.158480124958,
+      "avg_loss": -803.3261886509399
+    },
+    "is_score": 0.261,
+    "oos_pass": true
+  },
+  {
+    "strategy": "pulse",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "5m",
+    "params": {
+      "fast_period": 5,
+      "slow_period": 13,
+      "atr_period": 10,
+      "trail_atr_mult": 1.5,
+      "min_spread_atr_mult": 0.1
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 75,
+      "win_rate": 0.24,
+      "profit_factor": 0.37277382828603395,
+      "total_pnl": -21068.232736510792,
+      "total_return_pct": -0.42136465473021584,
+      "max_drawdown_pct": -0.5064771740922152,
+      "sharpe": -6.629252166067707,
+      "avg_win": 695.6276633877266,
+      "avg_loss": -589.2900118857872
+    },
+    "oos": {
+      "num_trades": 33,
+      "win_rate": 0.30303030303030304,
+      "profit_factor": 0.8310418643857579,
+      "total_pnl": -2433.2609677120513,
+      "total_return_pct": -0.04866521935424103,
+      "max_drawdown_pct": -0.2001809182411524,
+      "sharpe": -0.21050616944526931,
+      "avg_win": 1196.8300453796346,
+      "avg_loss": -626.1548444134087
+    },
+    "is_score": 0.1035,
+    "oos_pass": false
+  },
+  {
+    "strategy": "pulse",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "5m",
+    "params": {
+      "fast_period": 12,
+      "slow_period": 26,
+      "atr_period": 14,
+      "trail_atr_mult": 2.5,
+      "min_spread_atr_mult": 0.2
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 5,
+      "win_rate": 0.4,
+      "profit_factor": 0.2650662505706681,
+      "total_pnl": -1801.2454988752027,
+      "total_return_pct": -0.03602490997750405,
+      "max_drawdown_pct": -0.06696264905364861,
+      "sharpe": -2.871966156937593,
+      "avg_win": 324.8247825840607,
+      "avg_loss": -816.9650213477747
+    },
+    "oos": {
+      "num_trades": 5,
+      "win_rate": 0.4,
+      "profit_factor": 2.852200395373199,
+      "total_pnl": 3760.450069885244,
+      "total_return_pct": 0.07520900139770488,
+      "max_drawdown_pct": -0.050789685382775764,
+      "sharpe": 2.8666212360848555,
+      "avg_win": 2895.355492553704,
+      "avg_loss": -676.7536384073879
+    },
+    "is_score": 0.2974,
+    "oos_pass": true
+  },
+  {
+    "strategy": "vwap_reversion",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "5m",
+    "params": {
+      "entry_dev": 2.0,
+      "stop_dev": 3.5,
+      "dev_period": 30,
+      "warmup_bars": 30,
+      "max_hold_bars": 60
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 47,
+      "win_rate": 0.48936170212765956,
+      "profit_factor": 0.9147000710299118,
+      "total_pnl": -1299.0118482977257,
+      "total_return_pct": -0.025980236965954515,
+      "max_drawdown_pct": -0.11104505900931053,
+      "sharpe": -0.7446004173560419,
+      "avg_win": 605.6410720909118,
+      "avg_loss": -634.5315210995291
+    },
+    "oos": {
+      "num_trades": 19,
+      "win_rate": 0.5263157894736842,
+      "profit_factor": 0.7306765891736768,
+      "total_pnl": -1671.7136037614569,
+      "total_return_pct": -0.033434272075229136,
+      "max_drawdown_pct": -0.1030127224152636,
+      "sharpe": -2.9117554815819693,
+      "avg_win": 453.537251115294,
+      "avg_loss": -689.6762349904885
+    },
+    "is_score": 0.3735,
+    "oos_pass": false
+  },
+  {
+    "strategy": "vwap_reversion",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "5m",
+    "params": {
+      "entry_dev": 2.5,
+      "stop_dev": 4.0,
+      "dev_period": 24,
+      "warmup_bars": 24,
+      "max_hold_bars": 48
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 43,
+      "win_rate": 0.5348837209302325,
+      "profit_factor": 0.89366289774645,
+      "total_pnl": -1405.3668146031055,
+      "total_return_pct": -0.02810733629206211,
+      "max_drawdown_pct": -0.10430627281476634,
+      "sharpe": -1.0242395030701008,
+      "avg_win": 513.5121981921586,
+      "avg_loss": -660.8073686511377
+    },
+    "oos": {
+      "num_trades": 19,
+      "win_rate": 0.47368421052631576,
+      "profit_factor": 0.7137399800723752,
+      "total_pnl": -1971.9037354189682,
+      "total_return_pct": -0.039438074708379366,
+      "max_drawdown_pct": -0.09514021914718243,
+      "sharpe": -2.4531314851680803,
+      "avg_win": 546.2890902778282,
+      "avg_loss": -688.8505547919422
+    },
+    "is_score": 0.3858,
+    "oos_pass": false
+  },
+  {
+    "strategy": "vwap_reversion",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "5m",
+    "params": {
+      "entry_dev": 1.5,
+      "stop_dev": 3.0,
+      "dev_period": 36,
+      "warmup_bars": 36,
+      "max_hold_bars": 36
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 49,
+      "win_rate": 0.5306122448979592,
+      "profit_factor": 1.1740076795200627,
+      "total_pnl": 2333.039276988896,
+      "total_return_pct": 0.04666078553977792,
+      "max_drawdown_pct": -0.10003122101446715,
+      "sharpe": 0.9714376387650776,
+      "avg_win": 605.4122782134712,
+      "avg_loss": -582.9426068070154
+    },
+    "oos": {
+      "num_trades": 18,
+      "win_rate": 0.4444444444444444,
+      "profit_factor": 0.8364846755544759,
+      "total_pnl": -891.4108367997284,
+      "total_return_pct": -0.01782821673599457,
+      "max_drawdown_pct": -0.08959685615633792,
+      "sharpe": -2.847305417313603,
+      "avg_win": 570.0165314280553,
+      "avg_loss": -545.1543088224172
+    },
+    "is_score": 0.5167,
+    "oos_pass": false
+  },
+  {
+    "strategy": "squeeze_breakout",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "5m",
+    "params": {
+      "bb_period": 20,
+      "bb_std": 2.0,
+      "kc_period": 20,
+      "kc_atr_mult": 1.5,
+      "min_squeeze_bars": 5,
+      "stop_atr_mult": 2.0,
+      "trail_atr_mult": 2.5
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 29,
+      "win_rate": 0.3103448275862069,
+      "profit_factor": 0.5743449347786518,
+      "total_pnl": -6249.272963474763,
+      "total_return_pct": -0.12498545926949525,
+      "max_drawdown_pct": -0.1805773734189174,
+      "sharpe": -1.596663164367752,
+      "avg_win": 936.9188460286465,
+      "avg_loss": -734.0771288866291
+    },
+    "oos": {
+      "num_trades": 13,
+      "win_rate": 0.38461538461538464,
+      "profit_factor": 0.9058318623538818,
+      "total_pnl": -413.69336953283556,
+      "total_return_pct": -0.00827386739065671,
+      "max_drawdown_pct": -0.08603154101091375,
+      "sharpe": -0.2381098764105754,
+      "avg_win": 795.8883858904236,
+      "avg_loss": -549.1419123731192
+    },
+    "is_score": 0.2543,
+    "oos_pass": false
+  },
+  {
+    "strategy": "squeeze_breakout",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "5m",
+    "params": {
+      "bb_period": 20,
+      "bb_std": 2.0,
+      "kc_period": 20,
+      "kc_atr_mult": 1.2,
+      "min_squeeze_bars": 3,
+      "stop_atr_mult": 1.5,
+      "trail_atr_mult": 2.0
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 18,
+      "win_rate": 0.2777777777777778,
+      "profit_factor": 1.3757197753600878,
+      "total_pnl": 3380.3686933682425,
+      "total_return_pct": 0.06760737386736484,
+      "max_drawdown_pct": -0.08638774605025383,
+      "sharpe": 1.4344992216215597,
+      "avg_win": 2475.483253452855,
+      "avg_loss": -692.0805826073872
+    },
+    "oos": {
+      "num_trades": 4,
+      "win_rate": 0.25,
+      "profit_factor": 0.1163318843811523,
+      "total_pnl": -4461.222722167865,
+      "total_return_pct": -0.0892244544433573,
+      "max_drawdown_pct": -0.1085711847224498,
+      "sharpe": -3.2131020424459824,
+      "avg_win": 587.3047094726842,
+      "avg_loss": -1682.8424772135165
+    },
+    "is_score": 0.5302,
+    "oos_pass": false
+  },
+  {
+    "strategy": "squeeze_breakout",
+    "symbol": "Tesla (TSLA)",
+    "timeframe": "5m",
+    "params": {
+      "bb_period": 14,
+      "bb_std": 1.8,
+      "kc_period": 14,
+      "kc_atr_mult": 1.5,
+      "min_squeeze_bars": 6,
+      "stop_atr_mult": 2.5,
+      "trail_atr_mult": 3.0
+    },
+    "slippage": 0.01,
+    "is": {
+      "num_trades": 57,
+      "win_rate": 0.3333333333333333,
+      "profit_factor": 0.9225504226300995,
+      "total_pnl": -1828.9276331871874,
+      "total_return_pct": -0.03657855266374375,
+      "max_drawdown_pct": -0.171649139632686,
+      "sharpe": -0.12711197096533028,
+      "avg_win": 1146.6053944247842,
+      "avg_loss": -621.4323717699496
+    },
+    "oos": {
+      "num_trades": 23,
+      "win_rate": 0.5217391304347826,
+      "profit_factor": 1.1873830802734466,
+      "total_pnl": 1350.8089831544266,
+      "total_return_pct": 0.027016179663088533,
+      "max_drawdown_pct": -0.08124478676200322,
+      "sharpe": 1.5961411885786547,
+      "avg_win": 713.3015642511347,
+      "avg_loss": -655.3463443508355
+    },
+    "is_score": 0.3051,
+    "oos_pass": true
+  }
+]

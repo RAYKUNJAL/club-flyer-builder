@@ -1,7 +1,20 @@
-"""Grid-scan every strategy archetype x several parameter variants x real market data,
-to find which configs post the highest backtested win rate (with a minimum trade-count
-floor so a 2-trade 100% win rate doesn't top the list). Writes results as JSON for the
-dashboard mockup to consume, and prints a ranked table.
+"""Grid-scan every strategy archetype x parameter variants x real market data -- with
+honest validation.
+
+Universe: Alpaca-tradable US equities/ETFs (GLD, SPY, QQQ, TSLA) at zero commission
+and penny-scale slippage. (Alpaca does not support futures; the old futures CSVs stay
+in data/ for reference but are no longer scanned.)
+
+Anti-overfitting design (the part that keeps this from lying to you):
+  * Each dataset is split 70/30 chronologically: configs are ranked ONLY on the
+    in-sample (first 70%) composite score; the untouched out-of-sample tail is then
+    reported next to it. An edge that exists only in-sample is curve-fit, not real.
+  * EVERY attempted configuration is logged to data/scan_trials.json with its IS and
+    OOS results -- selection from many trials inflates the winners' stats (probability
+    of backtest overfitting; Bailey & Lopez de Prado), so the trial count and the
+    losers must stay visible.
+  * A minimum trade-count floor keeps 2-trade wonders off the board, and the top-8
+    payload marks each config's OOS verdict so the dashboard can show it.
 """
 from __future__ import annotations
 
@@ -27,19 +40,28 @@ from algotrader.strategies.vwap_reversion import VwapReversion  # noqa: E402
 
 DATA_DIR = Path(__file__).resolve().parents[1] / "data"
 MIN_TRADES = 8
+IS_FRACTION = 0.70  # chronological in-sample share; the last 30% is the holdout
 
+# Alpaca-tradable universe. point_value = 1.0 (shares), zero commission, penny slippage.
 DAILY_SOURCES = [
-    ("GC_daily.csv", "Gold (GC)", 10.0),
-    ("ES_daily.csv", "S&P 500 (ES)", 5.0),
-    ("CL_daily.csv", "Crude Oil (CL)", 10.0),
-    ("TSLA_daily.csv", "Tesla (TSLA)", 1.0),
+    ("GLD_daily.csv", "Gold ETF (GLD)"),
+    ("SPY_daily.csv", "S&P 500 ETF (SPY)"),
+    ("QQQ_daily.csv", "Nasdaq ETF (QQQ)"),
+    ("TSLA_daily.csv", "Tesla (TSLA)"),
 ]
 INTRADAY_SOURCES = [
-    ("NQ_5min_rth.csv", "Nasdaq (NQ)", 2.0),
-    ("ES_5min_rth.csv", "S&P 500 (ES)", 5.0),
-    ("GC_5min_rth.csv", "Gold (GC)", 10.0),
+    ("SPY_5min_rth.csv", "S&P 500 ETF (SPY)"),
+    ("QQQ_5min_rth.csv", "Nasdaq ETF (QQQ)"),
+    ("TSLA_5min_rth.csv", "Tesla (TSLA)"),
 ]
 
+POINT_VALUE = 1.0
+MAX_SHARES = 2000
+COMMISSION = 0.0          # Alpaca equities are commission-free
+SLIPPAGE_DAILY = 0.02     # $/share -- conservative for liquid ETFs at daily horizon
+SLIPPAGE_5M = 0.01
+
+# ATR/std-based strategies are price-scale-free and keep fixed params.
 SWING_VARIANTS = [
     {"entry_period": 55, "exit_period": 20, "atr_period": 20, "atr_stop_mult": 3.0},
     {"entry_period": 20, "exit_period": 10, "atr_period": 14, "atr_stop_mult": 2.5},
@@ -50,162 +72,174 @@ MEANREV_VARIANTS = [
     {"band_period": 14, "band_std": 1.5, "stop_std": 2.5},
     {"band_period": 10, "band_std": 2.5, "stop_std": 3.5},
 ]
-ORB_VARIANTS = [
-    {"range_minutes": 15, "atr_period": 14, "atr_stop_mult": 1.5, "reward_risk": 2.0, "max_risk_points": 40},
-    {"range_minutes": 30, "atr_period": 14, "atr_stop_mult": 1.5, "reward_risk": 2.0, "max_risk_points": 50},
-    {"range_minutes": 30, "atr_period": 14, "atr_stop_mult": 1.0, "reward_risk": 1.5, "max_risk_points": 30},
+RSI2_VARIANTS = [
+    {"rsi_period": 2, "oversold": 10.0, "trend_period": 200, "exit_ma_period": 5, "max_hold_bars": 10, "stop_atr_mult": 3.0},
+    {"rsi_period": 2, "oversold": 25.0, "trend_period": 100, "exit_ma_period": 5, "max_hold_bars": 8, "stop_atr_mult": 3.0},
+    {"rsi_period": 4, "oversold": 20.0, "trend_period": 150, "exit_ma_period": 10, "max_hold_bars": 12, "stop_atr_mult": 2.5},
 ]
-FASTTREND_VARIANTS = [
-    {"drive_minutes": 5, "momentum_threshold_points": 10, "target_points": 15, "stop_points": 8, "max_hold_minutes": 30},
-    {"drive_minutes": 10, "momentum_threshold_points": 15, "target_points": 20, "stop_points": 10, "max_hold_minutes": 45},
-    {"drive_minutes": 5, "momentum_threshold_points": 20, "target_points": 25, "stop_points": 12, "max_hold_minutes": 20},
+SQUEEZE_VARIANTS = [
+    {"bb_period": 20, "bb_std": 2.0, "kc_period": 20, "kc_atr_mult": 1.5, "min_squeeze_bars": 5, "stop_atr_mult": 2.0, "trail_atr_mult": 2.5},
+    {"bb_period": 20, "bb_std": 2.0, "kc_period": 20, "kc_atr_mult": 1.2, "min_squeeze_bars": 3, "stop_atr_mult": 1.5, "trail_atr_mult": 2.0},
+    {"bb_period": 14, "bb_std": 1.8, "kc_period": 14, "kc_atr_mult": 1.5, "min_squeeze_bars": 6, "stop_atr_mult": 2.5, "trail_atr_mult": 3.0},
 ]
 PULSE_VARIANTS = [
     {"fast_period": 9, "slow_period": 21, "atr_period": 14, "trail_atr_mult": 2.0, "min_spread_atr_mult": 0.15},
     {"fast_period": 5, "slow_period": 13, "atr_period": 10, "trail_atr_mult": 1.5, "min_spread_atr_mult": 0.1},
     {"fast_period": 12, "slow_period": 26, "atr_period": 14, "trail_atr_mult": 2.5, "min_spread_atr_mult": 0.2},
 ]
-RSI2_VARIANTS = [
-    # Classic Connors baseline: deep oversold within the 200-day trend, quick snapback exit.
-    {"rsi_period": 2, "oversold": 10.0, "trend_period": 200, "exit_ma_period": 5, "max_hold_bars": 10, "stop_atr_mult": 3.0},
-    # Looser entry / shorter trend filter -> more signals on shorter daily histories.
-    {"rsi_period": 2, "oversold": 25.0, "trend_period": 100, "exit_ma_period": 5, "max_hold_bars": 8, "stop_atr_mult": 3.0},
-    # Smoother RSI(4) variant with a slower exit MA and slightly tighter disaster stop.
-    {"rsi_period": 4, "oversold": 20.0, "trend_period": 150, "exit_ma_period": 10, "max_hold_bars": 12, "stop_atr_mult": 2.5},
-]
-SQUEEZE_VARIANTS = [
-    # TTM-style defaults: 20/2.0 Bollinger inside 20/1.5 Keltner, 5-bar squeeze floor.
-    {"bb_period": 20, "bb_std": 2.0, "kc_period": 20, "kc_atr_mult": 1.5, "min_squeeze_bars": 5, "stop_atr_mult": 2.0, "trail_atr_mult": 2.5},
-    # Tighter Keltner + shorter squeeze floor -> earlier, more frequent fires.
-    {"bb_period": 20, "bb_std": 2.0, "kc_period": 20, "kc_atr_mult": 1.2, "min_squeeze_bars": 3, "stop_atr_mult": 1.5, "trail_atr_mult": 2.0},
-    # Faster lookbacks with a longer squeeze requirement and wider trail.
-    {"bb_period": 14, "bb_std": 1.8, "kc_period": 14, "kc_atr_mult": 1.5, "min_squeeze_bars": 6, "stop_atr_mult": 2.5, "trail_atr_mult": 3.0},
-]
 VWAP_VARIANTS = [
-    # Baseline 2-sigma stretch fade back to session VWAP.
     {"entry_dev": 2.0, "stop_dev": 3.5, "dev_period": 30, "warmup_bars": 30, "max_hold_bars": 60},
-    # Deeper stretch required, shorter estimation window, quicker time stop.
     {"entry_dev": 2.5, "stop_dev": 4.0, "dev_period": 24, "warmup_bars": 24, "max_hold_bars": 48},
-    # Shallower stretch, longer warmup for a more stable band, tighter hold.
     {"entry_dev": 1.5, "stop_dev": 3.0, "dev_period": 36, "warmup_bars": 36, "max_hold_bars": 36},
 ]
 
 
-def run_one(strategy, data, point_value, equity=50_000.0, risk_pct=0.02, max_contracts=50):
-    sizer = PositionSizer(RiskConfig(risk_per_trade_pct=risk_pct, point_value=point_value, max_contracts=max_contracts))
-    engine = BacktestEngine(data, strategy, sizer, starting_equity=equity, point_value=point_value)
+def fasttrend_variants_for(price: float) -> list[dict]:
+    """FastTrend's thresholds are absolute price points; scale them off the instrument's
+    price so 'momentum' means comparable %-moves on a $600 SPY and a $60 name."""
+    out = []
+    for thr_pct, hold in [(0.0015, 30), (0.0025, 45), (0.0035, 20)]:
+        thr = round(price * thr_pct, 2)
+        out.append({
+            "drive_minutes": 5 if hold != 45 else 10,
+            "momentum_threshold_points": thr,
+            "target_points": round(thr * 1.5, 2),
+            "stop_points": round(thr * 0.75, 2),
+            "max_hold_minutes": hold,
+        })
+    return out
+
+
+def orb_variants_for(price: float) -> list[dict]:
+    max_risk = round(price * 0.01, 2)  # cap risk per share at ~1% of price
+    return [
+        {"range_minutes": 15, "atr_period": 14, "atr_stop_mult": 1.5, "reward_risk": 2.0, "max_risk_points": max_risk},
+        {"range_minutes": 30, "atr_period": 14, "atr_stop_mult": 1.5, "reward_risk": 2.0, "max_risk_points": max_risk},
+        {"range_minutes": 30, "atr_period": 14, "atr_stop_mult": 1.0, "reward_risk": 1.5, "max_risk_points": round(max_risk * 0.6, 2)},
+    ]
+
+
+def run_one(strategy, data, slippage, equity=50_000.0, risk_pct=0.02):
+    sizer = PositionSizer(RiskConfig(
+        risk_per_trade_pct=risk_pct, point_value=POINT_VALUE, max_contracts=MAX_SHARES,
+    ))
+    engine = BacktestEngine(
+        data, strategy, sizer, starting_equity=equity, point_value=POINT_VALUE,
+        commission_per_contract=COMMISSION, slippage_points=slippage,
+    )
     result = engine.run()
-    metrics = compute_metrics(result, starting_equity=equity)
-    return result, metrics
+    return result, compute_metrics(result, starting_equity=equity)
+
+
+def metrics_dict(m) -> dict:
+    return {
+        "num_trades": m.num_trades, "win_rate": m.win_rate, "profit_factor": m.profit_factor,
+        "total_pnl": m.total_pnl, "total_return_pct": m.total_return_pct,
+        "max_drawdown_pct": m.max_drawdown_pct, "sharpe": m.sharpe,
+        "avg_win": m.avg_win, "avg_loss": m.avg_loss,
+    }
+
+
+def score_of(m) -> float:
+    return composite_score(m.win_rate, m.profit_factor, m.sharpe, m.max_drawdown_pct)
 
 
 def main():
-    rows = []
+    strategy_grid_daily = [
+        ("swing_trend", SwingTrend, SWING_VARIANTS),
+        ("mean_reversion", MeanReversion, MEANREV_VARIANTS),
+        ("rsi2_pullback", Rsi2Pullback, RSI2_VARIANTS),
+        ("squeeze_breakout", SqueezeBreakout, SQUEEZE_VARIANTS),
+    ]
 
-    for fname, label, pv in DAILY_SOURCES:
-        data = load_csv(DATA_DIR / fname)
-        for params in SWING_VARIANTS:
-            strat = SwingTrend(**params)
-            result, m = run_one(strat, data, pv)
-            rows.append(("swing_trend", label, "1d", params, result, m))
-        for params in MEANREV_VARIANTS:
-            strat = MeanReversion(**params)
-            result, m = run_one(strat, data, pv)
-            rows.append(("mean_reversion", label, "1d", params, result, m))
-        for params in RSI2_VARIANTS:
-            strat = Rsi2Pullback(**params)
-            result, m = run_one(strat, data, pv)
-            rows.append(("rsi2_pullback", label, "1d", params, result, m))
-        for params in SQUEEZE_VARIANTS:
-            strat = SqueezeBreakout(**params)
-            result, m = run_one(strat, data, pv)
-            rows.append(("squeeze_breakout", label, "1d", params, result, m))
+    trials = []
+    for sources, tf, slippage, grid_builder in [
+        (DAILY_SOURCES, "1d", SLIPPAGE_DAILY, lambda price: strategy_grid_daily),
+        (INTRADAY_SOURCES, "5m", SLIPPAGE_5M, lambda price: [
+            ("orb", OpeningRangeBreakout, orb_variants_for(price)),
+            ("fast_trend", FastTrend, fasttrend_variants_for(price)),
+            ("pulse", Pulse, PULSE_VARIANTS),
+            ("vwap_reversion", VwapReversion, VWAP_VARIANTS),
+            ("squeeze_breakout", SqueezeBreakout, SQUEEZE_VARIANTS),
+        ]),
+    ]:
+        for fname, label in sources:
+            if not (DATA_DIR / fname).exists():
+                print(f"skip {label} {tf}: {fname} missing")
+                continue
+            data = load_csv(DATA_DIR / fname)
+            split = int(len(data) * IS_FRACTION)
+            is_data, oos_data = data.iloc[:split], data.iloc[split:]
+            price = float(data["close"].median())
+            for strat_name, cls, variants in grid_builder(price):
+                for params in variants:
+                    _, m_is = run_one(cls(**params), is_data, slippage)
+                    _, m_oos = run_one(cls(**params), oos_data, slippage)
+                    trials.append({
+                        "strategy": strat_name, "symbol": label, "timeframe": tf,
+                        "params": params, "slippage": slippage,
+                        "is": metrics_dict(m_is), "oos": metrics_dict(m_oos),
+                        "is_score": score_of(m_is),
+                        "oos_pass": bool(m_oos.num_trades > 0 and m_oos.profit_factor > 1.0),
+                        "_m_is": m_is,
+                    })
 
-    for fname, label, pv in INTRADAY_SOURCES:
-        data = load_csv(DATA_DIR / fname)
-        for params in ORB_VARIANTS:
-            strat = OpeningRangeBreakout(**params)
-            result, m = run_one(strat, data, pv)
-            rows.append(("orb", label, "5m", params, result, m))
-        for params in FASTTREND_VARIANTS:
-            strat = FastTrend(**params)
-            result, m = run_one(strat, data, pv)
-            rows.append(("fast_trend", label, "5m", params, result, m))
-        for params in PULSE_VARIANTS:
-            strat = Pulse(**params)
-            result, m = run_one(strat, data, pv)
-            rows.append(("pulse", label, "5m", params, result, m))
-        for params in VWAP_VARIANTS:
-            strat = VwapReversion(**params)
-            result, m = run_one(strat, data, pv)
-            rows.append(("vwap_reversion", label, "5m", params, result, m))
-        for params in SQUEEZE_VARIANTS:
-            strat = SqueezeBreakout(**params)
-            result, m = run_one(strat, data, pv)
-            rows.append(("squeeze_breakout", label, "5m", params, result, m))
+    # Log EVERY trial -- selection bias is only measurable if the losers stay visible.
+    trials_path = DATA_DIR / "scan_trials.json"
+    trials_path.write_text(json.dumps(
+        [{k: v for k, v in t.items() if not k.startswith("_")} for t in trials], indent=2
+    ))
 
-    qualified = [r for r in rows if r[5].num_trades >= MIN_TRADES]
-    # Rank by risk-adjusted composite score (see algotrader.backtest.scoring), not raw
-    # win rate -- a high win rate with a poor profit factor or deep drawdown should not
-    # top the leaderboard.
-    def score_of(r):
-        m = r[5]
-        return composite_score(m.win_rate, m.profit_factor, m.sharpe, m.max_drawdown_pct)
+    qualified = [t for t in trials if t["is"]["num_trades"] >= MIN_TRADES]
+    qualified.sort(key=lambda t: t["is_score"], reverse=True)
 
-    qualified.sort(key=score_of, reverse=True)
+    print(f"{len(trials)} configurations tried ({len(qualified)} with >= {MIN_TRADES} in-sample trades) "
+          f"-- all logged to {trials_path.name}")
+    print(f"{'strategy':16s} {'symbol':18s} {'tf':4s} {'IS score':>8s} {'IS trades':>9s} {'IS PF':>6s} "
+          f"{'OOS trades':>10s} {'OOS PF':>7s} {'OOS?':>5s}")
+    for t in qualified[:20]:
+        print(f"{t['strategy']:16s} {t['symbol']:18s} {t['timeframe']:4s} {t['is_score']:8.3f} "
+              f"{t['is']['num_trades']:9d} {t['is']['profit_factor']:6.2f} "
+              f"{t['oos']['num_trades']:10d} {t['oos']['profit_factor']:7.2f} "
+              f"{'pass' if t['oos_pass'] else 'FAIL':>5s}")
 
-    print(f"{'strategy':14s} {'symbol':16s} {'tf':4s} {'score':>6s} {'trades':>7s} {'win%':>7s} {'PF':>6s} {'return%':>8s} {'maxDD%':>7s}")
-    for r in qualified[:20]:
-        strat_name, label, tf, params, result, m = r
-        print(
-            f"{strat_name:14s} {label:16s} {tf:4s} {score_of(r):6.3f} {m.num_trades:7d} {m.win_rate*100:6.1f}% "
-            f"{m.profit_factor:6.2f} {m.total_return_pct*100:7.1f}% {m.max_drawdown_pct*100:6.1f}%"
-        )
-
+    # Dashboard payload: top 8 by IN-SAMPLE score, each re-run on the full history for
+    # display curves, with the IS/OOS validation verdict attached and visible.
     top = qualified[:8]
     payload = []
-    for strat_name, label, tf, params, result, m in top:
-        payload.append(
-            {
-                "strategy": strat_name,
-                "symbol": label,
-                "timeframe": tf,
-                "params": params,
-                "score": composite_score(m.win_rate, m.profit_factor, m.sharpe, m.max_drawdown_pct),
-                "metrics": {
-                    "num_trades": m.num_trades,
-                    "win_rate": m.win_rate,
-                    "profit_factor": m.profit_factor,
-                    "total_pnl": m.total_pnl,
-                    "total_return_pct": m.total_return_pct,
-                    "max_drawdown_pct": m.max_drawdown_pct,
-                    "sharpe": m.sharpe,
-                    "avg_win": m.avg_win,
-                    "avg_loss": m.avg_loss,
-                },
-                "equity_curve": [
-                    {"t": str(t), "equity": float(v)} for t, v in result.equity_curve.items()
-                ],
-                "trades": [
-                    {
-                        "side": t.side,
-                        "entry_time": str(t.entry_time),
-                        "exit_time": str(t.exit_time),
-                        "entry_price": t.entry_price,
-                        "exit_price": t.exit_price,
-                        "contracts": t.contracts,
-                        "pnl": t.pnl,
-                        "entry_reason": t.entry_reason,
-                        "exit_reason": t.exit_reason,
-                    }
-                    for t in result.trades
-                ],
-            }
-        )
+    for t in top:
+        cls = {"swing_trend": SwingTrend, "mean_reversion": MeanReversion,
+               "rsi2_pullback": Rsi2Pullback, "squeeze_breakout": SqueezeBreakout,
+               "orb": OpeningRangeBreakout, "fast_trend": FastTrend,
+               "pulse": Pulse, "vwap_reversion": VwapReversion}[t["strategy"]]
+        fname = next(f for f, lbl in (DAILY_SOURCES + INTRADAY_SOURCES)
+                     if lbl == t["symbol"] and ((t["timeframe"] == "1d") == ("daily" in f)))
+        data = load_csv(DATA_DIR / fname)
+        result, m_full = run_one(cls(**t["params"]), data, t["slippage"])
+        payload.append({
+            "strategy": t["strategy"], "symbol": t["symbol"], "timeframe": t["timeframe"],
+            "params": t["params"],
+            "score": t["is_score"],
+            "validation": {
+                "in_sample": t["is"], "out_of_sample": t["oos"], "oos_pass": t["oos_pass"],
+                "note": f"ranked on first {IS_FRACTION:.0%} of history; last {1-IS_FRACTION:.0%} untouched holdout",
+                "trials_total": len(trials),
+            },
+            "metrics": metrics_dict(m_full),
+            "equity_curve": [{"t": str(ts), "equity": float(v)} for ts, v in result.equity_curve.items()],
+            "trades": [
+                {"side": tr.side, "entry_time": str(tr.entry_time), "exit_time": str(tr.exit_time),
+                 "entry_price": tr.entry_price, "exit_price": tr.exit_price, "contracts": tr.contracts,
+                 "pnl": tr.pnl, "entry_reason": tr.entry_reason, "exit_reason": tr.exit_reason}
+                for tr in result.trades
+            ],
+        })
 
-    out_path = Path(__file__).resolve().parents[1] / "data" / "win_rate_scan.json"
+    out_path = DATA_DIR / "win_rate_scan.json"
     out_path.write_text(json.dumps(payload, indent=2))
-    print(f"\nwrote top {len(payload)} configs to {out_path}")
+    oos_passes = sum(1 for t in top if t["oos_pass"])
+    print(f"\nwrote top {len(payload)} configs to {out_path.name} "
+          f"({oos_passes}/{len(top)} passed the out-of-sample holdout)")
 
 
 if __name__ == "__main__":

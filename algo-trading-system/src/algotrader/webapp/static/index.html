@@ -189,7 +189,7 @@
     <div class="broker-card">
       <h4>Broker connection</h4>
       <div class="broker-row">
-        <span>Tradovate</span>
+        <span>Alpaca (paper)</span>
         <span class="pill pill-warning" id="broker-pill"><span class="dot"></span>Checking…</span>
       </div>
       <button class="broker-btn" id="connect-btn">Connect account</button>
@@ -205,6 +205,7 @@
       </div>
       <div class="copy-controls">
         <span class="score-badge" id="hdr-score" hidden></span>
+        <span class="score-badge" id="hdr-oos" hidden></span>
         <button class="copy-btn" id="copy-btn" hidden>Copy strategy</button>
       </div>
     </div>
@@ -223,10 +224,10 @@
     </div>
 
     <div class="card">
-      <h3>Order flow footprint — S&amp;P 500 (ES), 15-minute</h3>
+      <h3>Order flow footprint — S&amp;P 500 ETF (SPY), 15-minute</h3>
       <div class="card-sub" id="fp-sub">Volume clusters per price level. <b style="color:var(--fp-buy)">■</b> buying
         (upticks) · <b style="color:var(--fp-sell)">■</b> selling (downticks) — tick-rule estimate from real 1-minute
-        bars (~75–85% accurate); true bid/ask footprints need the Tradovate market-data feed. Cells read
+        bars (~75–85% accurate); true bid/ask footprints need a tick-level market-data feed. Cells read
         <b>sell × buy</b>; outlined cell = point of control.</div>
       <div style="overflow-x:auto" id="fp-scroll">
         <div class="chart-wrap" style="display:inline-block">
@@ -392,6 +393,17 @@ function renderHeader(s) {
   const scoreEl = document.getElementById("hdr-score");
   scoreEl.hidden = false;
   scoreEl.textContent = "score " + (s.score !== undefined ? s.score.toFixed(3) : "—");
+  const oosEl = document.getElementById("hdr-oos");
+  if (s.validation) {
+    oosEl.hidden = false;
+    const pass = s.validation.oos_pass;
+    oosEl.textContent = pass ? "✓ out-of-sample pass" : "✗ out-of-sample FAIL";
+    oosEl.style.background = pass ? "rgba(12,163,12,0.12)" : "rgba(208,59,59,0.12)";
+    oosEl.style.color = pass ? "var(--good)" : "var(--critical)";
+    oosEl.title = s.validation.note + " · " + s.validation.trials_total + " configurations tried in total";
+  } else {
+    oosEl.hidden = true;
+  }
   renderCopyButton(s);
 }
 
@@ -810,7 +822,7 @@ document.getElementById("connect-btn").addEventListener("click", async () => {
   try {
     const s = wasConnected
       ? await api("/api/broker/disconnect", { method: "POST" })
-      : await api("/api/broker/connect", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({mode: "demo"}) });
+      : await api("/api/broker/connect", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({mode: "paper"}) });
     note.textContent = s.detail;
     note.className = "broker-note" + (s.connected === false && !wasConnected ? " is-error" : "");
   } catch (e) {
@@ -933,7 +945,7 @@ function drawFootprint() {
 
 async function loadFootprint() {
   try {
-    fpData = await api("/api/footprint/ES?candle_minutes=15&max_candles=26");
+    fpData = await api("/api/footprint/SPY?candle_minutes=15&max_candles=26");
   } catch (e) {
     document.getElementById("fp-sub").textContent = e.message;
     return;

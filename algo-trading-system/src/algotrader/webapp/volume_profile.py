@@ -25,12 +25,20 @@ import pandas as pd
 
 #: (symbol label, timeframe) -> CSV file, matching scripts/scan_win_rates.py sources.
 SOURCE_FILES: dict[tuple[str, str], str] = {
+    # Alpaca-tradable equity universe (current scan)
+    ("Gold ETF (GLD)", "1d"): "GLD_daily.csv",
+    ("S&P 500 ETF (SPY)", "1d"): "SPY_daily.csv",
+    ("S&P 500 ETF (SPY)", "5m"): "SPY_5min_rth.csv",
+    ("Nasdaq ETF (QQQ)", "1d"): "QQQ_daily.csv",
+    ("Nasdaq ETF (QQQ)", "5m"): "QQQ_5min_rth.csv",
+    ("Tesla (TSLA)", "1d"): "TSLA_daily.csv",
+    ("Tesla (TSLA)", "5m"): "TSLA_5min_rth.csv",
+    # legacy futures data kept for reference
     ("Gold (GC)", "1d"): "GC_daily.csv",
     ("Gold (GC)", "5m"): "GC_5min_rth.csv",
     ("S&P 500 (ES)", "1d"): "ES_daily.csv",
     ("S&P 500 (ES)", "5m"): "ES_5min_rth.csv",
     ("Crude Oil (CL)", "1d"): "CL_daily.csv",
-    ("Tesla (TSLA)", "1d"): "TSLA_daily.csv",
     ("Nasdaq (NQ)", "5m"): "NQ_5min_rth.csv",
 }
 

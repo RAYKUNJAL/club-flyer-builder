@@ -206,29 +206,26 @@ stale. Some filers still report values in thousands despite the 2023 dollars rul
 detects and corrects that (a 13F totaling under the $100M filing threshold is a units error).
 Copy-trading apps like dub have no public API, which is why this uses the SEC source directly.
 
-### Tradovate demo account setup
+### Alpaca paper account setup (primary broker)
 
-To wire this to a real (simulated) account:
+The tradable universe is Alpaca-supported US equities/ETFs: GLD, SPY, QQQ, TSLA. (Alpaca does
+not support futures; the old futures modules and data stay in the repo for reference only.)
 
-1. Create a Tradovate account at [tradovate.com](https://www.tradovate.com) — sign-up includes a
-   free demo/simulation account by default, no funding required to practice.
-2. Tradovate's REST/WebSocket API requires a registered API app (an app ID + CID/secret pair) —
-   apply for API access from your Tradovate account dashboard or contact their support for
-   current API-access requirements; policies around which account tiers get API access do change,
-   so confirm directly with Tradovate rather than assuming.
-3. Once you have credentials, set them as environment variables (never commit them to git):
+1. Create a free account at [alpaca.markets](https://alpaca.markets) — every account includes a
+   paper-trading account with simulated $100k (adjustable) at no cost, no funding required.
+2. In the dashboard, generate **paper** API keys and set them (never commit them to git):
    ```bash
-   export TRADOVATE_USERNAME=you@example.com
-   export TRADOVATE_PASSWORD=...
-   export TRADOVATE_APP_ID=...
-   export TRADOVATE_APP_VERSION=1.0
-   export TRADOVATE_CID=...
-   export TRADOVATE_SECRET=...
-   export TRADOVATE_ACCOUNT_ID=...
+   export APCA_API_KEY_ID=...
+   export APCA_API_SECRET_KEY=...
    ```
-4. Restart the app and click **Connect account** — it authenticates against Tradovate's `demo`
-   endpoint. Orders stay in `dry_run=True` (logged, never sent) until you deliberately change that
-   in `TradovateBroker`, and only after you've verified behavior against the demo environment.
+3. Restart the app and click **Connect account** — it authenticates against Alpaca's paper
+   endpoint and shows your paper equity. The dashboard can ONLY use the paper endpoint.
+4. `scripts/run_paper_trading.py` also picks up these keys automatically: with them set, paper
+   orders (including broker-side protective stops) rest on Alpaca's book; without them it uses
+   the in-memory paper broker.
+5. The live endpoint is refused everywhere unless BOTH `AlpacaBroker(live=True)` is deliberately
+   constructed AND `ALPACA_ALLOW_LIVE=1` is set — two manual steps no committed code performs.
+   See `GATES.md` for what has to be true before that ever happens.
 
 ## Architecture
 

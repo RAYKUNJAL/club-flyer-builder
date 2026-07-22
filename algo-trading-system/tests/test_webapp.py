@@ -77,12 +77,19 @@ def test_broker_status_defaults_disconnected(client):
 
 
 def test_broker_connect_without_credentials_fails_honestly(client, monkeypatch):
-    for var in ["TRADOVATE_USERNAME", "TRADOVATE_PASSWORD", "TRADOVATE_APP_ID", "TRADOVATE_CID", "TRADOVATE_SECRET"]:
+    for var in ["APCA_API_KEY_ID", "APCA_API_SECRET_KEY"]:
         monkeypatch.delenv(var, raising=False)
-    resp = client.post("/api/broker/connect", json={"mode": "demo"})
+    resp = client.post("/api/broker/connect", json={"mode": "paper"})
     body = resp.json()
     assert body["connected"] is False
-    assert "TRADOVATE_USERNAME" in body["detail"]
+    assert "APCA_API_KEY_ID" in body["detail"]
+
+
+def test_broker_connect_refuses_live_mode(client):
+    resp = client.post("/api/broker/connect", json={"mode": "live"})
+    body = resp.json()
+    assert body["connected"] is False
+    assert "not available" in body["detail"]
 
 
 def test_broker_account_requires_connection(client):

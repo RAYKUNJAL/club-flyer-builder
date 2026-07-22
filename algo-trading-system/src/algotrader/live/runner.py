@@ -45,6 +45,8 @@ class LiveRunner:
         symbol: str,
         max_history_bars: int = 500,
         on_trade_closed: Optional[TradeCallback] = None,
+        session: Optional[tuple] = None,  # (datetime.time open, datetime.time close): entries only inside
+        max_stale_polls: Optional[int] = None,  # halt after this many consecutive empty polls
     ):
         self.strategy = strategy
         self.broker = broker
@@ -52,13 +54,49 @@ class LiveRunner:
         self.symbol = symbol
         self.max_history_bars = max_history_bars
         self.on_trade_closed = on_trade_closed
+        self.session = session
+        self.max_stale_polls = max_stale_polls
         self._history = pd.DataFrame(columns=["open", "high", "low", "close", "volume"])
         self._pos = PositionState()
         self._stop_order_id: Optional[str] = None
         self._current_day: Optional[pd.Timestamp] = None
         self._day_start_equity: Optional[float] = None
 
+    def reconcile_with_broker(self) -> None:
+        """Call once on startup. If the broker reports an open position this process
+        doesn't know about (e.g. we crashed mid-trade and restarted), flatten it --
+        an unmanaged position has no strategy watching its exit and no local stop
+        bookkeeping, which is strictly worse than taking the exit."""
+        try:
+            broker_pos = self.broker.get_position(self.symbol)
+        except Exception:
+            logger.exception("startup reconciliation: could not query broker position")
+            return
+        if broker_pos.contracts > 0 and self._pos.side is None:
+            logger.warning(
+                "startup reconciliation: broker holds %s x%d @ %.2f with no local state -- flattening",
+                broker_pos.side, broker_pos.contracts, broker_pos.avg_price,
+            )
+            self.broker.flatten(self.symbol)
+
+    @staticmethod
+    def _bar_is_valid(bar: pd.Series) -> bool:
+        try:
+            values = [float(bar[k]) for k in ("open", "high", "low", "close")]
+        except (KeyError, TypeError, ValueError):
+            return False
+        if any(v != v for v in values):  # NaN
+            return False
+        o, h, l, c = values
+        return h >= l and h >= max(o, c) - 1e-9 and l <= min(o, c) + 1e-9 and c > 0
+
     def on_new_bar(self, ts: pd.Timestamp, bar: pd.Series) -> None:
+        if not self._bar_is_valid(bar):
+            # A malformed feed row (missing fields, NaNs, inverted high/low) must never
+            # reach the strategy or trip a stop -- skip it and keep the resting broker
+            # stop as protection.
+            logger.warning("skipping invalid bar at %s: %s", ts, dict(bar) if bar is not None else None)
+            return
         if hasattr(self.broker, "update_quote"):
             self.broker.update_quote(self.symbol, bar["close"])  # e.g. PaperBroker needs a quote before it can fill
 
@@ -90,6 +128,11 @@ class LiveRunner:
 
     def _enter(self, order, price: float, ts: pd.Timestamp) -> None:
         side = "long" if order.action == OrderAction.ENTER_LONG else "short"
+        if self.session is not None:
+            open_t, close_t = self.session
+            if not (open_t <= ts.time() < close_t):
+                logger.info("skip entry: %s outside trading session %s-%s", ts.time(), open_t, close_t)
+                return
         equity = self.broker.get_equity()
         if self._day_start_equity is not None and self.risk_sizer.daily_loss_limit_hit(
             self._day_start_equity, equity
@@ -203,12 +246,28 @@ class LiveRunner:
 
     def run_forever(self, fetch_latest_bar: FetchBarFn, poll_interval_seconds: float = 60.0) -> None:
         logger.info("live runner starting for %s using strategy=%s", self.symbol, self.strategy.name)
+        self.reconcile_with_broker()
+        stale_polls = 0
         while True:
             try:
                 result = fetch_latest_bar()
                 if result is not None:
+                    stale_polls = 0
                     ts, bar = result
                     self.on_new_bar(ts, bar)
+                else:
+                    stale_polls += 1
+                    if self.max_stale_polls is not None and stale_polls >= self.max_stale_polls:
+                        # A dead data feed means an open position is flying blind. Flatten,
+                        # then stop -- a supervisor (systemd) can restart us when data returns.
+                        logger.error(
+                            "data feed stale for %d polls (~%.0fs) -- flattening and halting",
+                            stale_polls, stale_polls * poll_interval_seconds,
+                        )
+                        if self._pos.side is not None:
+                            self._exit("stale_data_halt", self._history["close"].iloc[-1]
+                                       if len(self._history) else 0.0)
+                        return
             except Exception:
                 # Never let one bad bar / transient broker error kill the live loop and
                 # orphan an open position. The broker-side stop bounds risk meanwhile.

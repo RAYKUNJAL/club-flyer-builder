@@ -27,10 +27,11 @@ python scripts/run_paper_trading.py        # auto-trades the dashboard-copied st
   (35% PF / 25% win rate / 20% Sharpe / 20% drawdown).
 - `src/algotrader/risk/position_sizing.py` — %-equity risk sizing by stop distance,
   daily loss cap.
-- `src/algotrader/live/` — `runner.py` (live loop, broker-side protective stops,
-  ratchet-only stop updates, reports closed trades via `on_trade_closed`),
-  `paper_broker.py`, `paper_tracker.py` (validation + kill criteria),
-  `tradovate_broker.py` (demo + dry_run=True by default).
+- `src/algotrader/live/` — `runner.py` (hardened live loop: broker-side protective stops,
+  ratchet-only stop updates, bar validation, startup reconciliation, stale-feed halt,
+  session gate, reports closed trades via `on_trade_closed`), `alpaca_broker.py` (paper
+  by default, unique client order ids), `paper_broker.py`, `paper_tracker.py` (validation
+  + kill criteria), `tradovate_broker.py` (legacy futures reference, unused).
 - `src/algotrader/webapp/` — FastAPI backend + static frontend. Reads
   `data/win_rate_scan.json`, `data/top_traders.json`, `data/active_strategy.json`,
   `data/paper_trades.json`. `volume_profile.py` = footprint-chart approximation from OHLCV.
@@ -42,9 +43,10 @@ python scripts/run_paper_trading.py        # auto-trades the dashboard-copied st
 
 1. **No lookahead bias.** Strategies may only read `ctx.history` up to the current bar.
    The engine and tests enforce this; any new strategy needs a test proving its entries.
-2. **Safety defaults are load-bearing.** Tradovate connects to demo with `dry_run=True`;
-   no code path flips that. Never change this default, never log or echo credentials,
-   and never commit anything containing real credential values.
+2. **Safety defaults are load-bearing.** The broker is Alpaca PAPER; the live endpoint
+   requires the deliberate two-step (AlpacaBroker(live=True) + ALPACA_ALLOW_LIVE=1) that
+   no committed code performs. Never change these defaults, never log or echo credentials,
+   never commit real credential values, and see GATES.md before touching anything live.
 3. **Stops are engine/runner-level, not strategy trust.** Entries carry `stop_price`;
    stop updates may only tighten risk (the runner rejects widening). Keep it that way.
 4. **Honest reporting.** Backtest results are labeled as backtests; approximations (e.g.

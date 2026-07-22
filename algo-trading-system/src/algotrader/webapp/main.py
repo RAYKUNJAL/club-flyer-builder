@@ -82,6 +82,7 @@ def list_strategies():
                     "score",
                     composite_score(m["win_rate"], m["profit_factor"], m["sharpe"], m["max_drawdown_pct"]),
                 ),
+                "validation": d.get("validation"),
                 "metrics": m,
             }
         )
@@ -149,9 +150,11 @@ def paper_trades():
 
 
 FOOTPRINT_SOURCES = {
+    # Alpaca-tradable universe first; legacy futures kept for reference
+    "SPY": ("SPY_1min.csv", "S&P 500 ETF (SPY)"),
+    "QQQ": ("QQQ_1min.csv", "Nasdaq ETF (QQQ)"),
+    "TSLA": ("TSLA_1min.csv", "Tesla (TSLA)"),
     "ES": ("ES_1min.csv", "S&P 500 (ES)"),
-    "NQ": ("NQ_1min.csv", "Nasdaq (NQ)"),
-    "GC": ("GC_1min.csv", "Gold (GC)"),
 }
 
 
@@ -239,7 +242,7 @@ def live_deselect():
 
 
 class ConnectRequest(BaseModel):
-    mode: Literal["demo", "live"] = "demo"
+    mode: Literal["paper", "live"] = "paper"
 
 
 @app.get("/api/broker/status")
