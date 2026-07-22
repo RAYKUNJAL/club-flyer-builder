@@ -182,6 +182,22 @@ def footprint(symbol: str, candle_minutes: int = 15, max_candles: int = 26, pric
     return out
 
 
+PORTFOLIO_FILE = DATA_DIR / "portfolio.json"
+
+
+@app.get("/api/portfolio")
+def portfolio():
+    """Pooled statistics across OOS-validated configs + per-family win-rate reliability
+    (95% Wilson lower bounds -- the law-of-large-numbers-honest read of a win rate)."""
+    if not PORTFOLIO_FILE.exists():
+        raise HTTPException(
+            404,
+            "No portfolio stats found. Run `python scripts/build_portfolio.py` from the "
+            "repo root (after scan_win_rates.py).",
+        )
+    return json.loads(PORTFOLIO_FILE.read_text())
+
+
 @app.get("/api/top_traders")
 def top_traders():
     """Leaderboard of famous fund managers' latest disclosed portfolios (SEC 13F)."""

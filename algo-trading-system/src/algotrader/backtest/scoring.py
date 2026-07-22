@@ -21,6 +21,23 @@ here if you disagree with the emphasis.
 from __future__ import annotations
 
 
+def wilson_lower(wins: int, n: int, z: float = 1.96) -> float:
+    """Lower bound of the 95% Wilson score interval for a win rate.
+
+    This is the law of large numbers made operational: a 60% win rate over 10
+    trades has a lower bound near 31% (meaningless), while 60% over 200 trades
+    has a lower bound near 53% (actually solid). Never judge a win rate without
+    its trade count -- this function is how the app enforces that.
+    """
+    if n <= 0:
+        return 0.0
+    p = wins / n
+    denom = 1 + z * z / n
+    center = p + z * z / (2 * n)
+    margin = z * ((p * (1 - p) / n + z * z / (4 * n * n)) ** 0.5)
+    return max(0.0, (center - margin) / denom)
+
+
 def composite_score(
     win_rate: float,
     profit_factor: float,

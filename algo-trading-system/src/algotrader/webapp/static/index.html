@@ -282,6 +282,21 @@
     </div>
 
     <div class="card">
+      <h3>Win-rate reliability — law of large numbers</h3>
+      <div class="card-sub">A win rate is only as solid as its trade count. Each family below pools EVERY
+        variant and symbol (winners and losers — no cherry-picking); the out-of-sample column was never
+        selected on, and the <b>95% lower bound</b> is the number you can actually lean on.</div>
+      <table>
+        <thead><tr>
+          <th>Strategy family</th><th class="num">Variants</th><th class="num">IS trades</th><th class="num">IS win</th>
+          <th class="num">OOS trades</th><th class="num">OOS win</th><th class="num">OOS 95% lower</th>
+        </tr></thead>
+        <tbody id="family-body"><tr><td colspan="7" class="empty-state">Loading…</td></tr></tbody>
+      </table>
+      <div class="card-sub" id="pool-note" style="margin-top:10px"></div>
+    </div>
+
+    <div class="card">
       <h3>Top traders — real SEC 13F filings</h3>
       <div class="card-sub" id="tt-sub">Latest disclosed portfolios of famous fund managers, straight from SEC EDGAR
         (official, public data). Long US equity positions only, filed up to 45 days after quarter end.</div>
@@ -628,6 +643,44 @@ function fmtBillions(x) {
   return "$" + Math.round(x).toLocaleString();
 }
 
+async function loadPortfolio() {
+  const body = document.getElementById("family-body");
+  let data;
+  try { data = await api("/api/portfolio"); }
+  catch (e) {
+    body.innerHTML = "";
+    const tr = document.createElement("tr"); const td = document.createElement("td");
+    td.colSpan = 7; td.className = "empty-state"; td.textContent = e.message;
+    tr.appendChild(td); body.appendChild(tr);
+    return;
+  }
+  body.textContent = "";
+  data.families.forEach((f, i) => {
+    const tr = document.createElement("tr");
+    if (i === 0) tr.className = "win-row-top";
+    const cells = [
+      [f.family.replace(/_/g, " "), false],
+      [String(f.variants), true], [String(f.is_trades), true],
+      [f.is_win_rate == null ? "—" : fmtPct(f.is_win_rate), true],
+      [String(f.oos_trades), true],
+      [f.oos_win_rate == null ? "—" : fmtPct(f.oos_win_rate), true],
+      [fmtPct(f.oos_win_rate_lower_95), true],
+    ];
+    cells.forEach(([text, num], ci) => {
+      const td = document.createElement("td");
+      if (num) td.className = "num";
+      if (ci === 6) { td.className = "num " + (f.oos_win_rate_lower_95 >= 0.5 ? "pnl-pos" : ""); }
+      td.textContent = text; tr.appendChild(td);
+    });
+    body.appendChild(tr);
+  });
+  const c = data.combined;
+  document.getElementById("pool-note").textContent =
+    `OOS-validated configs pooled: ${c.num_trades} trades, ${fmtPct(c.win_rate)} win rate ` +
+    `(95% lower bound ${fmtPct(c.win_rate_lower_95)}), profit factor ${c.profit_factor ? c.profit_factor.toFixed(2) : "—"}. ` +
+    `High win rate and high profit factor live in different families — expectancy is what pays.`;
+}
+
 async function loadTopTraders() {
   const body = document.getElementById("tt-body");
   let data;
@@ -958,6 +1011,7 @@ async function loadFootprint() {
 loadActive().then(loadStrategies);
 loadFootprint();
 loadTopTraders();
+loadPortfolio();
 loadPaperSummary();
 setInterval(loadPaperSummary, 30000);
 pollBrokerStatus();

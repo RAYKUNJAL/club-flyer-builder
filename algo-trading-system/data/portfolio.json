@@ -1,0 +1,166 @@
+{
+  "note": "Pooled trades from every config that passed the untouched out-of-sample holdout. Win-rate lower bounds are 95% Wilson intervals: the honest, law-of-large-numbers reading of a win rate. Pooling grows the sample and tightens the bound -- it never inflates the underlying rate. Trades overlap in time across configs; this is a statistical pool, not a simulated margin-accurate multi-strategy account.",
+  "combined": {
+    "num_trades": 247,
+    "wins": 108,
+    "win_rate": 0.43724696356275305,
+    "win_rate_lower_95": 0.37681318240240397,
+    "profit_factor": 2.75946225009378,
+    "total_pnl": 211548.5560074744,
+    "expectancy": 856.4718866699368
+  },
+  "configs": [
+    {
+      "num_trades": 13,
+      "wins": 9,
+      "win_rate": 0.6923076923076923,
+      "win_rate_lower_95": 0.4236888781333764,
+      "profit_factor": 4.787380130148682,
+      "total_pnl": 14174.112904401743,
+      "expectancy": 1090.3163772616726,
+      "strategy": "pulse",
+      "symbol": "S&P 500 ETF (SPY)",
+      "timeframe": "5m",
+      "score": 0.9524
+    },
+    {
+      "num_trades": 84,
+      "wins": 36,
+      "win_rate": 0.42857142857142855,
+      "win_rate_lower_95": 0.3281580631787752,
+      "profit_factor": 2.4287005207596626,
+      "total_pnl": 63908.709741130566,
+      "expectancy": 760.8179731086972,
+      "strategy": "swing_trend",
+      "symbol": "Tesla (TSLA)",
+      "timeframe": "1d",
+      "score": 0.6585
+    },
+    {
+      "num_trades": 46,
+      "wins": 21,
+      "win_rate": 0.45652173913043476,
+      "win_rate_lower_95": 0.3215451042112199,
+      "profit_factor": 2.8499826515322875,
+      "total_pnl": 31960.102134704528,
+      "expectancy": 694.7848290153158,
+      "strategy": "swing_trend",
+      "symbol": "Gold ETF (GLD)",
+      "timeframe": "1d",
+      "score": 0.6278
+    },
+    {
+      "num_trades": 11,
+      "wins": 6,
+      "win_rate": 0.5454545454545454,
+      "win_rate_lower_95": 0.2800877556899882,
+      "profit_factor": 3.099179086080734,
+      "total_pnl": 12019.278331910866,
+      "expectancy": 1092.6616665373515,
+      "strategy": "mean_reversion",
+      "symbol": "S&P 500 ETF (SPY)",
+      "timeframe": "1d",
+      "score": 0.6155
+    },
+    {
+      "num_trades": 51,
+      "wins": 20,
+      "win_rate": 0.39215686274509803,
+      "win_rate_lower_95": 0.27027144858027696,
+      "profit_factor": 2.9230647625296795,
+      "total_pnl": 48339.755767622024,
+      "expectancy": 947.8383483847456,
+      "strategy": "swing_trend",
+      "symbol": "Tesla (TSLA)",
+      "timeframe": "1d",
+      "score": 0.6783
+    },
+    {
+      "num_trades": 42,
+      "wins": 16,
+      "win_rate": 0.38095238095238093,
+      "win_rate_lower_95": 0.24999520898785943,
+      "profit_factor": 2.741888069538745,
+      "total_pnl": 41146.597127704634,
+      "expectancy": 979.6808839929674,
+      "strategy": "swing_trend",
+      "symbol": "Tesla (TSLA)",
+      "timeframe": "1d",
+      "score": 0.6724
+    }
+  ],
+  "families": [
+    {
+      "family": "rsi2_pullback",
+      "variants": 12,
+      "is_trades": 663,
+      "is_win_rate": 0.6817496229260935,
+      "oos_trades": 319,
+      "oos_win_rate": 0.768025078369906,
+      "oos_win_rate_lower_95": 0.7186818038925328
+    },
+    {
+      "family": "vwap_reversion",
+      "variants": 9,
+      "is_trades": 431,
+      "is_win_rate": 0.531322505800464,
+      "oos_trades": 171,
+      "oos_win_rate": 0.49122807017543857,
+      "oos_win_rate_lower_95": 0.4173173755720263
+    },
+    {
+      "family": "swing_trend",
+      "variants": 12,
+      "is_trades": 569,
+      "is_win_rate": 0.3989455184534271,
+      "oos_trades": 242,
+      "oos_win_rate": 0.4297520661157025,
+      "oos_win_rate_lower_95": 0.3689573509403207
+    },
+    {
+      "family": "orb",
+      "variants": 9,
+      "is_trades": 366,
+      "is_win_rate": 0.3442622950819672,
+      "oos_trades": 150,
+      "oos_win_rate": 0.41333333333333333,
+      "oos_win_rate_lower_95": 0.3376520916836594
+    },
+    {
+      "family": "pulse",
+      "variants": 9,
+      "is_trades": 327,
+      "is_win_rate": 0.3394495412844037,
+      "oos_trades": 131,
+      "oos_win_rate": 0.3893129770992366,
+      "oos_win_rate_lower_95": 0.3101054456646504
+    },
+    {
+      "family": "fast_trend",
+      "variants": 9,
+      "is_trades": 223,
+      "is_win_rate": 0.2242152466367713,
+      "oos_trades": 103,
+      "oos_win_rate": 0.3786407766990291,
+      "oos_win_rate_lower_95": 0.2909256762644888
+    },
+    {
+      "family": "squeeze_breakout",
+      "variants": 21,
+      "is_trades": 383,
+      "is_win_rate": 0.3472584856396867,
+      "oos_trades": 183,
+      "oos_win_rate": 0.3442622950819672,
+      "oos_win_rate_lower_95": 0.2792606265846997
+    },
+    {
+      "family": "mean_reversion",
+      "variants": 12,
+      "is_trades": 1903,
+      "is_win_rate": 0.26169206516027327,
+      "oos_trades": 815,
+      "oos_win_rate": 0.3042944785276074,
+      "oos_win_rate_lower_95": 0.2736843638347868
+    }
+  ]
+}
