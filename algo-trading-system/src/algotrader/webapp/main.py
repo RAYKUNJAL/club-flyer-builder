@@ -136,10 +136,12 @@ def paper_summary():
     backtest = None
     if ACTIVE_STRATEGY_FILE.exists():
         active = json.loads(ACTIVE_STRATEGY_FILE.read_text())
-        scan = _load_scan()
-        sid = active.get("strategy_id")
-        if isinstance(sid, int) and 0 <= sid < len(scan):
-            backtest = scan[sid]["metrics"]
+        backtest = active.get("metrics")
+        if backtest is None:  # older selections stored only a scan index
+            scan = _load_scan()
+            sid = active.get("strategy_id")
+            if isinstance(sid, int) and 0 <= sid < len(scan):
+                backtest = scan[sid]["metrics"]
     return tracker.summary(backtest)
 
 
@@ -236,6 +238,9 @@ def live_select(req: SelectRequest):
             "score",
             composite_score(m["win_rate"], m["profit_factor"], m["sharpe"], m["max_drawdown_pct"]),
         ),
+        # Embed the backtest metrics so the paper tracker's comparison baseline
+        # travels with the selection (works even if the scan file changes later).
+        "metrics": m,
         "selected_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     }
     ACTIVE_STRATEGY_FILE.parent.mkdir(parents=True, exist_ok=True)

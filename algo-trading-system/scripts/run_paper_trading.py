@@ -55,26 +55,32 @@ REQUIRED_COLS = ("open", "high", "low", "close", "volume")
 
 
 def make_bar_fetcher(ticker: str, interval: str):
-    """Poll Yahoo for the most recent COMPLETED bar; validate defensively and dedupe
+    """Poll Yahoo's chart API (plain requests -- survives TLS-inspecting proxies that
+    break yfinance) for the most recent COMPLETED bar; validate defensively and dedupe
     by timestamp. Malformed responses (missing columns/timestamps -- observed in the
     wild) return None instead of crashing the loop."""
-    import yfinance as yf
+    from fetch_yahoo_chart import fetch_chart  # sibling script, shared client
 
     last_seen = {"ts": None}
+    log = logging.getLogger(__name__)
 
     def fetch():
-        period = "2d" if interval != "1d" else "10d"
+        period = "5d" if interval != "1d" else "1mo"
         try:
-            df = yf.Ticker(ticker).history(period=period, interval=interval)
+            df = fetch_chart(ticker, period, interval)
         except Exception:
-            logging.getLogger(__name__).exception("bar fetch failed for %s", ticker)
+            log.exception("bar fetch failed for %s", ticker)
             return None
-        if df is None or len(df) < 2 or not isinstance(df.index, pd.DatetimeIndex):
+        if df is None or len(df) < 2:
             return None
         df = df.rename(columns=str.lower)
+        if "timestamp" in df.columns:  # fetch_chart returns timestamp as a column
+            df = df.set_index(pd.DatetimeIndex(pd.to_datetime(df["timestamp"])))
+        if not isinstance(df.index, pd.DatetimeIndex):
+            log.warning("bar fetch for %s returned no usable timestamps -- skipping", ticker)
+            return None
         if any(c not in df.columns for c in REQUIRED_COLS):
-            logging.getLogger(__name__).warning(
-                "bar fetch for %s missing columns (got %s) -- skipping", ticker, list(df.columns))
+            log.warning("bar fetch for %s missing columns (got %s) -- skipping", ticker, list(df.columns))
             return None
         # The final row is the still-forming bar; the one before it is complete.
         ts = df.index[-2]
@@ -87,6 +93,13 @@ def make_bar_fetcher(ticker: str, interval: str):
 
 
 def main() -> None:
+    import argparse
+
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--check", action="store_true",
+                    help="verify the full pipeline (selection, strategy build, broker, one real bar) and exit")
+    args = ap.parse_args()
+
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
     active_file = DATA / "active_strategy.json"
@@ -129,6 +142,20 @@ def main() -> None:
 
     print(f"Paper trading {active['label']} on {ticker} ({interval} bars) via {broker_desc}. "
           f"{len(tracker.trades)} trades logged so far.")
+
+    if args.check:
+        fetch = make_bar_fetcher(ticker, interval)
+        result = fetch()
+        if result is None:
+            raise SystemExit("CHECK FAILED: could not fetch a completed bar from the data feed")
+        ts, bar = result
+        runner.reconcile_with_broker()
+        runner.on_new_bar(ts, bar)
+        print(f"CHECK OK: fetched real {interval} bar {ts} (close {bar['close']:.2f}), "
+              f"fed it through the hardened runner, broker equity ${broker.get_equity():,.2f}. "
+              "Pipeline is live-ready.")
+        return
+
     runner.run_forever(make_bar_fetcher(ticker, interval), poll_interval_seconds=poll_seconds)
 
 
