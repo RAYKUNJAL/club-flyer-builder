@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS - AI Trading Command Center</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #00ff41;
+            overflow: hidden;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            grid-template-rows: 60px 1fr 80px;
+            height: 100vh;
+            gap: 0;
+        }
+
+        /* Header */
+        header {
+            grid-column: 1 / -1;
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 2px solid #00ff41;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px #00ff41;
+        }
+
+        .status {
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff41;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Left panel - Agent Team */
+        .agents-panel {
+            grid-row: 2;
+            grid-column: 1;
+            background: rgba(0, 0, 0, 0.5);
+            border-right: 2px solid #00ff41;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .agents-header {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 0 0 5px #00ff41;
+            letter-spacing: 2px;
+        }
+
+        .agent {
+            background: rgba(0, 50, 0, 0.3);
+            border: 1px solid #00ff41;
+            border-radius: 3px;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .agent:hover {
+            background: rgba(0, 80, 0, 0.5);
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+        }
+
+        .agent-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .agent-status {
+            font-size: 10px;
+            opacity: 0.7;
+        }
+
+        .agent-thinking {
+            animation: think 1s infinite;
+        }
+
+        @keyframes think {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        /* Center panel - Chat & Market Data */
+        .center-panel {
+            grid-row: 2;
+            grid-column: 2;
+            display: flex;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 2px solid #00ff41;
+            border-right: 2px solid #00ff41;
+        }
+
+        .market-data {
+            background: rgba(0, 20, 0, 0.3);
+            border-bottom: 1px solid #00ff41;
+            padding: 10px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            font-size: 12px;
+        }
+
+        .market-item {
+            padding: 5px;
+            background: rgba(0, 50, 0, 0.2);
+            border-left: 2px solid #00ff41;
+        }
+
+        .market-symbol {
+            font-weight: bold;
+        }
+
+        .market-price {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+
+        .chat-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .message {
+            margin-bottom: 12px;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .message.user {
+            color: #00ffff;
+            text-align: right;
+            margin-left: 30%;
+        }
+
+        .message.agent {
+            color: #00ff41;
+            margin-right: 30%;
+        }
+
+        .message.system {
+            color: #ffaa00;
+            text-align: center;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .message-header {
+            font-size: 10px;
+            opacity: 0.6;
+            margin-bottom: 3px;
+        }
+
+        .message-content {
+            background: rgba(0, 50, 0, 0.2);
+            padding: 8px;
+            border-left: 2px solid currentColor;
+        }
+
+        /* Right panel - Trading Dashboard */
+        .trading-panel {
+            grid-row: 2;
+            grid-column: 3;
+            background: rgba(0, 0, 0, 0.5);
+            border-left: 2px solid #00ff41;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .trading-header {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            text-shadow: 0 0 5px #00ff41;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+        }
+
+        .metric-label {
+            opacity: 0.7;
+        }
+
+        .metric-value {
+            font-weight: bold;
+            color: #00ff41;
+        }
+
+        .metric-value.positive {
+            color: #00ff41;
+        }
+
+        .metric-value.negative {
+            color: #ff4444;
+        }
+
+        .positions {
+            margin-top: 15px;
+        }
+
+        .position {
+            background: rgba(0, 50, 0, 0.3);
+            border: 1px solid #00ff41;
+            border-radius: 2px;
+            padding: 8px;
+            margin-bottom: 8px;
+            font-size: 11px;
+        }
+
+        .position-symbol {
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .position-details {
+            font-size: 10px;
+            opacity: 0.8;
+        }
+
+        /* Input area */
+        .input-area {
+            grid-row: 3;
+            grid-column: 1 / -1;
+            background: rgba(0, 0, 0, 0.8);
+            border-top: 2px solid #00ff41;
+            display: flex;
+            gap: 10px;
+            padding: 12px;
+            align-items: center;
+        }
+
+        .input-field {
+            flex: 1;
+            background: rgba(0, 30, 0, 0.5);
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            padding: 8px 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+
+        .input-field:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+        }
+
+        button {
+            background: rgba(0, 100, 0, 0.5);
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            background: rgba(0, 150, 0, 0.7);
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .voice-btn {
+            min-width: 50px;
+        }
+
+        .voice-btn.listening {
+            background: rgba(255, 0, 0, 0.5);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+            animation: recordPulse 0.6s infinite;
+        }
+
+        @keyframes recordPulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(255, 0, 0, 0.7); }
+            50% { box-shadow: 0 0 30px rgba(255, 0, 0, 0.9); }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 255, 65, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00ff41;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00ffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">◆ JARVIS ◆</div>
+            <div class="status">
+                <div class="status-item">
+                    <div class="indicator"></div>
+                    <span>SYSTEM ONLINE</span>
+                </div>
+                <div class="status-item">
+                    <span id="market-status">MARKETS: OPEN</span>
+                </div>
+                <div class="status-item">
+                    <span id="time">00:00:00</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Left: Agent Team -->
+        <div class="agents-panel">
+            <div class="agents-header">[ AGENT TEAM ]</div>
+
+            <div class="agent" data-agent="research">
+                <div class="agent-name">🔍 RESEARCH</div>
+                <div class="agent-status">Market Analysis & Trend Detection</div>
+            </div>
+
+            <div class="agent" data-agent="strategy">
+                <div class="agent-name">📊 STRATEGY</div>
+                <div class="agent-status">Config Selection & Setup</div>
+            </div>
+
+            <div class="agent" data-agent="risk">
+                <div class="agent-name">⚖️ RISK</div>
+                <div class="agent-status">Position Sizing & Limits</div>
+            </div>
+
+            <div class="agent" data-agent="execution">
+                <div class="agent-name">⚡ EXECUTION</div>
+                <div class="agent-status">Order Placement & Fills</div>
+            </div>
+
+            <div class="agent" data-agent="guard">
+                <div class="agent-name">🛡️ GUARD</div>
+                <div class="agent-status">Stop Enforcement & Kills</div>
+            </div>
+
+            <div class="agent" data-agent="portfolio">
+                <div class="agent-name">💼 PORTFOLIO</div>
+                <div class="agent-status">Multi-Market Coordination</div>
+            </div>
+        </div>
+
+        <!-- Center: Chat & Market Data -->
+        <div class="center-panel">
+            <div class="market-data">
+                <div class="market-item">
+                    <div class="market-symbol">SPY</div>
+                    <div class="market-price">$425.30 ↑0.5%</div>
+                </div>
+                <div class="market-item">
+                    <div class="market-symbol">QQQ</div>
+                    <div class="market-price">$395.20 ↑1.2%</div>
+                </div>
+                <div class="market-item">
+                    <div class="market-symbol">BTC</div>
+                    <div class="market-price">$43,250 ↑2.1%</div>
+                </div>
+                <div class="market-item">
+                    <div class="market-symbol">ETH</div>
+                    <div class="market-price">$2,340 ↑1.8%</div>
+                </div>
+            </div>
+
+            <div class="chat-area" id="chat-area">
+                <div class="message system">
+                    <div class="message-content">
+                        ▲ JARVIS INITIALIZED ▲<br/>
+                        Agents online. Ready for commands.<br/>
+                        Speak or type to begin.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Trading Dashboard -->
+        <div class="trading-panel">
+            <div class="trading-header">[ PORTFOLIO ]</div>
+
+            <div class="metric">
+                <div class="metric-label">Equity</div>
+                <div class="metric-value positive">$52,340</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Day P&L</div>
+                <div class="metric-value positive">+$2,340</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Win Rate</div>
+                <div class="metric-value">74.5%</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Sharpe</div>
+                <div class="metric-value">1.85</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Max DD</div>
+                <div class="metric-value negative">-8.3%</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Positions</div>
+                <div class="metric-value">3 / 5</div>
+            </div>
+
+            <div class="positions">
+                <div class="position">
+                    <div class="position-symbol">SPY LONG</div>
+                    <div class="position-details">
+                        100 @ $425.30<br/>
+                        Stop: $423.00 | Target: $428.00<br/>
+                        P&L: +$230 (+0.54%)
+                    </div>
+                </div>
+
+                <div class="position">
+                    <div class="position-symbol">QQQ LONG</div>
+                    <div class="position-details">
+                        50 @ $395.20<br/>
+                        Stop: $392.00 | Target: $398.00<br/>
+                        P&L: +$140 (+0.71%)
+                    </div>
+                </div>
+
+                <div class="position">
+                    <div class="position-symbol">TSLA LONG</div>
+                    <div class="position-details">
+                        30 @ $245.50<br/>
+                        Stop: $242.00 | Target: $250.00<br/>
+                        P&L: +$105 (+1.43%)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+            <input type="text" class="input-field" id="command-input" placeholder="Command or question for JARVIS...">
+            <button class="voice-btn" id="voice-btn" title="Click to toggle voice">🎤</button>
+            <button id="send-btn">SEND</button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize
+        const chatArea = document.getElementById('chat-area');
+        const commandInput = document.getElementById('command-input');
+        const sendBtn = document.getElementById('send-btn');
+        const voiceBtn = document.getElementById('voice-btn');
+        const agents = document.querySelectorAll('.agent');
+
+        let isListening = false;
+        let recognition;
+
+        // Initialize speech recognition if available
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+
+            recognition.onstart = () => {
+                isListening = true;
+                voiceBtn.classList.add('listening');
+                voiceBtn.textContent = '🎙️';
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = Array.from(event.results)
+                    .map(result => result[0].transcript)
+                    .join('');
+                commandInput.value = transcript;
+                sendMessage();
+            };
+
+            recognition.onend = () => {
+                isListening = false;
+                voiceBtn.classList.remove('listening');
+                voiceBtn.textContent = '🎤';
+            };
+
+            recognition.onerror = (event) => {
+                addMessage('SYSTEM', `Voice error: ${event.error}`, 'system');
+            };
+        }
+
+        // Voice button toggle
+        voiceBtn.addEventListener('click', () => {
+            if (!recognition) {
+                addMessage('SYSTEM', 'Speech recognition not available', 'system');
+                return;
+            }
+            if (isListening) {
+                recognition.stop();
+            } else {
+                recognition.start();
+            }
+        });
+
+        // Send message
+        function sendMessage() {
+            const message = commandInput.value.trim();
+            if (!message) return;
+
+            addMessage('USER', message, 'user');
+            commandInput.value = '';
+
+            // Simulate agent processing
+            agentRespond(message);
+        }
+
+        function agentRespond(userMessage) {
+            // Simulate agent thinking
+            const randomAgent = agents[Math.floor(Math.random() * agents.length)];
+            const agentEl = randomAgent;
+            const agentName = randomAgent.querySelector('.agent-name').textContent;
+
+            agentEl.classList.add('agent-thinking');
+
+            setTimeout(() => {
+                agentEl.classList.remove('agent-thinking');
+
+                // Simple responses based on keywords
+                let response = '';
+                const msg = userMessage.toLowerCase();
+
+                if (msg.includes('should') || msg.includes('should we')) {
+                    response = `Research consensus: Current market condition shows strong uptrend on SPY (200-day MA confirmed). Recommend long entry on pullback. Risk/reward 1:2.5. Proceed? (Y/N)`;
+                } else if (msg.includes('buy') || msg.includes('enter') || msg.includes('long')) {
+                    response = `Execution ready: SPY 100 shares at market. Stop at $423.00. Portfolio heat: 2.3% (within limits). Risk Agent confirms position sizing. Executing...`;
+                } else if (msg.includes('close') || msg.includes('exit')) {
+                    response = `Closing positions: SPY -100 @ $426.50, +$120 P&L. QQQ -50 @ $396.00, +$90 P&L. Portfolio updated.`;
+                } else if (msg.includes('status') || msg.includes('how are we')) {
+                    response = `Portfolio Status: Equity $52,340 | Day P&L +$2,340 | Win Rate 74.5% | Active positions: 3/5 | Daily loss cushion: $1,185 remaining.`;
+                } else if (msg.includes('risk') || msg.includes('drawdown')) {
+                    response = `Risk Summary: Max drawdown -8.3% | Daily loss limit $1,500 (used $315) | Concurrent positions 3/5 | Volatility regime: Normal. All systems green.`;
+                } else {
+                    response = `Agent Analysis: Processing your request. Market conditions analyzed. Backtest data reviewed. Standing by for confirmation.`;
+                }
+
+                addMessage(agentName, response, 'agent');
+
+                // Simulate TTS if available
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(response);
+                    utterance.rate = 1.0;
+                    utterance.pitch = 1.0;
+                    utterance.volume = 0.7;
+                    speechSynthesis.cancel();
+                    speechSynthesis.speak(utterance);
+                }
+            }, 800);
+        }
+
+        function addMessage(sender, content, type) {
+            const msgEl = document.createElement('div');
+            msgEl.className = `message ${type}`;
+            msgEl.innerHTML = `
+                <div class="message-header">${sender}</div>
+                <div class="message-content">${escapeHtml(content)}</div>
+            `;
+            chatArea.appendChild(msgEl);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Event listeners
+        sendBtn.addEventListener('click', sendMessage);
+        commandInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Update time
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('time').textContent =
+                now.toLocaleTimeString('en-US', { hour12: false });
+        }, 1000);
+
+        // Agent click info
+        agents.forEach(agent => {
+            agent.addEventListener('click', () => {
+                const agentName = agent.querySelector('.agent-name').textContent;
+                addMessage('SYSTEM', `${agentName} - Ready for input`, 'system');
+            });
+        });
+
+        // Welcome message
+        setTimeout(() => {
+            addMessage('SYSTEM', 'All agents operational. Type "help" or use voice commands.', 'system');
+        }, 1000);
+    </script>
+</body>
+</html>
