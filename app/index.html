@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PatWaGo — Splash</title>
+<link rel="stylesheet" href="assets/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  .splash-screen {
+    background: radial-gradient(circle at 50% 0%, #16311c 0%, var(--pw-black) 60%);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    color: var(--pw-white);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .splash-screen::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: -60px;
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, rgba(63,182,91,0.25) 0%, transparent 70%);
+  }
+  .splash-screen::after {
+    content: '';
+    position: absolute;
+    bottom: 120px; right: -80px;
+    width: 260px; height: 260px;
+    background: radial-gradient(circle, rgba(244,180,0,0.15) 0%, transparent 70%);
+  }
+
+  .splash-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 32px 0;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .brand-mark {
+    width: 92px;
+    height: 92px;
+    margin: 8px 0 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .brand-name {
+    font-family: var(--font-display);
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  .brand-name .p-letter { color: var(--pw-green-light); }
+  .brand-name .rest { color: var(--pw-white); }
+  .brand-name .go { color: var(--pw-gold); }
+
+  .brand-tag {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.06em;
+    margin-top: 4px;
+    text-transform: uppercase;
+  }
+
+  .hero-lines {
+    margin-top: 30px;
+    font-family: var(--font-display);
+    font-size: 27px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .hero-lines .accent-gold { color: var(--pw-gold); }
+  .hero-lines .accent-white { color: var(--pw-white); }
+
+  .hero-sub {
+    margin-top: 12px;
+    font-size: 14.5px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.55;
+    max-width: 280px;
+  }
+
+  .island-wrap {
+    margin-top: auto;
+    width: 100%;
+    height: 190px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .island-svg { width: 100%; height: 100%; display: block; }
+
+  .splash-footer {
+    padding: 0 28px calc(28px + env(safe-area-inset-bottom, 0px));
+    position: relative;
+    z-index: 2;
+  }
+
+  .login-line {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 13.5px;
+    color: rgba(255,255,255,0.55);
+  }
+  .login-line a { color: var(--pw-green-light); font-weight: 600; text-decoration: none; }
+
+  .dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 20px;
+  }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.25); }
+  .dot.active { background: var(--pw-green-light); width: 18px; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<div class="device-gallery">
+  <div class="device">
+    <div class="screen-body">
+      <div class="splash-screen">
+
+        <div class="status-bar on-dark">
+          <span>9:41</span>
+          <div class="status-icons">
+            <svg width="18" height="12" viewBox="0 0 18 12" fill="none"><rect x="0" y="8" width="3" height="4" rx="0.5" fill="white"/><rect x="5" y="5" width="3" height="7" rx="0.5" fill="white"/><rect x="10" y="2" width="3" height="10" rx="0.5" fill="white"/><rect x="15" y="0" width="3" height="12" rx="0.5" fill="white"/></svg>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M8 9.5C9 9.5 9.9 9.9 10.5 10.5L8 13L5.5 10.5C6.1 9.9 7 9.5 8 9.5Z" fill="white"/><path d="M8 6C9.9 6 11.6 6.8 12.8 8L11.4 9.4C10.5 8.5 9.3 8 8 8C6.7 8 5.5 8.5 4.6 9.4L3.2 8C4.4 6.8 6.1 6 8 6Z" fill="white"/><path d="M8 2.5C10.8 2.5 13.3 3.6 15.2 5.4L13.8 6.8C12.2 5.3 10.2 4.5 8 4.5C5.8 4.5 3.8 5.3 2.2 6.8L0.8 5.4C2.7 3.6 5.2 2.5 8 2.5Z" fill="white"/></svg>
+            <svg width="24" height="12" viewBox="0 0 24 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="2.5" stroke="white" stroke-opacity="0.5"/><rect x="2.5" y="2.5" width="17" height="7" rx="1.2" fill="white"/><rect x="22" y="4" width="1.5" height="4" rx="0.7" fill="white" fill-opacity="0.5"/></svg>
+          </div>
+        </div>
+
+        <div class="splash-content">
+          <div class="brand-mark">
+            <svg width="88" height="88" viewBox="0 0 88 88" fill="none">
+              <path d="M44 6C50 10 58 10 62 6" stroke="#F4B400" stroke-width="3" stroke-linecap="round"/>
+              <path d="M60 8L68 4L64 12Z" fill="#F4B400"/>
+              <circle cx="44" cy="46" r="34" fill="#0F5C24"/>
+              <path d="M44 12C60.5 12 74 25.5 74 42C74 45 73.6 47.9 72.8 50.6C67 44 57.6 40 47 40C40 40 33.6 42 28.4 45.4C25 39.3 23 32.2 23 24.6C23 20.7 23.5 17 24.5 13.5C30.3 12.5 37 12 44 12Z" fill="#3FB65B"/>
+              <text x="44" y="58" font-family="Poppins, sans-serif" font-size="40" font-weight="700" fill="white" text-anchor="middle">P</text>
+            </svg>
+          </div>
+          <div class="brand-name">
+            <span class="rest">Pat</span><span class="p-letter">wa</span><span class="go">go</span>
+          </div>
+          <div class="brand-tag">Your Jamaica. Your Way.</div>
+
+          <div class="hero-lines">
+            <div><span class="accent-gold">Explore</span> <span class="accent-white">Jamaica.</span></div>
+            <div><span class="accent-gold">Book</span> <span class="accent-white">everything.</span></div>
+            <div><span class="accent-gold">Live</span> <span class="accent-white">every moment.</span></div>
+          </div>
+
+          <p class="hero-sub">Flights, Stays, Tours, Attractions and more — all in one app.</p>
+        </div>
+
+        <div class="island-wrap">
+          <svg class="island-svg" viewBox="0 0 375 190" preserveAspectRatio="xMidYMax slice">
+            <ellipse cx="187" cy="150" rx="150" ry="16" fill="#F4B400" opacity="0.12"/>
+            <path d="M20 150 Q60 60 140 75 Q170 80 200 65 Q260 40 330 90 Q345 100 355 150 Z" fill="#1E8A3C"/>
+            <path d="M20 150 Q60 60 140 75 Q170 80 200 65 Q260 40 330 90 Q345 100 355 150 Z" fill="url(#islandGrad)" opacity="0.5"/>
+            <defs>
+              <linearGradient id="islandGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#3FB65B"/>
+                <stop offset="100%" stop-color="#0F5C24"/>
+              </linearGradient>
+            </defs>
+            <circle cx="230" cy="95" r="26" fill="#F4B400" opacity="0.9"/>
+            <path d="M110 150 Q160 145 210 150 Q260 155 330 148" stroke="#F4B400" stroke-width="2" fill="none" opacity="0.5"/>
+            <g opacity="0.9">
+              <path d="M70 120 L70 90" stroke="#0F5C24" stroke-width="3" stroke-linecap="round"/>
+              <path d="M70 92 Q80 88 88 94" stroke="#3FB65B" stroke-width="4" stroke-linecap="round" fill="none"/>
+              <path d="M70 96 Q60 90 52 96" stroke="#3FB65B" stroke-width="4" stroke-linecap="round" fill="none"/>
+              <path d="M70 100 Q82 98 90 106" stroke="#3FB65B" stroke-width="4" stroke-linecap="round" fill="none"/>
+            </g>
+            <g opacity="0.9">
+              <path d="M280 128 L280 100" stroke="#0F5C24" stroke-width="3" stroke-linecap="round"/>
+              <path d="M280 102 Q290 98 298 104" stroke="#3FB65B" stroke-width="4" stroke-linecap="round" fill="none"/>
+              <path d="M280 106 Q270 100 262 106" stroke="#3FB65B" stroke-width="4" stroke-linecap="round" fill="none"/>
+            </g>
+          </svg>
+        </div>
+
+        <div class="splash-footer">
+          <a href="onboarding.html" class="btn btn-primary btn-block">
+            Let's Go to Jamaica
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <div class="login-line">Already have an account? <a href="home.html">Log in</a></div>
+          <div class="dots">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

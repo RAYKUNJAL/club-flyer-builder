@@ -1,0 +1,296 @@
+/* ============================================
+   PatWaGo App UI — Shared Design System
+   ============================================ */
+
+:root {
+  --pw-black:       #0B0F0C;
+  --pw-black-2:     #12160F;
+  --pw-green:       #1E8A3C;
+  --pw-green-dark:  #0F5C24;
+  --pw-green-light: #3FB65B;
+  --pw-gold:        #F4B400;
+  --pw-gold-dark:   #D99A00;
+  --pw-white:       #FFFFFF;
+  --pw-paper:       #F7F8F5;
+  --pw-ink:         #14170F;
+  --pw-ink-2:       #5B6154;
+  --pw-muted:       #8A8F80;
+  --pw-border:      #E6E8E0;
+  --pw-star:        #F4B400;
+  --pw-red:         #E4483A;
+
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  --radius-pill: 999px;
+
+  --shadow-card: 0 2px 10px rgba(20, 23, 15, 0.06);
+  --shadow-float: 0 8px 24px rgba(20, 23, 15, 0.14);
+
+  --font-display: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: #E9EBE5;
+  color: var(--pw-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================
+   DEVICE FRAME — simulates a phone viewport
+   ============================================ */
+
+.device-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  padding: 40px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.device {
+  width: 375px;
+  height: 812px;
+  background: var(--pw-white);
+  border-radius: 44px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--shadow-float), 0 0 0 10px #1a1a1a, 0 0 0 11px #333;
+  display: flex;
+  flex-direction: column;
+}
+
+.status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px 4px;
+  font-size: 15px;
+  font-weight: 600;
+  flex-shrink: 0;
+  z-index: 20;
+  position: relative;
+}
+
+.status-bar.on-dark { color: var(--pw-white); }
+.status-bar.on-light { color: var(--pw-ink); }
+
+.status-icons { display: flex; align-items: center; gap: 5px; }
+
+.screen-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.screen-body::-webkit-scrollbar { display: none; }
+
+/* ============================================
+   BOTTOM NAV
+   ============================================ */
+
+.bottom-nav {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 8px calc(10px + env(safe-area-inset-bottom, 0px));
+  background: var(--pw-white);
+  border-top: 1px solid var(--pw-border);
+  flex-shrink: 0;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  color: var(--pw-muted);
+  font-size: 11px;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 4px 10px;
+}
+
+.nav-item.active { color: var(--pw-green); }
+
+.nav-item svg { width: 22px; height: 22px; }
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+
+.h1 { font-family: var(--font-display); font-size: 26px; font-weight: 600; line-height: 1.25; }
+.h2 { font-family: var(--font-display); font-size: 20px; font-weight: 600; line-height: 1.3; }
+.h3 { font-family: var(--font-display); font-size: 16px; font-weight: 600; line-height: 1.35; }
+.body-text { font-size: 14px; line-height: 1.6; color: var(--pw-ink-2); }
+.caption { font-size: 12px; color: var(--pw-muted); }
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15px;
+  border: none;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.btn:active { transform: scale(0.97); }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--pw-gold) 0%, var(--pw-green-light) 130%);
+  color: var(--pw-black);
+  padding: 16px 28px;
+}
+
+.btn-gold {
+  background: var(--pw-gold);
+  color: var(--pw-black);
+  padding: 12px 20px;
+}
+
+.btn-block { width: 100%; }
+
+/* ============================================
+   PILLS / CHIPS
+   ============================================ */
+
+.chip-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 2px 20px 4px;
+  scrollbar-width: none;
+}
+.chip-row::-webkit-scrollbar { display: none; }
+
+.chip {
+  flex-shrink: 0;
+  padding: 9px 18px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid var(--pw-border);
+  background: var(--pw-white);
+  color: var(--pw-ink-2);
+  white-space: nowrap;
+}
+
+.chip.active {
+  background: var(--pw-green);
+  border-color: var(--pw-green);
+  color: var(--pw-white);
+}
+
+/* ============================================
+   CARDS
+   ============================================ */
+
+.card {
+  background: var(--pw-white);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--pw-border);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--pw-ink);
+}
+
+.rating .stars { color: var(--pw-star); }
+.rating .count { color: var(--pw-muted); font-weight: 400; }
+
+.price-tag {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.price-tag .amount {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--pw-ink);
+}
+
+.price-tag .amount .from { font-size: 11px; font-weight: 400; color: var(--pw-muted); }
+.price-tag .unit { font-size: 11px; color: var(--pw-muted); display: block; }
+
+.heart-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  flex-shrink: 0;
+  cursor: pointer;
+  border: none;
+}
+
+.location-line {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12.5px;
+  color: var(--pw-ink-2);
+}
+
+.location-line svg { width: 13px; height: 13px; flex-shrink: 0; color: var(--pw-muted); }
+
+/* ============================================
+   UTILITY
+   ============================================ */
+
+.px-20 { padding-left: 20px; padding-right: 20px; }
+.section-gap { margin-bottom: 24px; }
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 20px 12px;
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--pw-paper);
+  border: 1px solid var(--pw-border);
+  cursor: pointer;
+  color: var(--pw-ink);
+  text-decoration: none;
+}
+
+.link-more {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pw-green);
+  text-decoration: none;
+}

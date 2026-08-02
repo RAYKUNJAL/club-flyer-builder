@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PatWaGo — Dunn's River Falls</title>
+<link rel="stylesheet" href="assets/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  .device { background: var(--pw-white); }
+
+  .gallery-wrap {
+    position: relative;
+    width: 100%;
+    height: 340px;
+    flex-shrink: 0;
+  }
+  .gallery-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .gallery-topbar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 16px 0;
+    z-index: 5;
+  }
+  .glass-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(11,15,12,0.35);
+    backdrop-filter: blur(4px);
+    border: none;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+  }
+  .glass-actions { display: flex; gap: 8px; }
+
+  .gallery-counter {
+    position: absolute;
+    bottom: 14px; right: 16px;
+    background: rgba(11,15,12,0.55);
+    color: white;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+  }
+
+  .detail-sheet {
+    background: var(--pw-white);
+    border-radius: 24px 24px 0 0;
+    margin-top: -20px;
+    position: relative;
+    z-index: 2;
+    padding: 22px 20px 4px;
+  }
+
+  .detail-title { font-family: var(--font-display); font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+
+  .detail-rating-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    margin-bottom: 14px;
+  }
+  .stars-full { color: var(--pw-star); letter-spacing: 1px; }
+  .rating-num { font-weight: 700; }
+  .review-count { color: var(--pw-muted); }
+
+  .detail-desc { font-size: 14px; line-height: 1.65; color: var(--pw-ink-2); margin-bottom: 20px; }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .feature-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+  }
+  .feature-icon {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    background: var(--pw-paper);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--pw-green);
+  }
+  .feature-item span { font-size: 10.5px; font-weight: 500; color: var(--pw-ink-2); line-height: 1.3; }
+
+  .included-block h3 { margin-bottom: 12px; }
+  .included-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 100px;
+  }
+  .included-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--pw-ink-2);
+  }
+  .included-item svg { color: var(--pw-green); flex-shrink: 0; }
+
+  .book-bar {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    background: var(--pw-white);
+    border-top: 1px solid var(--pw-border);
+    padding: 14px 20px calc(14px + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    z-index: 10;
+  }
+  .book-price { flex: 1; }
+  .book-price .amount { font-family: var(--font-display); font-size: 20px; font-weight: 700; }
+  .book-price .amount .unit { font-size: 12px; font-weight: 400; color: var(--pw-muted); }
+  .book-price .free-cancel {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 11px; color: var(--pw-green); margin-top: 2px;
+  }
+  .book-bar .btn-primary { padding: 15px 26px; }
+</style>
+</head>
+<body>
+
+<div class="device-gallery">
+  <div class="device">
+
+    <div class="status-bar on-dark" style="position:absolute; top:0; left:0; right:0; z-index:6;">
+      <span>9:41</span>
+      <div class="status-icons">
+        <svg width="18" height="12" viewBox="0 0 18 12" fill="none"><rect x="0" y="8" width="3" height="4" rx="0.5" fill="white"/><rect x="5" y="5" width="3" height="7" rx="0.5" fill="white"/><rect x="10" y="2" width="3" height="10" rx="0.5" fill="white"/><rect x="15" y="0" width="3" height="12" rx="0.5" fill="white"/></svg>
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M8 9.5C9 9.5 9.9 9.9 10.5 10.5L8 13L5.5 10.5C6.1 9.9 7 9.5 8 9.5Z" fill="white"/><path d="M8 6C9.9 6 11.6 6.8 12.8 8L11.4 9.4C10.5 8.5 9.3 8 8 8C6.7 8 5.5 8.5 4.6 9.4L3.2 8C4.4 6.8 6.1 6 8 6Z" fill="white"/><path d="M8 2.5C10.8 2.5 13.3 3.6 15.2 5.4L13.8 6.8C12.2 5.3 10.2 4.5 8 4.5C5.8 4.5 3.8 5.3 2.2 6.8L0.8 5.4C2.7 3.6 5.2 2.5 8 2.5Z" fill="white"/></svg>
+        <svg width="24" height="12" viewBox="0 0 24 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="2.5" stroke="white" stroke-opacity="0.5"/><rect x="2.5" y="2.5" width="17" height="7" rx="1.2" fill="white"/><rect x="22" y="4" width="1.5" height="4" rx="0.7" fill="white" fill-opacity="0.5"/></svg>
+      </div>
+    </div>
+
+    <div class="screen-body" style="position:relative;">
+
+      <div class="gallery-wrap">
+        <img src="https://images.unsplash.com/photo-1546587348-d12660c30c50?w=750&h=680&fit=crop&q=75" alt="Dunn's River Falls">
+        <div class="gallery-topbar">
+          <a href="tours.html" class="glass-btn" aria-label="Back">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          </a>
+          <div class="glass-actions">
+            <button class="glass-btn" aria-label="Save">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+            </button>
+            <button class="glass-btn" aria-label="Share">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="gallery-counter">1 / 12</div>
+      </div>
+
+      <div class="detail-sheet">
+
+        <div class="detail-title">Dunn's River Falls &amp; Park</div>
+        <div class="location-line" style="margin-bottom:12px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 13-9 13s-9-7-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          Ocho Rios, St. Ann
+        </div>
+        <div class="detail-rating-row">
+          <span class="stars-full">★★★★★</span>
+          <span class="rating-num">4.8</span>
+          <span class="review-count">(2,345 reviews)</span>
+        </div>
+
+        <p class="detail-desc">Climb the iconic Dunn's River Falls, enjoy the beautiful beach, gardens and exciting activities for the whole family.</p>
+
+        <div class="feature-grid">
+          <div class="feature-item">
+            <span class="feature-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+            <span>Guide Included</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></span>
+            <span>Hotel Pickup</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
+            <span>2-3 Hrs Duration</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+            <span>All Ages Welcome</span>
+          </div>
+        </div>
+
+        <div class="included-block">
+          <h3>What's Included</h3>
+          <div class="included-grid">
+            <div class="included-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Entry Fee
+            </div>
+            <div class="included-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Hotel Pickup &amp; Drop-off
+            </div>
+            <div class="included-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Professional Tour Guide
+            </div>
+            <div class="included-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Safety Briefing
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="book-bar">
+      <div class="book-price">
+        <div class="amount">$85 <span class="unit">/person</span></div>
+        <div class="free-cancel">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Free cancellation up to 24 hours
+        </div>
+      </div>
+      <a href="#" class="btn btn-primary">Book Now
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

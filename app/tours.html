@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PatWaGo — Tours &amp; Attractions</title>
+<link rel="stylesheet" href="assets/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  .device { background: var(--pw-paper); }
+
+  .tours-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 20px 6px;
+  }
+
+  .page-head { padding: 8px 20px 4px; }
+  .page-head .h1 { margin-bottom: 4px; }
+
+  .filter-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--pw-paper);
+    border: 1px solid var(--pw-border);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--pw-ink);
+  }
+
+  .tour-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 16px 20px 4px;
+  }
+
+  .tour-card {
+    display: flex;
+    gap: 12px;
+    padding: 10px;
+    text-decoration: none;
+    color: var(--pw-ink);
+  }
+
+  .tour-photo {
+    width: 92px; height: 92px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--pw-border);
+  }
+  .tour-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .tour-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .tour-info-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .tour-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14.5px;
+    line-height: 1.3;
+  }
+
+  .tour-meta { margin-top: 5px; display: flex; flex-direction: column; gap: 4px; }
+
+  .cta-banner {
+    margin: 22px 20px 20px;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(120deg, #0F5C24 0%, #1E8A3C 100%);
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--pw-white);
+  }
+  .cta-banner-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .cta-banner-text { flex: 1; }
+  .cta-banner-text strong { display: block; font-size: 13.5px; font-weight: 600; }
+  .cta-banner-text span { font-size: 12px; color: rgba(255,255,255,0.75); }
+  .cta-banner .btn { padding: 10px 16px; font-size: 13px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="device-gallery">
+  <div class="device">
+
+    <div class="status-bar on-light">
+      <span>9:41</span>
+      <div class="status-icons">
+        <svg width="18" height="12" viewBox="0 0 18 12" fill="none"><rect x="0" y="8" width="3" height="4" rx="0.5" fill="#14170F"/><rect x="5" y="5" width="3" height="7" rx="0.5" fill="#14170F"/><rect x="10" y="2" width="3" height="10" rx="0.5" fill="#14170F"/><rect x="15" y="0" width="3" height="12" rx="0.5" fill="#14170F"/></svg>
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M8 9.5C9 9.5 9.9 9.9 10.5 10.5L8 13L5.5 10.5C6.1 9.9 7 9.5 8 9.5Z" fill="#14170F"/><path d="M8 6C9.9 6 11.6 6.8 12.8 8L11.4 9.4C10.5 8.5 9.3 8 8 8C6.7 8 5.5 8.5 4.6 9.4L3.2 8C4.4 6.8 6.1 6 8 6Z" fill="#14170F"/><path d="M8 2.5C10.8 2.5 13.3 3.6 15.2 5.4L13.8 6.8C12.2 5.3 10.2 4.5 8 4.5C5.8 4.5 3.8 5.3 2.2 6.8L0.8 5.4C2.7 3.6 5.2 2.5 8 2.5Z" fill="#14170F"/></svg>
+        <svg width="24" height="12" viewBox="0 0 24 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="2.5" stroke="#14170F" stroke-opacity="0.5"/><rect x="2.5" y="2.5" width="17" height="7" rx="1.2" fill="#14170F"/><rect x="22" y="4" width="1.5" height="4" rx="0.7" fill="#14170F" fill-opacity="0.5"/></svg>
+      </div>
+    </div>
+
+    <div class="tours-topbar">
+      <a href="home.html" class="icon-btn" aria-label="Back">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      </a>
+      <span class="h3">Tours &amp; Attractions</span>
+      <span style="width:36px"></span>
+    </div>
+
+    <div class="screen-body">
+
+      <div class="page-head">
+        <div class="h1">Tours &amp; Attractions</div>
+        <div class="body-text">Explore the best of Jamaica</div>
+      </div>
+
+      <div class="chip-row" style="margin-top:14px;">
+        <span class="chip active">All</span>
+        <span class="chip">Adventure</span>
+        <span class="chip">Nature</span>
+        <span class="chip">Culture</span>
+        <span class="chip">Water</span>
+      </div>
+
+      <div class="tour-list">
+
+        <a href="tour-detail.html" class="tour-card card">
+          <div class="tour-photo">
+            <img src="https://images.unsplash.com/photo-1546587348-d12660c30c50?w=200&h=200&fit=crop&q=70" alt="Dunn's River Falls & Park">
+          </div>
+          <div class="tour-info">
+            <div class="tour-info-top">
+              <div class="tour-name">Dunn's River Falls &amp; Park</div>
+              <button class="heart-btn" aria-label="Save"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#14170F" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg></button>
+            </div>
+            <div class="tour-meta">
+              <span class="location-line">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 13-9 13s-9-7-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                Ocho Rios, St. Ann
+              </span>
+              <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:4px;">
+                <span class="rating"><span class="stars">★</span> 4.8 <span class="count">(2,345)</span></span>
+                <span class="price-tag"><span class="amount"><span class="from">From</span> $85</span><span class="unit">/person</span></span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="tour-detail.html" class="tour-card card">
+          <div class="tour-photo">
+            <img src="https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?w=200&h=200&fit=crop&q=70" alt="Bamboo Rafting on the Martha Brae">
+          </div>
+          <div class="tour-info">
+            <div class="tour-info-top">
+              <div class="tour-name">Bamboo Rafting on the Martha Brae</div>
+              <button class="heart-btn" aria-label="Save"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#14170F" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg></button>
+            </div>
+            <div class="tour-meta">
+              <span class="location-line">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 13-9 13s-9-7-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                Trelawny
+              </span>
+              <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:4px;">
+                <span class="rating"><span class="stars">★</span> 4.6 <span class="count">(1,890)</span></span>
+                <span class="price-tag"><span class="amount"><span class="from">From</span> $65</span><span class="unit">/person</span></span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="tour-detail.html" class="tour-card card">
+          <div class="tour-photo">
+            <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=200&h=200&fit=crop&q=70" alt="Blue Lagoon Adventure">
+          </div>
+          <div class="tour-info">
+            <div class="tour-info-top">
+              <div class="tour-name">Blue Lagoon Adventure</div>
+              <button class="heart-btn" aria-label="Save"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#14170F" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg></button>
+            </div>
+            <div class="tour-meta">
+              <span class="location-line">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 13-9 13s-9-7-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                Port Antonio, Portland
+              </span>
+              <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:4px;">
+                <span class="rating"><span class="stars">★</span> 4.7 <span class="count">(1,234)</span></span>
+                <span class="price-tag"><span class="amount"><span class="from">From</span> $75</span><span class="unit">/person</span></span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="tour-detail.html" class="tour-card card">
+          <div class="tour-photo">
+            <img src="https://images.unsplash.com/photo-1533105079780-92b9be482077?w=200&h=200&fit=crop&q=70" alt="ATV Off-Road Experience">
+          </div>
+          <div class="tour-info">
+            <div class="tour-info-top">
+              <div class="tour-name">ATV Off-Road Experience</div>
+              <button class="heart-btn" aria-label="Save"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#14170F" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg></button>
+            </div>
+            <div class="tour-meta">
+              <span class="location-line">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 13-9 13s-9-7-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                Ocho Rios, St. Ann
+              </span>
+              <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:4px;">
+                <span class="rating"><span class="stars">★</span> 4.5 <span class="count">(987)</span></span>
+                <span class="price-tag"><span class="amount"><span class="from">From</span> $110</span><span class="unit">/person</span></span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="tour-detail.html" class="tour-card card">
+          <div class="tour-photo">
+            <img src="https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=200&h=200&fit=crop&q=70" alt="Seven Mile Beach Catamaran">
+          </div>
+          <div class="tour-info">
+            <div class="tour-info-top">
+              <div class="tour-name">Seven Mile Beach Catamaran Cruise</div>
+              <button class="heart-btn" aria-label="Save"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#14170F" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg></button>
+            </div>
+            <div class="tour-meta">
+              <span class="location-line">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 13-9 13s-9-7-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                Negril, Westmoreland
+              </span>
+              <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:4px;">
+                <span class="rating"><span class="stars">★</span> 4.9 <span class="count">(3,102)</span></span>
+                <span class="price-tag"><span class="amount"><span class="from">From</span> $95</span><span class="unit">/person</span></span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+      </div>
+
+      <div class="cta-banner">
+        <div class="cta-banner-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        </div>
+        <div class="cta-banner-text">
+          <strong>Don't see what you want?</strong>
+          <span>Create a custom experience</span>
+        </div>
+        <a href="yaadie.html" class="btn btn-gold">Tell Us</a>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
